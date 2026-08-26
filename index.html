@@ -1,258 +1,358 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rellotge estil estació suïssa - Tablet</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
-    background: #f4f2ec;
-    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  }
-  body {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 4rem 2.5rem 2.5rem;
-    box-sizing: border-box;
-    min-height: 100vh;
-  }
-  .wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    width: 100%;
-    max-width: 460px;
-  }
-  .col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-  }
-  .clock-case {
-    background: linear-gradient(135deg, #3a3a3a 0%, #1c1c1c 45%, #0a0a0a 100%);
-    border-radius: 50%;
-    padding: 16px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-  }
-  #clock {
-    width: min(42vw, 420px);
-    height: min(42vw, 420px);
-    display: block;
-  }
-  #digital {
-    font-size: 30px;
-    font-weight: 600;
-    color: #1c1c1c;
-  }
-  #calHeader {
-    text-align: center;
-    font-size: 30px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 18px;
-    color: #1c1c1c;
-    text-transform: capitalize;
-  }
-  #calGrid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 12px;
-    text-align: center;
-    font-size: 24px;
-    width: 100%;
-    color: #1c1c1c;
-  }
-  #calGrid div { padding: 9px 0; border-radius: 8px; }
-  .dow { font-size: 19px; letter-spacing: 0.5px; color: #9a9a94; font-weight: 600; }
-  .today { background: #d0102a; color: #ffffff; font-weight: 600; }
-
-  /* En pantalles més amples (tauleta en horitzontal), rellotge i calendari en línia */
-  @media (min-width: 900px) {
-    .wrap {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: center;
-      max-width: 1000px;
-      gap: 5rem;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rellotge Automàtic - PRS 516</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .col { width: auto; }
-    #calGrid { min-width: 400px; }
-  }
-</style>
+
+    body {
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* Caixa exterior del rellotge */
+    .watch-case {
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e6e6e6 0%, #888 70%, #444 100%);
+      padding: 22px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.8);
+      position: relative;
+    }
+
+    /* Bisel negre exterior */
+    .bezel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #222;
+      position: relative;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.9);
+    }
+
+    /* Textos del bisel (60, 10, 20, 30, 40, 50) */
+    .bezel-mark {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 18px;
+      top: 0;
+      left: 0;
+    }
+
+    /* Esfera principal de plata */
+    .dial {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+      right: 32px;
+      bottom: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #f0f0f0 0%, #d4d4d4 60%, #b8b8b8 100%);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
+      border: 1px solid #aaa;
+    }
+
+    /* Textos de la marca */
+    .brand-title {
+      position: absolute;
+      top: 21%;
+      width: 100%;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #111;
+    }
+
+    .brand-subtitle {
+      position: absolute;
+      top: 28%;
+      width: 100%;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #333;
+    }
+
+    .model-title {
+      position: absolute;
+      bottom: 27%;
+      width: 100%;
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+      color: #111;
+    }
+
+    .model-title span {
+      color: #c00;
+    }
+
+    .model-subtitle {
+      position: absolute;
+      bottom: 21%;
+      width: 100%;
+      text-align: center;
+      font-size: 9px;
+      color: #444;
+      line-height: 1.2;
+    }
+
+    .swiss-made {
+      position: absolute;
+      bottom: 8%;
+      width: 100%;
+      text-align: center;
+      font-size: 7px;
+      letter-spacing: 2px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Finestra de Calendari (Dia/Data) */
+    .calendar-window {
+      position: absolute;
+      right: 15%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #fff;
+      border: 2px solid #333;
+      display: flex;
+      font-size: 11px;
+      font-weight: bold;
+      font-family: monospace;
+      box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+
+    .calendar-day, .calendar-date {
+      padding: 2px 5px;
+      color: #000;
+    }
+
+    .calendar-day {
+      border-right: 1px solid #888;
+    }
+
+    /* Índexs de les hores */
+    .index-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hour-index {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    .hour-index::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 16px;
+      background: linear-gradient(to right, #fff, #bbb, #fff);
+      border: 1px solid #555;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Agulles */
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      z-index: 10;
+    }
+
+    /* Agulla de les Hores */
+    .hour-hand {
+      width: 8px;
+      height: 75px;
+      margin-left: -4px;
+      background: #222;
+      border: 1px solid #000;
+      border-radius: 2px;
+    }
+
+    .hour-hand::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 1px;
+      right: 1px;
+      height: 40px;
+      background: #fff;
+    }
+
+    /* Agulla dels Minuts */
+    .minute-hand {
+      width: 6px;
+      height: 105px;
+      margin-left: -3px;
+      background: #222;
+      border: 1px solid #000;
+      border-radius: 2px;
+    }
+
+    .minute-hand::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 1px;
+      right: 1px;
+      height: 65px;
+      background: #fff;
+    }
+
+    /* Segona agulla (Vermella en forma de T) */
+    .second-hand {
+      width: 2px;
+      height: 120px;
+      margin-left: -1px;
+      background: #d00;
+      z-index: 12;
+    }
+
+    /* Disseny T a la cua de la segona agulla */
+    .second-hand::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: -5px;
+      width: 12px;
+      height: 4px;
+      background: #d00;
+    }
+
+    /* Centre del rellotge */
+    .center-cap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      margin-top: -6px;
+      margin-left: -6px;
+      background: #d00;
+      border-radius: 50%;
+      z-index: 13;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+  </style>
 </head>
 <body>
 
-<div class="wrap">
+  <div class="watch-case">
+    <div class="bezel" id="bezel">
+      <!-- Bisel exterior generat per JS -->
+      <div class="dial">
+        <!-- Textos de l'esfera -->
+        <div class="brand-title">TISSOT</div>
+        <div class="brand-subtitle">1853</div>
+        
+        <div class="model-title">PRS<span>516</span></div>
+        <div class="model-subtitle">automatic<br>100m / 330ft</div>
+        
+        <!-- Finestra de Calendari -->
+        <div class="calendar-window">
+          <div class="calendar-day" id="day">SAT</div>
+          <div class="calendar-date" id="date">28</div>
+        </div>
 
-  <div class="col">
-    <div class="clock-case">
-      <svg id="clock" viewBox="0 0 200 200" role="img" aria-label="Rellotge estil estació suïssa">
-        <defs>
-          <radialGradient id="faceGrad" cx="35%" cy="30%" r="75%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="70%" stop-color="#f7f7f5"/>
-            <stop offset="100%" stop-color="#e8e8e4"/>
-          </radialGradient>
-          <filter id="softShadow" x="-60%" y="-60%" width="220%" height="220%">
-            <feDropShadow dx="0" dy="1.1" stdDeviation="1" flood-color="#000000" flood-opacity="0.35"/>
-          </filter>
-        </defs>
-        <circle cx="100" cy="100" r="96" fill="url(#faceGrad)" stroke="#1c1c1c" stroke-width="2"/>
-        <g id="ticks" filter="url(#softShadow)"></g>
-        <text x="100" y="48" text-anchor="middle" font-family="'Mondaine Helvetica', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="1.08" fill="#1c1c1c">MONDAINE</text>
-        <g id="brandLogo" filter="url(#softShadow)">
-          <rect x="73.25" y="53.65" width="11.2" height="7.7" fill="#d52b1e"/>
-          <polygon points="78.85,55.05 78.85,59.95 73.95,57.5" fill="#ffffff"/>
-          <polygon points="78.85,55.05 78.85,59.95 83.75,57.5" fill="#ffffff"/>
-          <text x="86.55" y="59.95" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="5.25" font-weight="700" letter-spacing="0.28" fill="#1c1c1c">SBB CFF FFS</text>
-        </g>
-        <text id="tempText" x="100" y="152" text-anchor="middle" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#1c1c1c">--°C</text>
-        <rect id="hourHand" x="95.785" y="37" width="8.43" height="81" fill="#1c1c1c" filter="url(#softShadow)"/>
-        <polygon id="minHand" points="96.07,118 96.07,100 96.33,8 103.68,8 103.93,100 103.93,118" fill="#1c1c1c" filter="url(#softShadow)"/>
-        <g id="secGroup" filter="url(#softShadow)">
-          <line x1="100" y1="118" x2="100" y2="30" stroke="#d0102a" stroke-width="2"/>
-          <circle cx="100" cy="37" r="7" fill="#d0102a"/>
-        </g>
-        <circle cx="100" cy="100" r="5" fill="#1c1c1c" filter="url(#softShadow)"/>
-      </svg>
+        <div class="swiss-made">SWISS MADE</div>
+
+        <!-- Índexs de les hores -->
+        <div class="index-container" id="indices"></div>
+
+        <!-- Agulles -->
+        <div class="hand hour-hand" id="hour-hand"></div>
+        <div class="hand minute-hand" id="minute-hand"></div>
+        <div class="hand second-hand" id="second-hand"></div>
+        <div class="center-cap"></div>
+      </div>
     </div>
-    <div id="digital">--:--:--</div>
   </div>
 
-  <div class="col" style="align-items: stretch;">
-    <div id="calHeader">--</div>
-    <div id="calGrid"></div>
-  </div>
+  <script>
+    // Generar marques del bisel (60, 10, 20, 30, 40, 50)
+    const bezel = document.getElementById('bezel');
+    const bezelValues = [
+      { val: '60', deg: 0 },
+      { val: '10', deg: 60 },
+      { val: '20', deg: 120 },
+      { val: '30', deg: 180 },
+      { val: '40', deg: 240 },
+      { val: '50', deg: 300 }
+    ];
 
-</div>
-
-<script>
-(function(){
-  var svgNS = "http://www.w3.org/2000/svg";
-  var ticks = document.getElementById('ticks');
-  for (var i = 0; i < 60; i++) {
-    var angle = i * 6 * Math.PI / 180;
-    var isHour = i % 5 === 0;
-    var r1 = isHour ? 72 : 84;
-    var w = isHour ? 6 : 3;
-    var len = isHour ? 20 : 8;
-    var x1 = 100 + r1 * Math.sin(angle), y1 = 100 - r1 * Math.cos(angle);
-    var x2 = 100 + (r1 + len) * Math.sin(angle), y2 = 100 - (r1 + len) * Math.cos(angle);
-    var line = document.createElementNS(svgNS, 'line');
-    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
-    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
-    line.setAttribute('stroke', '#1c1c1c');
-    line.setAttribute('stroke-width', w);
-    ticks.appendChild(line);
-  }
-
-  var diesSetmana = ["dl","dt","dc","dj","dv","ds","dg"];
-  var diesLlarg = ["diumenge","dilluns","dimarts","dimecres","dijous","divendres","dissabte"];
-  var mesos = ["gener","febrer","març","abril","maig","juny","juliol","agost","setembre","octubre","novembre","desembre"];
-
-  function buildCalendar(now) {
-    var year = now.getFullYear(), month = now.getMonth(), today = now.getDate();
-    document.getElementById('calHeader').textContent = mesos[month] + " " + year;
-    var grid = document.getElementById('calGrid');
-    grid.innerHTML = '';
-    diesSetmana.forEach(function(d){
-      var el = document.createElement('div');
-      el.textContent = d;
-      el.className = 'dow';
-      grid.appendChild(el);
+    bezelValues.forEach(item => {
+      const mark = document.createElement('div');
+      mark.className = 'bezel-mark';
+      mark.innerText = item.val;
+      mark.style.transform = `rotate(${item.deg}deg)`;
+      bezel.appendChild(mark);
     });
-    var firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
-    var daysInMonth = new Date(year, month + 1, 0).getDate();
-    for (var i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
-    for (var d = 1; d <= daysInMonth; d++) {
-      var cell = document.createElement('div');
-      cell.textContent = d;
-      if (d === today) cell.className = 'today';
-      grid.appendChild(cell);
-    }
-  }
 
-  var lastDay = null;
-  var lastDigitalSecond = null;
-
-  function frame() {
-    var now = new Date();
-    var h = now.getHours() % 12, m = now.getMinutes();
-    var s = now.getSeconds();
-    var ms = now.getMilliseconds();
-    var sFrac = s + ms / 1000;
-
-    var sAngle;
-    if (sFrac < 58) {
-      sAngle = (sFrac / 58) * 360;
-    } else {
-      sAngle = 360;
+    // Generar els 12 índexs horaris aplicats
+    const indicesContainer = document.getElementById('indices');
+    for (let i = 0; i < 12; i++) {
+      const index = document.createElement('div');
+      index.className = 'hour-index';
+      index.style.transform = `rotate(${i * 30}deg)`;
+      indicesContainer.appendChild(index);
     }
 
-    var mAngle = m * 6;
-    var hAngle = (h + m / 60) * 30;
+    // Funcionalitat del rellotge en temps real
+    const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-    document.getElementById('hourHand').setAttribute('transform', 'rotate(' + hAngle + ' 100 100)');
-    document.getElementById('minHand').setAttribute('transform', 'rotate(' + mAngle + ' 100 100)');
-    document.getElementById('secGroup').setAttribute('transform', 'rotate(' + sAngle + ' 100 100)');
+    function updateWatch() {
+      const now = new Date();
 
-    if (s !== lastDigitalSecond) {
-      lastDigitalSecond = s;
-      var pad = function(n){ return n < 10 ? '0' + n : n; };
-      document.getElementById('digital').textContent = pad(now.getHours()) + ':' + pad(m) + ':' + pad(s);
+      const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
+      const minutes = now.getMinutes() + seconds / 60;
+      const hours = (now.getHours() % 12) + minutes / 60;
 
-      if (lastDay !== now.getDate()) {
-        lastDay = now.getDate();
-        buildCalendar(now);
-      }
+      // Càlcul dels angles de les agulles
+      const secondDeg = seconds * 6; // 360 / 60
+      const minuteDeg = minutes * 6; // 360 / 60
+      const hourDeg = hours * 30;    // 360 / 12
+
+      document.getElementById('second-hand').style.transform = `rotate(${secondDeg}deg)`;
+      document.getElementById('minute-hand').style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
+
+      // Actualitzar calendari
+      document.getElementById('day').innerText = daysOfWeek[now.getDay()];
+      document.getElementById('date').innerText = String(now.getDate()).padStart(2, '0');
+
+      requestAnimationFrame(updateWatch);
     }
 
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-
-  /* Temperatura actual, a partir de la geolocalització del dispositiu i l'API pública Open-Meteo (sense clau) */
-  var tempEl = document.getElementById('tempText');
-  var lastCoords = null;
-
-  function fetchTemperature(lat, lon) {
-    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true')
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        if (data && data.current_weather) {
-          var t = Math.round(data.current_weather.temperature);
-          tempEl.textContent = t + '°C';
-        }
-      })
-      .catch(function(){ /* si falla la xarxa, es manté el darrer valor conegut */ });
-  }
-
-  function requestLocationAndTemp() {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      function(pos){
-        lastCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-        fetchTemperature(lastCoords.lat, lastCoords.lon);
-      },
-      function(){ /* permís denegat o error: es manté "--°C" */ },
-      { timeout: 10000, maximumAge: 600000 }
-    );
-  }
-
-  requestLocationAndTemp();
-  setInterval(function(){
-    if (lastCoords) fetchTemperature(lastCoords.lat, lastCoords.lon);
-    else requestLocationAndTemp();
-  }, 15 * 60 * 1000); /* refresc cada 15 minuts */
-})();
-</script>
-
+    // Iniciar el moviment continu (estil automàtic de matís fluid)
+    requestAnimationFrame(updateWatch);
+  </script>
 </body>
 </html>
