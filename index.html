@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brúixola 3D Realista - Gir 360º</title>
+    <title>Brúixola 3D Sòlida - Gir 360º</title>
     <style>
-        /* Configuració bàsica */
         body {
             margin: 0;
             padding: 0;
@@ -18,103 +17,98 @@
             font-family: sans-serif;
         }
 
-        /* Contenidor principal: dóna la perspectiva 3D */
         .scene {
             width: 400px;
             height: 400px;
-            perspective: 1500px; /* Perspectiva per notar la profunditat */
+            perspective: 1200px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Aquest contenidor gira. Aquí dins hi ha TOTES les parts de la brúixola */
+        /* El cos sòlid de la brúixola */
         .compass-3d {
             width: 280px;
             height: 280px;
             position: relative;
             transform-style: preserve-3d;
-            /* Animació: 7 segons, lineal, infinita */
             animation: girar 7s linear infinite;
-            /* Punt de partida: perfectament frontal */
-            transform: rotateY(0deg); 
+            transform: rotateY(0deg);
+            /* Això és clau: el contenidor té un gruix visual */
+            border-radius: 50%;
         }
 
-        /* --- 1. LA CAIXA (El cilindre daurat) --- */
-        /* Creem el gruix del cilindre simulant una forma amb múltiples capes */
-        .case-cylinder {
+        /* --- CAPA 1: EL GRUIX LATERAL (El cilindre sòlid) --- */
+        /* Aquesta capa és el "cos" de metall que es veu de perfil */
+        .cylinder-body {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            transform-style: preserve-3d;
-            /* El fons daurat de la caixa */
-            background: radial-gradient(circle at 30% 30%, #fceabb, #d4af37, #b8860b, #8b6508);
+            /* Un degradat radial que simula la corba del metall */
+            background: radial-gradient(circle, 
+                #fceabb 0%, 
+                #d4af37 30%, 
+                #b8860b 60%, 
+                #8b6508 90%, 
+                #4a3604 100%);
+            /* Posem aquest cos 15px enrere perquè la cara frontal quedi al davant */
+            transform: translateZ(-15px);
+            /* Aquesta ombra interior és el que dóna la sensació de corba tancada */
             box-shadow: 
-                inset 0 0 20px rgba(0,0,0,0.6),
-                0 0 20px rgba(0,0,0,0.4);
+                inset 0 0 30px rgba(0,0,0,0.8),
+                0 0 15px rgba(0,0,0,0.5);
+            z-index: 1;
         }
 
-        /* Capes de gruix per simular el cilindre (les vores) */
-        .case-edge {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 8px solid #b8860b;
-            box-sizing: border-box;
-            transform-style: preserve-3d;
-        }
-
-        /* --- 2. LA CARA FRONTAL (L'esfera de la brúixola) --- */
+        /* --- CAPA 2: LA CARA FRONTAL (L'esfera) --- */
         .face-front {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            /* Imatge realista de brúixola */
             background-image: url('https://i.imgur.com/8YwJ5wT.png'); 
             background-size: cover;
             background-position: center;
-            border: 6px solid #d4af37; /* Marc daurat exterior */
+            border: 4px solid #d4af37;
             box-sizing: border-box;
-            /* La posem una mica endavant per donar gruix */
+            /* La cara frontal està 15px endavant */
             transform: translateZ(15px);
-            backface-visibility: hidden; /* Amaguem la part del darrere d'aquesta capa */
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-            z-index: 2;
+            backface-visibility: hidden;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+            z-index: 3;
         }
 
-        /* Efecte de vidre sobre l'esfera */
+        /* Efecte de vidre (opcional) */
         .glass-overlay {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%);
-            transform: translateZ(16px); /* Just per sobre de la cara */
+            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.2) 100%);
+            transform: translateZ(16px);
             pointer-events: none;
-            z-index: 3;
+            z-index: 4;
         }
 
-        /* --- 3. EL REVERS (Cara posterior sòlida) --- */
+        /* --- CAPA 3: EL REVERS (Cara posterior) --- */
         .face-back {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            /* Metall daurat sòlid */
-            background: radial-gradient(circle at 70% 30%, #fceabb, #d4af37, #b8860b, #6b4c05);
-            border: 6px solid #b8860b;
+            /* Metall sòlid daurat */
+            background: radial-gradient(circle at 60% 40%, #fceabb, #d4af37, #b8860b, #6b4c05);
+            border: 4px solid #b8860b;
             box-sizing: border-box;
-            /* El girem 180º perquè miri cap enrere */
+            /* El revers està 15px enrere, girat 180º */
             transform: rotateY(180deg) translateZ(15px);
             backface-visibility: hidden;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
             z-index: 2;
         }
 
-        /* Anell decoratiu al revers perquè no sigui pla */
+        /* Detall decoratiu al revers */
         .face-back::after {
             content: '';
             position: absolute;
@@ -123,51 +117,39 @@
             width: 70%;
             height: 70%;
             border-radius: 50%;
-            border: 2px dashed rgba(139, 101, 8, 0.6);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            border: 2px dashed rgba(139, 101, 8, 0.5);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
         }
 
-        /* --- 4. LA NANSA (Anella superior) --- */
+        /* --- NANSA --- */
         .handle {
             position: absolute;
             top: -35px;
             left: 50%;
-            transform: translateX(-50%) translateZ(0); /* Al centre del cilindre */
+            transform: translateX(-50%) translateZ(0);
             width: 30px;
             height: 30px;
-            border: 6px solid #d4af37;
+            border: 5px solid #d4af37;
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             background: transparent;
             z-index: 0;
         }
 
-        /* Animació de gir */
         @keyframes girar {
-            0% {
-                transform: rotateY(0deg);
-            }
-            100% {
-                transform: rotateY(360deg);
-            }
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
         }
-
     </style>
 </head>
 <body>
 
     <div class="scene">
         <div class="compass-3d">
+            <!-- El cos cilíndric (la paret lateral massissa) -->
+            <div class="cylinder-body"></div>
             
-            <!-- La caixa (el cilindre de fons) -->
-            <div class="case-cylinder"></div>
-            
-            <!-- El gruix lateral (les vores daurades) -->
-            <div class="case-edge" style="transform: translateZ(0px);"></div>
-            <div class="case-edge" style="transform: translateZ(5px);"></div>
-            <div class="case-edge" style="transform: translateZ(10px);"></div>
-            
-            <!-- La cara frontal (l'esfera de la brúixola) -->
+            <!-- La cara frontal de la brúixola -->
             <div class="face-front"></div>
             
             <!-- El reflex de vidre -->
@@ -178,7 +160,6 @@
             
             <!-- La nansa superior -->
             <div class="handle"></div>
-
         </div>
     </div>
 
