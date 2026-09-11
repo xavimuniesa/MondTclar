@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brúixola 3D Sòlida - Gir 360º</title>
+    <title>Brúixola 3D Sòlida - Cilindre Real</title>
     <style>
         body {
             margin: 0;
@@ -20,7 +20,7 @@
         .scene {
             width: 400px;
             height: 400px;
-            perspective: 1200px;
+            perspective: 1500px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -36,27 +36,121 @@
             transform: rotateY(0deg);
         }
 
-        /* L'ÚNIC element que forma la brúixola */
-        .compass-solid {
+        /* --- 1. LA CARA FRONTAL (L'esfera de la brúixola) --- */
+        .face-front {
+            position: absolute;
             width: 100%;
             height: 100%;
-            position: absolute;
             border-radius: 50%;
-            
-            /* Aquí tenim la imatge SVG incrustada directament al CSS. 
-               No depèn de cap enllaç extern, per tant MAI donarà error 404. 
-               Aquesta imatge ja és un cilindre 3D amb la cara frontal, el gruix i el revers. */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3CradialGradient id='gold' cx='40%25' cy='40%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%23fff8dc'/%3E%3Cstop offset='30%25' stop-color='%23fceabb'/%3E%3Cstop offset='70%25' stop-color='%23d4af37'/%3E%3Cstop offset='100%25' stop-color='%238b6508'/%3E%3C/radialGradient%3E%3CradialGradient id='darkGold' cx='60%25' cy='60%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%23fceabb'/%3E%3Cstop offset='50%25' stop-color='%23d4af37'/%3E%3Cstop offset='100%25' stop-color='%234a3604'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='150' cy='150' r='140' fill='url(%23gold)' stroke='%23b8860b' stroke-width='4'/%3E%3Ccircle cx='150' cy='150' r='120' fill='none' stroke='%23d4af37' stroke-width='2' stroke-dasharray='4 4'/%3E%3Ccircle cx='150' cy='150' r='100' fill='none' stroke='%238b6508' stroke-width='1'/%3E%3Cpath d='M150 50 L160 140 L150 150 L140 140 Z' fill='%23ffd700'/%3E%3Cpath d='M150 250 L160 160 L150 150 L140 160 Z' fill='%23b8860b'/%3E%3Ccircle cx='150' cy='150' r='8' fill='%23d4af37'/%3E%3C/svg%3E");
-            
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            
-            /* Ombra per donar realisme */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            
-            /* Assegurem que no hi hagi cap efecte de transparència estrany */
-            backface-visibility: visible;
+            /* Aquí posem la imatge de la brúixola. Si no tens la teva, aquesta funciona */
+            background: 
+                radial-gradient(circle at 30% 30%, #fff8dc 0%, #fceabb 20%, #d4af37 50%, #b8860b 80%, #6b4c05 100%);
+            border: 4px solid #d4af37;
+            box-sizing: border-box;
+            transform: translateZ(15px);
+            backface-visibility: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.7);
+            z-index: 3;
+        }
+
+        /* Detall de l'esfera (simula l'agulla i les marques) */
+        .face-front::after {
+            content: 'N';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #8b6508;
+            font-weight: bold;
+            font-size: 24px;
+            text-shadow: 1px 1px 0 #fff8dc;
+        }
+
+        /* --- 2. LA CARA POSTERIOR (El revers sòlid daurat) --- */
+        .face-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 60% 40%, #fceabb, #d4af37, #b8860b, #6b4c05);
+            border: 4px solid #b8860b;
+            box-sizing: border-box;
+            transform: rotateY(180deg) translateZ(15px);
+            backface-visibility: hidden;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
+            z-index: 2;
+        }
+
+        /* --- 3. EL GRUIX LATERAL (Les parets del cilindre) --- */
+        /* Creem DUES parets rectangulars que formen el cos massís */
+        .cylinder-wall {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-style: preserve-3d;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Paret davantera del cilindre (la que veuràs de perfil) */
+        .cylinder-wall::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Aquest és el gruix: una paret amb degradat metàl·lic */
+            background: linear-gradient(to bottom, 
+                #b8860b 0%, 
+                #fceabb 15%, 
+                #d4af37 50%, 
+                #fceabb 85%, 
+                #b8860b 100%);
+            border-radius: 50% / 10%; /* Això arrodoneix la paret per simular la corba */
+            transform: rotateX(90deg) translateZ(15px);
+            transform-origin: center;
+            opacity: 0.95;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Paret posterior del cilindre (per darrere) */
+        .cylinder-wall::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                #b8860b 0%, 
+                #fceabb 15%, 
+                #d4af37 50%, 
+                #fceabb 85%, 
+                #b8860b 100%);
+            border-radius: 50% / 10%;
+            transform: rotateX(-90deg) translateZ(15px);
+            transform-origin: center;
+            opacity: 0.95;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- 4. LA NANSA --- */
+        .handle {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%) translateZ(0);
+            width: 30px;
+            height: 30px;
+            border: 5px solid #d4af37;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            background: transparent;
+            z-index: 0;
         }
 
         @keyframes girar {
@@ -69,8 +163,17 @@
 
     <div class="scene">
         <div class="compass-3d">
-            <!-- Un sol element sòlid que conté tota la brúixola -->
-            <div class="compass-solid"></div>
+            <!-- El gruix lateral (les parets del cilindre) -->
+            <div class="cylinder-wall"></div>
+            
+            <!-- La cara frontal de la brúixola -->
+            <div class="face-front"></div>
+            
+            <!-- El revers sòlid daurat -->
+            <div class="face-back"></div>
+            
+            <!-- La nansa superior -->
+            <div class="handle"></div>
         </div>
     </div>
 
