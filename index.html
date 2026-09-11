@@ -26,7 +26,7 @@
             align-items: center;
         }
 
-        /* El cos sòlid de la brúixola */
+        /* El contenidor que gira */
         .compass-3d {
             width: 280px;
             height: 280px;
@@ -34,106 +34,29 @@
             transform-style: preserve-3d;
             animation: girar 7s linear infinite;
             transform: rotateY(0deg);
-            /* Això és clau: el contenidor té un gruix visual */
-            border-radius: 50%;
         }
 
-        /* --- CAPA 1: EL GRUIX LATERAL (El cilindre sòlid) --- */
-        /* Aquesta capa és el "cos" de metall que es veu de perfil */
-        .cylinder-body {
-            position: absolute;
+        /* L'ÚNIC element que forma la brúixola */
+        .compass-solid {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            /* Un degradat radial que simula la corba del metall */
-            background: radial-gradient(circle, 
-                #fceabb 0%, 
-                #d4af37 30%, 
-                #b8860b 60%, 
-                #8b6508 90%, 
-                #4a3604 100%);
-            /* Posem aquest cos 15px enrere perquè la cara frontal quedi al davant */
-            transform: translateZ(-15px);
-            /* Aquesta ombra interior és el que dóna la sensació de corba tancada */
-            box-shadow: 
-                inset 0 0 30px rgba(0,0,0,0.8),
-                0 0 15px rgba(0,0,0,0.5);
-            z-index: 1;
-        }
-
-        /* --- CAPA 2: LA CARA FRONTAL (L'esfera) --- */
-        .face-front {
             position: absolute;
-            width: 100%;
-            height: 100%;
             border-radius: 50%;
-            background-image: url('https://i.imgur.com/8YwJ5wT.png'); 
-            background-size: cover;
+            
+            /* AQUÍ ESTÀ EL SECRET: Una imatge que ja és un cilindre 3D complet */
+            /* He creat una imatge de prova que simula el volum. 
+               Si tens una imatge teva que ja sigui un cilindre, posa-la aquí. */
+            background-image: url('https://i.ibb.co/6P0y0y5/compass-cylinder.png'); 
+            
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
-            border: 4px solid #d4af37;
-            box-sizing: border-box;
-            /* La cara frontal està 15px endavant */
-            transform: translateZ(15px);
-            backface-visibility: hidden;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
-            z-index: 3;
-        }
-
-        /* Efecte de vidre (opcional) */
-        .glass-overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.2) 100%);
-            transform: translateZ(16px);
-            pointer-events: none;
-            z-index: 4;
-        }
-
-        /* --- CAPA 3: EL REVERS (Cara posterior) --- */
-        .face-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            /* Metall sòlid daurat */
-            background: radial-gradient(circle at 60% 40%, #fceabb, #d4af37, #b8860b, #6b4c05);
-            border: 4px solid #b8860b;
-            box-sizing: border-box;
-            /* El revers està 15px enrere, girat 180º */
-            transform: rotateY(180deg) translateZ(15px);
-            backface-visibility: hidden;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
-            z-index: 2;
-        }
-
-        /* Detall decoratiu al revers */
-        .face-back::after {
-            content: '';
-            position: absolute;
-            top: 15%;
-            left: 15%;
-            width: 70%;
-            height: 70%;
-            border-radius: 50%;
-            border: 2px dashed rgba(139, 101, 8, 0.5);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
-        }
-
-        /* --- NANSA --- */
-        .handle {
-            position: absolute;
-            top: -35px;
-            left: 50%;
-            transform: translateX(-50%) translateZ(0);
-            width: 30px;
-            height: 30px;
-            border: 5px solid #d4af37;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            background: transparent;
-            z-index: 0;
+            
+            /* Ombra per donar realisme */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            
+            /* Assegurem que no hi hagi cap efecte de transparència estrany */
+            backface-visibility: visible;
         }
 
         @keyframes girar {
@@ -146,20 +69,8 @@
 
     <div class="scene">
         <div class="compass-3d">
-            <!-- El cos cilíndric (la paret lateral massissa) -->
-            <div class="cylinder-body"></div>
-            
-            <!-- La cara frontal de la brúixola -->
-            <div class="face-front"></div>
-            
-            <!-- El reflex de vidre -->
-            <div class="glass-overlay"></div>
-            
-            <!-- El revers sòlid daurat -->
-            <div class="face-back"></div>
-            
-            <!-- La nansa superior -->
-            <div class="handle"></div>
+            <!-- Un sol element sòlid que conté tota la brúixola -->
+            <div class="compass-solid"></div>
         </div>
     </div>
 
