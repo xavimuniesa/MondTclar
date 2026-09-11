@@ -36,55 +36,53 @@
             transform: rotateY(0deg);
         }
 
-        /* --- 1. LA CARA FRONTAL (L'esfera de la brúixola) --- */
+        /* --- LA CARA FRONTAL (L'esfera de la brúixola) --- */
         .face-front {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            /* Aquí posem la imatge de la brúixola. Si no tens la teva, aquesta funciona */
-            background: 
-                radial-gradient(circle at 30% 30%, #fff8dc 0%, #fceabb 20%, #d4af37 50%, #b8860b 80%, #6b4c05 100%);
+            background-image: url('https://i.imgur.com/8YwJ5wT.png'); 
+            background-size: cover;
+            background-position: center;
             border: 4px solid #d4af37;
             box-sizing: border-box;
-            transform: translateZ(15px);
+            transform: translateZ(20px);
             backface-visibility: hidden;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.7);
-            z-index: 3;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+            z-index: 100;
         }
 
-        /* Detall de l'esfera (simula l'agulla i les marques) */
-        .face-front::after {
-            content: 'N';
+        /* Efecte de vidre */
+        .glass-overlay {
             position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #8b6508;
-            font-weight: bold;
-            font-size: 24px;
-            text-shadow: 1px 1px 0 #fff8dc;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.2) 100%);
+            transform: translateZ(21px);
+            pointer-events: none;
+            z-index: 101;
         }
 
-        /* --- 2. LA CARA POSTERIOR (El revers sòlid daurat) --- */
+        /* --- LA CARA POSTERIOR (El revers sòlid daurat) --- */
         .face-back {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: 
-                radial-gradient(circle at 60% 40%, #fceabb, #d4af37, #b8860b, #6b4c05);
+            background: radial-gradient(circle at 60% 40%, #fceabb, #d4af37, #b8860b, #6b4c05);
             border: 4px solid #b8860b;
             box-sizing: border-box;
-            transform: rotateY(180deg) translateZ(15px);
+            transform: rotateY(180deg) translateZ(20px);
             backface-visibility: hidden;
             box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
-            z-index: 2;
+            z-index: 99;
         }
 
-        /* --- 3. EL GRUIX LATERAL (Les parets del cilindre) --- */
-        /* Creem DUES parets rectangulars que formen el cos massís */
-        .cylinder-wall {
+        /* --- EL COS CENTRAL (El cilindre massís) --- */
+        /* Creem una pila de capes fines per simular el volum */
+        .cylinder-stack {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -95,50 +93,10 @@
             z-index: 1;
         }
 
-        /* Paret davantera del cilindre (la que veuràs de perfil) */
-        .cylinder-wall::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* Aquest és el gruix: una paret amb degradat metàl·lic */
-            background: linear-gradient(to bottom, 
-                #b8860b 0%, 
-                #fceabb 15%, 
-                #d4af37 50%, 
-                #fceabb 85%, 
-                #b8860b 100%);
-            border-radius: 50% / 10%; /* Això arrodoneix la paret per simular la corba */
-            transform: rotateX(90deg) translateZ(15px);
-            transform-origin: center;
-            opacity: 0.95;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-        }
+        /* Generem automàticament 30 capes amb JavaScript per no escriure 30 línies */
+        /* Això crea l'efecte de "cos massís" */
 
-        /* Paret posterior del cilindre (per darrere) */
-        .cylinder-wall::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, 
-                #b8860b 0%, 
-                #fceabb 15%, 
-                #d4af37 50%, 
-                #fceabb 85%, 
-                #b8860b 100%);
-            border-radius: 50% / 10%;
-            transform: rotateX(-90deg) translateZ(15px);
-            transform-origin: center;
-            opacity: 0.95;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-        }
-
-        /* --- 4. LA NANSA --- */
+        /* --- LA NANSA --- */
         .handle {
             position: absolute;
             top: -35px;
@@ -162,12 +120,15 @@
 <body>
 
     <div class="scene">
-        <div class="compass-3d">
-            <!-- El gruix lateral (les parets del cilindre) -->
-            <div class="cylinder-wall"></div>
+        <div class="compass-3d" id="compass">
+            <!-- El cos central s'omplirà amb JavaScript -->
+            <div class="cylinder-stack" id="stack"></div>
             
             <!-- La cara frontal de la brúixola -->
             <div class="face-front"></div>
+            
+            <!-- El reflex de vidre -->
+            <div class="glass-overlay"></div>
             
             <!-- El revers sòlid daurat -->
             <div class="face-back"></div>
@@ -176,6 +137,39 @@
             <div class="handle"></div>
         </div>
     </div>
+
+    <script>
+        // Generem 30 capes de discos per crear el volum del cilindre
+        const stack = document.getElementById('stack');
+        const totalCapes = 30;
+        const gruixTotal = 40; // px de profunditat total (de -20 a +20)
+        
+        for (let i = 0; i < totalCapes; i++) {
+            const layer = document.createElement('div');
+            // Calculem la posició Z de cada capa
+            const zPos = -20 + (i * (gruixTotal / (totalCapes - 1)));
+            
+            // Estil de cada capa
+            layer.style.position = 'absolute';
+            layer.style.width = '100%';
+            layer.style.height = '100%';
+            layer.style.borderRadius = '50%';
+            layer.style.transform = `translateZ(${zPos}px)`;
+            
+            // El color: degradat daurat fosc per donar sensació de metall polit
+            layer.style.background = `radial-gradient(circle at 40% 40%, 
+                #fceabb 0%, 
+                #d4af37 30%, 
+                #b8860b 60%, 
+                #8b6508 100%)`;
+            
+            // Posem una vora fosca per accentuar el volum
+            layer.style.boxShadow = 'inset 0 0 15px rgba(0,0,0,0.8)';
+            
+            // Afegim la capa al contenidor
+            stack.appendChild(layer);
+        }
+    </script>
 
 </body>
 </html>
