@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sant Pere · Zúric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --fade:2.5s; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:#0b1022;-webkit-tap-highlight-color:transparent}
+  #sky{position:fixed;inset:0;width:100%;height:100%;display:block}
+  .layer{position:fixed;inset:0;width:100%;height:100%;overflow:visible;display:block;will-change:transform;transform-origin:50% 72%;pointer-events:none}
+  #sky{will-change:transform;transform:scale(1.06)}
+  .win{opacity:0;transition:opacity var(--fade) ease}
+  .win.on{opacity:1}
+  #glowsBack,#glowsFront,#lampGlows{mix-blend-mode:screen}
+
+  #panel{
+    position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));
+    padding:8px 13px 9px;border-radius:12px;
+    background:rgba(12,16,28,.4);backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);
+    color:#f4efe4;font-family:Inter,system-ui,-apple-system,sans-serif;
+    border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 24px rgba(0,0,0,.25);z-index:5;user-select:none;
+    display:flex;align-items:baseline;gap:12px;font-variant-numeric:tabular-nums;white-space:nowrap
+  }
+  #tDate{font-size:12px;opacity:.75}
+  #tTime{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:26px;line-height:1}
+  #tBell{font-size:13px;cursor:pointer;opacity:.85;pointer-events:auto}
+  #tTemp{font-size:14px;font-weight:500;color:#ffd9a0}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+
+<svg class="layer" viewBox="0 0 1000 1800" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" id="scene" data-depth="0.06">
+<defs>
+  <filter id="fFar" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">
+    <feColorMatrix id="mFar" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="c"/>
+    <feFlood class="haze" flood-color="#a8c8ec" flood-opacity=".38" result="f"/>
+    <feComposite in="f" in2="SourceAlpha" operator="in" result="h"/>
+    <feMerge><feMergeNode in="c"/><feMergeNode in="h"/></feMerge>
+  </filter>
+  <filter id="fTower" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">
+    <feColorMatrix id="mTower" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="c"/>
+    <feFlood class="haze" flood-color="#a8c8ec" flood-opacity=".2" result="f"/>
+    <feComposite in="f" in2="SourceAlpha" operator="in" result="h"/>
+    <feMerge><feMergeNode in="c"/><feMergeNode in="h"/></feMerge>
+  </filter>
+  <filter id="fBack" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">
+    <feColorMatrix id="mBack" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="c"/>
+    <feFlood class="haze" flood-color="#a8c8ec" flood-opacity=".08" result="f"/>
+    <feComposite in="f" in2="SourceAlpha" operator="in" result="h"/>
+    <feMerge><feMergeNode in="c"/><feMergeNode in="h"/></feMerge>
+  </filter>
+  <filter id="fWorld" color-interpolation-filters="sRGB" x="-5%" y="-5%" width="110%" height="110%">
+    <feDropShadow dx="0" dy="6" stdDeviation="16" flood-color="#000" flood-opacity=".5" result="d"/>
+    <feColorMatrix id="mWorld" in="d" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+  </filter>
+  <filter id="fTree" color-interpolation-filters="sRGB" x="-10%" y="-10%" width="120%" height="120%">
+    <feGaussianBlur stdDeviation="1.6" result="b"/>
+    <feDropShadow in="b" dx="-14" dy="12" stdDeviation="22" flood-color="#000" flood-opacity=".55" result="d"/>
+    <feColorMatrix id="mTree" in="d" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+  </filter>
+  <pattern id="tiles" width="22" height="26" patternUnits="userSpaceOnUse">
+    <rect width="22" height="26" fill="#9a6750"/>
+    <path d="M0 13 Q5.5 5 11 13 Q16.5 5 22 13" fill="#8c5b46" stroke="#6b4333" stroke-width="1.1"/>
+    <path d="M-11 26 Q-5.5 18 0 26 Q5.5 18 11 26 Q16.5 18 22 26 Q27.5 18 33 26" fill="#a3705a" stroke="#6b4333" stroke-width="1.1"/>
+  </pattern>
+  <pattern id="slate" width="14" height="11" patternUnits="userSpaceOnUse">
+    <path d="M0 10.5 H14 M7 0 V5.5 M0 5.5 H14 M3 5.5 V11" stroke="#000" stroke-opacity=".28" stroke-width="1"/>
+  </pattern>
+  <pattern id="louver" width="6" height="4" patternUnits="userSpaceOnUse">
+    <path d="M0 3.5 H6" stroke="#000" stroke-opacity=".3" stroke-width="1"/>
+  </pattern>
+  <linearGradient id="gStone" x1="0" x2="1">
+    <stop offset="0" stop-color="#7c7a73"/><stop offset=".07" stop-color="#8f8d86"/><stop offset=".85" stop-color="#8a8881"/><stop offset="1" stop-color="#7a7872"/>
+  </linearGradient>
+  <linearGradient id="gGlass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#4a5664"/><stop offset="1" stop-color="#1f252d"/>
+  </linearGradient>
+  <linearGradient id="gRight" x1="0" x2="1">
+    <stop offset="0" stop-color="#a8977a"/><stop offset=".04" stop-color="#cbb693"/><stop offset="1" stop-color="#c4ae8b"/>
+  </linearGradient>
+  <radialGradient id="gWinGlow">
+    <stop offset="0" stop-color="#ffcf7a" stop-opacity=".6"/>
+    <stop offset=".35" stop-color="#ffb65a" stop-opacity=".22"/>
+    <stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gLamp">
+    <stop offset="0" stop-color="#fff0c8" stop-opacity=".95"/>
+    <stop offset=".12" stop-color="#ffd28a" stop-opacity=".55"/>
+    <stop offset=".45" stop-color="#ffb35a" stop-opacity=".16"/>
+    <stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+
+<!-- ===== Far background (behind tower) ===== -->
+<g id="Lfar" filter="url(#fFar)">
+  <!-- distant little spire on the left -->
+  <line x1="258" y1="664" x2="258" y2="712" stroke="#555" stroke-width="2"/>
+  <circle cx="258" cy="712" r="4" fill="#cfa24a"/>
+  <path d="M252 812 L258 718 L264 812 Z" fill="#48505a"/>
+  <path d="M258 664 m-6 0 h12 m-6 -6 v12" stroke="#777" stroke-width="1.5"/>
+</g>
+
+</svg>
+<svg class="layer" viewBox="0 0 1000 1800" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" data-depth="0.14">
+<!-- ===== Tower of St. Peter ===== -->
+<g id="tower" filter="url(#fTower)">
+  <line x1="470" y1="226" x2="470" y2="352" stroke="#4d4b47" stroke-width="3"/>
+  <path d="M471 230 L496 236 L494 251 L471 246 Z" fill="#6c83b6"/>
+  <circle cx="470" cy="227" r="2.6" fill="#d9ae45"/>
+  <circle cx="470" cy="282" r="7.5" fill="#d9ae45"/>
+  <circle cx="468" cy="280" r="2.5" fill="#fff2c0" opacity=".6"/>
+
+  <path d="M344 806 C384 796 404 764 420 722 L467 350 L473 350 L520 722 C536 764 556 796 596 806 Z" fill="#434851"/>
+  <path d="M470 350 L473 350 L520 722 C536 764 556 796 596 806 L470 806 Z" fill="#383c44"/>
+  <path d="M344 806 C384 796 404 764 420 722 L467 350 L473 350 L520 722 C536 764 556 796 596 806 Z" fill="url(#slate)" opacity=".45"/>
+  <path d="M470 352 V806" stroke="#2a2d33" stroke-width="2.2"/>
+  <path d="M344 806 C384 796 404 764 420 722 L467 350 M596 806 C556 796 536 764 520 722 L473 350" stroke="#2a2d33" stroke-width="3" fill="none"/>
+
+  <!-- turrets -->
+  <rect x="352" y="745" width="30" height="60" fill="#3a3e46"/>
+  <path d="M348 750 L367 694 L386 750 Z" fill="#33373e"/>
+  <line x1="367" y1="694" x2="367" y2="682" stroke="#8a7a50" stroke-width="2"/>
+  <circle cx="367" cy="680" r="4.2" fill="#d9ae45"/>
+  <rect x="558" y="745" width="30" height="60" fill="#34383f"/>
+  <path d="M554 750 L573 694 L592 750 Z" fill="#2f3339"/>
+  <line x1="573" y1="694" x2="573" y2="682" stroke="#8a7a50" stroke-width="2"/>
+  <circle cx="573" cy="680" r="4.2" fill="#d9ae45"/>
+
+  <!-- dormer -->
+  <path d="M447 794 V744 L470 702 L493 744 V794 Z" fill="#3d414a"/>
+  <path d="M443 748 L470 698 L497 748" stroke="#2a2d33" stroke-width="3" fill="none"/>
+  <rect x="455" y="754" width="9" height="15" fill="#15171b"/>
+  <rect x="476" y="754" width="9" height="15" fill="#15171b"/>
+  <line x1="470" y1="700" x2="470" y2="682" stroke="#8a7a50" stroke-width="2"/>
+  <circle cx="470" cy="678" r="4.8" fill="#d9ae45"/>
+
+  <!-- shaft -->
+  <rect x="348" y="800" width="244" height="17" fill="#6c6a64"/>
+  <rect x="358" y="816" width="224" height="1010" fill="url(#gStone)"/>
+  <g id="stoneLines" stroke="#000" stroke-opacity=".06" stroke-width="1"></g>
+  <rect x="350" y="1018" width="240" height="10" fill="#76746e"/>
+  <rect x="350" y="1027" width="240" height="4" fill="#000" opacity=".12"/>
+
+  <!-- lancet window behind the dial -->
+  <path d="M449 990 V882 Q449 846 470 832 Q491 846 491 882 V990 Z" fill="#24272c"/>
+  <path d="M470 840 V990 M449 915 H491" stroke="#6f6d67" stroke-width="3"/>
+  <path d="M456 882 Q456 858 470 850 Q484 858 484 882" stroke="#6f6d67" stroke-width="2" fill="none"/>
+  <!-- lower lancet -->
+  <path d="M462 1182 V1132 Q462 1116 470 1110 Q478 1116 478 1132 V1182 Z" fill="#2a2d32"/>
+
+  <!-- clock -->
+  <g id="clock">
+    <circle cx="470" cy="918" r="86" fill="none" stroke="#141414" stroke-width="30"/>
+    <circle cx="470" cy="918" r="101.5" fill="none" stroke="#c99c3a" stroke-width="3"/>
+    <circle cx="470" cy="918" r="70.5" fill="none" stroke="#c99c3a" stroke-width="2"/>
+    <g id="numerals" font-family="'Cormorant Garamond',Georgia,serif" font-weight="700" font-size="23" fill="#dcb048" text-anchor="middle" dominant-baseline="central"></g>
+    <g id="hH">
+      <path d="M-4 14 L-4 -33 C-15 -38 -13 -52 0 -64 C13 -52 15 -38 4 -33 L4 14 Z" fill="#e0b54a" stroke="#6b5220" stroke-width="1.2"/>
+      <path d="M0 -58 C-6 -50 -6 -42 0 -38 C6 -42 6 -50 0 -58 Z" fill="#141414" opacity=".55"/>
+    </g>
+    <g id="hM">
+      <path d="M-3 22 L-2.6 -68 L-8 -77 L0 -97 L8 -77 L2.6 -68 L3 22 Z" fill="#e3b94e" stroke="#6b5220" stroke-width="1.1"/>
+      <circle cx="0" cy="18" r="6" fill="#e3b94e" stroke="#6b5220" stroke-width="1.1"/>
+    </g>
+    <circle cx="470" cy="918" r="7" fill="#e3b94e" stroke="#6b5220" stroke-width="1.2"/>
+  </g>
+</g>
+
+</svg>
+<svg class="layer" viewBox="0 0 1000 1800" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" data-depth="0.32">
+<!-- ===== Middle houses ===== -->
+<g id="Lback" filter="url(#fBack)">
+  <polygon points="286,1122 392,1122 408,1310 286,1310" fill="url(#tiles)"/>
+  <rect x="292" y="1290" width="72" height="530" fill="#d49a82"/>
+  <rect x="292" y="1290" width="72" height="10" fill="#9c6f5d"/>
+
+  <polygon points="412,1356 438,1236 556,1228 574,1356" fill="url(#tiles)"/>
+
+  <polygon points="500,1214 728,1214 740,1422 478,1422" fill="#565b63"/>
+  <polygon points="500,1214 728,1214 740,1422 478,1422" fill="url(#slate)" opacity=".6"/>
+  <rect x="498" y="1208" width="232" height="8" fill="#6a6f76"/>
+  <polygon points="572,1252 598,1250 600,1278 574,1280" fill="#c7d3de"/>
+  <polygon points="606,1250 632,1248 634,1276 608,1278" fill="#c7d3de"/>
+  <g id="dormers"></g>
+
+  <rect x="472" y="1420" width="268" height="400" fill="#e8e7e2"/>
+  <rect x="468" y="1418" width="276" height="14" fill="#cfcdc6"/>
+
+  <polygon points="734,1400 880,1400 880,1330 760,1330" fill="url(#tiles)"/>
+  <rect x="738" y="1400" width="140" height="420" fill="#e2e0da"/>
+
+  <polygon points="418,1340 491,1262 564,1340" fill="#efeee9"/>
+  <rect x="418" y="1338" width="146" height="482" fill="#eeede8"/>
+  <polyline points="408,1348 491,1254 574,1348" stroke="#7a5140" stroke-width="9" fill="none"/>
+  <g id="backWins"></g>
+</g>
+<g id="lightsBack"><g id="glowsBack"></g><g id="panesBack"></g></g>
+
+</svg>
+<svg class="layer" viewBox="0 0 1000 1800" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" data-depth="0.62">
+<!-- ===== Front: left house & right building ===== -->
+<g id="Lfront" filter="url(#fWorld)">
+  <!-- right tall building -->
+  <polygon points="752,1010 866,852 866,1010" fill="#6e4c3c"/>
+  <rect x="862" y="-2400" width="1400" height="4220" fill="url(#gRight)"/>
+  <!-- left house -->
+  <rect x="5" y="632" width="26" height="180" fill="#3b3d42"/>
+  <rect x="1" y="626" width="34" height="9" fill="#2c2e32"/>
+  <polygon points="-1250,805 272,805 306,1182 -1250,1182" fill="url(#tiles)"/>
+  <rect x="-1250" y="800" width="1522" height="8" fill="#6c4a3a"/>
+  <line x1="272" y1="805" x2="306" y2="1182" stroke="#d6c39b" stroke-width="10"/>
+  <rect x="-1250" y="1180" width="1556" height="640" fill="#e6c79f"/>
+  <rect x="-1250" y="1180" width="1556" height="22" fill="#6b5244" opacity=".55"/>
+  <rect x="-1250" y="1480" width="1556" height="8" fill="#cfae86"/>
+  <rect x="296" y="1180" width="10" height="640" fill="#c9a882"/>
+  <g id="frontWins"></g>
+  <g id="lampFix"></g>
+</g>
+<g id="lightsFront"><g id="glowsFront"></g><g id="panesFront"></g></g>
+
+<!-- ===== Lamp glows ===== -->
+<g id="lampGlows" opacity="0"></g>
+</svg>
+<svg class="layer" viewBox="0 0 1000 1800" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" data-depth="1">
+<!-- ===== Tree ===== -->
+<g id="Ltree" filter="url(#fTree)"></g>
+</svg>
+
+<div id="panel">
+  <span id="tDate"></span>
+  <span id="tTime">--:--</span>
+  <span id="tTemp">-- °C</span>
+  <span id="tBell">🔕</span>
+</div>
+
+<script>
+(() => {
+'use strict';
+const NS = 'http://www.w3.org/2000/svg';
+const LAT = 47.3707, LON = 8.5409;       // Sant Pere, Zúric
+const RAD = Math.PI / 180;
+const $ = id => document.getElementById(id);
+function E(tag, a, parent){ const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; }
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const R = mulberry32(20260928);
+const clamp = (x, a=0, b=1) => Math.max(a, Math.min(b, x));
+const smooth = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+const lerp = (a, b, t) => a + (b - a) * t;
+function lerpKeys(keys, x){
+  if (x <= keys[0][0]) return keys[0].slice(1);
+  for (let i = 1; i < keys.length; i++){
+    if (x <= keys[i][0]){
+      const [x0, ...a] = keys[i-1], [x1, ...b] = keys[i], t = (x - x0) / (x1 - x0);
+      return a.map((v, j) => Array.isArray(v) ? v.map((w, k) => lerp(w, b[j][k], t)) : lerp(v, b[j], t));
+    }
+  }
+  return keys[keys.length-1].slice(1);
+}
+
+/* ---------- Time (Zurich) ---------- */
+const fmt = new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Zurich', hour:'2-digit', minute:'2-digit', second:'2-digit', hourCycle:'h23' });
+const fmtDate = new Intl.DateTimeFormat('ca', { timeZone:'Europe/Zurich', weekday:'long', day:'numeric', month:'long' });
+function zParts(ms){
+  const p = fmt.formatToParts(new Date(ms)); const o = {};
+  for (const x of p) if (x.type !== 'literal') o[x.type] = +x.value;
+  return { h:o.hour % 24, m:o.minute, s:o.second, ms: ((ms % 1000) + 1000) % 1000 };
+}
+const pad = n => String(n).padStart(2, '0');
+
+let live = true, speed = 1, anchorReal = performance.now(), anchorSim = Date.now();
+function simNow(){ return live ? Date.now() : anchorSim + (performance.now() - anchorReal) * speed; }
+function reanchor(ms){ anchorSim = ms; anchorReal = performance.now(); }
+
+/* ---------- Astronomy ---------- */
+function altAz(ms, ra, dec){
+  const d = (ms - 946728000000) / 86400000;
+  const gmst = (280.46061837 + 360.98564736629 * d) % 360;
+  const ha = (gmst + LON) * RAD - ra, lat = LAT * RAD;
+  const alt = Math.asin(Math.sin(lat) * Math.sin(dec) + Math.cos(lat) * Math.cos(dec) * Math.cos(ha));
+  const az = Math.atan2(Math.sin(ha), Math.cos(ha) * Math.sin(lat) - Math.tan(dec) * Math.cos(lat));
+  return { alt: alt / RAD, az: (az / RAD + 540) % 360 };
+}
+function sunPos(ms){
+  const d = (ms - 946728000000) / 86400000;
+  const g = (357.529 + 0.98560028 * d) * RAD, q = 280.459 + 0.98564736 * d;
+  const L = (q + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * RAD;
+  const e = (23.439 - 0.00000036 * d) * RAD;
+  const ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L)), dec = Math.asin(Math.sin(e) * Math.sin(L));
+  return Object.assign(altAz(ms, ra, dec), { ra, dec });
+}
+function moonPos(ms, sun){
+  const phase = (((ms - Date.UTC(2000,0,6,18,14)) / 86400000) % 29.530588 + 29.530588) % 29.530588 / 29.530588;
+  const ra = sun.ra + phase * 2 * Math.PI, dec = sun.dec * Math.cos(phase * 2 * Math.PI);
+  return Object.assign(altAz(ms, ra, dec), { phase });
+}
+let rsCache = { key:null };
+function riseSet(ms){
+  const z = zParts(ms), mid = ms - ((z.h * 60 + z.m) * 60 + z.s) * 1000 - z.ms;
+  const key = Math.round(mid / 60000);
+  if (rsCache.key === key) return rsCache;
+  let rise = null, set = null, prev = sunPos(mid).alt; const H = -0.833, step = 300000;
+  for (let t = mid + step; t <= mid + 86400000; t += step){
+    const a = sunPos(t).alt, f = (H - prev) / (a - prev);
+    if (prev < H && a >= H) rise = t - step + f * step;
+    if (prev >= H && a < H) set = t - step + f * step;
+    prev = a;
+  }
+  return rsCache = { key, rise, set, mid };
+}
+const hm = ms => { if (ms == null) return '—'; const z = zParts(ms); return pad(z.h) + ':' + pad(z.m); };
+
+/* ---------- Build scene ---------- */
+// stone courses
+for (let y = 840; y < 1820; y += 26) E('line', { x1:358, y1:y, x2:582, y2:y }, $('stoneLines'));
+// numerals (radial, like the real dial)
+['XII','I','II','III','IIII','V','VI','VII','VIII','IX','X','XI'].forEach((n, i) => {
+  E('text', { x:470, y:918 - 86, transform:`rotate(${i * 30} 470 918)` }, $('numerals')).textContent = n;
+});
+
+const wins = [];
+const WARM = ['#ffd98a','#ffc868','#ffe2ad','#ffcf7e','#ffbe60','#fff0c8'];
+function addWin(glass, glowG, paneG, x, y, w, h, o = {}){
+  const frame = o.frame || '#efe9dc';
+  if (o.shutter){
+    const sw = w * 0.52;
+    for (const sx of [x - sw - 3, x + w + 3]){
+      E('rect', { x:sx, y:y - 2, width:sw, height:h + 4, fill:o.shutter }, glass);
+      E('rect', { x:sx, y:y - 2, width:sw, height:h + 4, fill:'url(#louver)' }, glass);
+    }
+  }
+  E('rect', { x, y, width:w, height:h, fill:'url(#gGlass)', stroke:frame, 'stroke-width':2.5 }, glass);
+  E('path', { d:`M${x + w/2} ${y}V${y + h}M${x} ${y + h*.42}H${x + w}`, stroke:frame, 'stroke-width':1.6 }, glass);
+
+  const glow = E('rect', { x:x - w * 1.2, y:y - h * .6, width:w * 3.4, height:h * 2.2, fill:'url(#gWinGlow)', class:'win' }, glowG);
+  const pane = E('g', { class:'win' }, paneG);
+  const col = WARM[Math.floor(R() * WARM.length)];
+  const p = E('rect', { x:x + 1.5, y:y + 1.5, width:w - 3, height:h - 3, fill:col }, pane);
+  if (R() < .55){
+    const cw = (w - 3) * (.2 + R() * .15);
+    E('rect', { x:x + 1.5, y:y + 1.5, width:cw, height:h - 3, fill:'#7a3b10', opacity:.28 }, pane);
+    E('rect', { x:x + w - 1.5 - cw, y:y + 1.5, width:cw, height:h - 3, fill:'#7a3b10', opacity:.28 }, pane);
+  }
+  E('path', { d:`M${x + w/2} ${y}V${y + h}M${x} ${y + h*.42}H${x + w}`, stroke:'#3b2a1c', 'stroke-width':1.6 }, pane);
+  wins.push({ glow, pane, p, col,
+    onAlt: -0.3 - R() * 6.5,
+    bed: 21.6 + R() * 4,           // hora d'anar a dormir (pot passar de mitjanit)
+    wake: 5.3 + R() * 2.2,
+    never: R() < .15, tv: R() < .07, on:false });
+}
+
+// Back windows
+{
+  const g = $('backWins'), gg = $('glowsBack'), pg = $('panesBack');
+  for (const y of [1380, 1520, 1665]) addWin(g, gg, pg, 315, y, 26, 52);
+  // dormers
+  const d = $('dormers');
+  for (const cx of [548, 666]){
+    E('rect', { x:cx - 26, y:1352, width:52, height:66, fill:'#ecebe6' }, d);
+    E('path', { d:`M${cx - 33} 1358 L${cx} 1326 L${cx + 33} 1358 Z`, fill:'#4b5058' }, d);
+    addWin(d, gg, pg, cx - 15, 1364, 30, 46);
+  }
+  for (const y of [1505, 1650]) for (const x of [582, 652]) addWin(g, gg, pg, x, y, 36, 64, { shutter:'#c9c9c3' });
+  for (const y of [1500, 1650]) for (const x of [770, 830]) addWin(g, gg, pg, x, y, 30, 60, { shutter:'#b9bdb8' });
+  for (const y of [1470, 1600, 1725]) for (const x of [440, 512]) addWin(g, gg, pg, x, y, 30, 56, { shutter:'#d4d3cd' });
+}
+// Front windows
+{
+  const g = $('frontWins'), gg = $('glowsFront'), pg = $('panesFront');
+  for (let k = 0; k < 8; k++){
+    const bx = 150 - k * 190;
+    for (let i = 0; i < 4; i++) for (const y of [1300, 1610]) addWin(g, gg, pg, bx + i * 29, y, 22, 125, { frame:'#f3ece0' });
+  }
+  for (let x = 912; x < 2150; x += 120)
+    for (let y = -760; y < 1700; y += 175) addWin(g, gg, pg, x, y, 40, 84, { shutter:'#66776a' });
+}
+// Lamps
+const lamps = [[110,1470],[-420,1470],[-900,1470],[602,1462],[902,1478],[1560,1500],[2000,1500]];
+for (const [x, y] of lamps){
+  const f = $('lampFix');
+  E('path', { d:`M${x-6} ${y-48} h30 v4 h-30z`, fill:'#2b2b2b' }, f);
+  E('line', { x1:x+14, y1:y-44, x2:x+14, y2:y-38, stroke:'#2b2b2b', 'stroke-width':2 }, f);
+  E('path', { d:`M${x+5} ${y-38} L${x+23} ${y-38} L${x+27} ${y-30} L${x+24} ${y-6} L${x+4} ${y-6} L${x+1} ${y-30} Z`, fill:'#2a2a2a' }, f);
+  E('rect', { x:x+7, y:y-30, width:14, height:21, fill:'#e9dcc0', opacity:.55 }, f);
+  const lg = $('lampGlows'), cx = x + 14, cy = y - 20;
+  E('ellipse', { cx, cy:cy + 90, rx:110, ry:170, fill:'url(#gLamp)', opacity:.55 }, lg);
+  E('circle', { cx, cy, r:190, fill:'url(#gLamp)' }, lg);
+  E('rect', { x:x+7, y:y-30, width:14, height:21, fill:'#fff3cf' }, lg);
+}
+// Tree & climbing ivy
+{
+  const t = $('Ltree');
+  const clusters = [[985,160,80],[955,380,100],[978,600,110],[935,830,130],[1010,1060,200],[860,1300,200],
+    [700,1150,90],[628,1085,55],[760,1560,210],[995,1600,260],[1200,1250,240],[1320,1650,260],[1470,1420,200],[655,1725,120]];
+  const pal = ['#24451a','#2f5a1e','#3d7327','#4f8a2e','#62a038','#7fb548','#9cc95e'];
+  for (const [cx, cy, r] of clusters) E('circle', { cx, cy, r:r * .82, fill:'#1f3b16' }, t);
+  for (const [cx, cy, r] of clusters){
+    const n = Math.round(r * 1.1);
+    for (let i = 0; i < n; i++){
+      const a = R() * Math.PI * 2, d = r * Math.sqrt(R());
+      const x = cx + Math.cos(a) * d, y = cy + Math.sin(a) * d * .9;
+      const light = clamp(.5 - (y - cy) / (2 * r) - (x - cx) / (4 * r) + (R() - .5) * .6);
+      const col = pal[Math.min(pal.length - 1, Math.floor(light * pal.length))];
+      const lr = 7 + R() * 12;
+      E('ellipse', { cx:x.toFixed(1), cy:y.toFixed(1), rx:lr.toFixed(1), ry:(lr * .58).toFixed(1), fill:col,
+        transform:`rotate(${(R() * 180).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})` }, t);
+    }
+  }
+}
+
+/* ---------- Sky canvas ---------- */
+const cv = $('sky'), ctx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1, sc = 1, offX = 0, offY = 0;
+function resize(){
+  DPR = Math.min(2, window.devicePixelRatio || 1);
+  W = innerWidth; H = innerHeight;
+  cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  sc = Math.min(W / 1000, H / 1800); offX = (W - 1000 * sc) / 2; offY = H - 1800 * sc;
+}
+addEventListener('resize', resize); resize();
+const vb = (x, y) => [offX + x * sc, offY + y * sc];
+// l'horitzó real queda amagat darrere les teulades; el sol alt surt per sobre del marc
+const skyPos = (alt, az) => vb(470 + (az - 160) * 5.5, 1150 - alt * 32);
+
+const stars = Array.from({ length: 340 }, () => ({ x:R(), y:Math.pow(R(), 1.3) * .8, r:.4 + Math.pow(R(), 3) * 1.6, p:R() * 6.28, s:.5 + R() * 2 }));
+const clouds = Array.from({ length: 6 }, () => ({ x0:R() * 1.3, y:.06 + R() * .36, s:.6 + R() * .9, v:.5 + R(),
+  puffs: Array.from({ length: 7 }, () => ({ dx:(R() - .5) * 2.4, dy:(R() - .5) * .5, r:.45 + R() * .6 })) }));
+
+const SKY = [
+  [-90,[4,6,14],[8,11,24]], [-18,[4,6,16],[10,14,32]], [-12,[8,12,34],[26,30,64]], [-8,[14,22,60],[56,54,98]],
+  [-4,[26,44,102],[156,98,122]], [-1,[48,84,152],[238,140,98]], [2,[70,112,182],[250,172,112]], [6,[72,130,205],[244,208,162]],
+  [12,[62,136,220],[192,219,240]], [30,[44,122,224],[160,204,244]], [90,[30,108,220],[140,194,242]] ];
+const CLOUD = [[-90,[30,36,58],.3],[-12,[40,46,72],.35],[-6,[120,90,130],.5],[-2,[240,140,120],.6],[2,[255,190,150],.7],[8,[255,240,230],.75],[20,[255,255,255],.8]];
+const rgb = (c, a = 1) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+
+function drawMoon(x, y, r, phase){
+  ctx.save(); ctx.translate(x, y);
+  let p = phase; if (p > .5){ ctx.scale(-1, 1); p = 1 - p; }
+  ctx.fillStyle = 'rgba(70,78,100,.35)'; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+  const k = Math.cos(p * 2 * Math.PI);
+  ctx.fillStyle = '#f3efe0'; ctx.shadowColor = 'rgba(230,235,255,.8)'; ctx.shadowBlur = r * 1.2;
+  ctx.beginPath(); ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, false);
+  ctx.ellipse(0, 0, Math.max(.01, r * Math.abs(k)), r, 0, Math.PI / 2, -Math.PI / 2, k > 0);
+  ctx.fill(); ctx.restore();
+}
+
+function drawSky(ms, sun, moon){
+  const [top, hor] = lerpKeys(SKY, sun.alt);
+  const horY = vb(0, 1450)[1];
+  const g = ctx.createLinearGradient(0, 0, 0, horY);
+  g.addColorStop(0, rgb(top)); g.addColorStop(1, rgb(hor));
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = rgb(hor); ctx.fillRect(0, horY, W, H - horY);
+
+  let [sx, sy] = skyPos(sun.alt, sun.az);
+  const gy = Math.min(sy, horY);
+  const ga = .62 * Math.exp(-Math.pow((sun.alt + 1) / 5.5, 2));
+  if (ga > .01){
+    const rg = ctx.createRadialGradient(sx, gy, 0, sx, gy, Math.max(W, H) * .8);
+    rg.addColorStop(0, `rgba(255,150,80,${ga})`); rg.addColorStop(.4, `rgba(255,110,90,${ga * .35})`); rg.addColorStop(1, 'rgba(255,100,80,0)');
+    ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
+  }
+  // stars
+  const sv = smooth(-5, -14, sun.alt);
+  if (sv > .01){
+    const t = performance.now() / 1000;
+    ctx.fillStyle = '#fff';
+    for (const s of stars){
+      ctx.globalAlpha = sv * (.55 + .45 * Math.sin(t * s.s + s.p));
+      ctx.beginPath(); ctx.arc(s.x * W, s.y * horY, s.r, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  // moon
+  const moonVis = smooth(-1, -6, sun.alt);      // la lluna només apareix quan el sol s'ha post
+  if (moon.alt > -2 && moonVis > .01){
+    const [mx, my] = skyPos(moon.alt, moon.az);
+    ctx.globalAlpha = moonVis;
+    drawMoon(mx, my, 17 * sc + 4, moon.phase);
+    ctx.globalAlpha = 1;
+  }
+  // sun
+  if (sun.alt > -3){
+    const low = smooth(14, 0, sun.alt);
+    const core = [255, lerp(250, 150, low), lerp(225, 70, low)];
+    const rr = (20 * sc + 5), halo = Math.max(W, H) * lerp(.55, .35, low);
+    // resplendor ampli (enlluerna, no és un disc pàl·lid)
+    let rg = ctx.createRadialGradient(sx, sy, 0, sx, sy, halo);
+    rg.addColorStop(0, rgb([255, 250, 225], lerp(.75, .6, low))); rg.addColorStop(.08, rgb(core, .35));
+    rg.addColorStop(.3, rgb(core, .12)); rg.addColorStop(1, rgb(core, 0));
+    ctx.fillStyle = rg; ctx.fillRect(sx - halo, sy - halo, halo * 2, halo * 2);
+    rg = ctx.createRadialGradient(sx, sy, 0, sx, sy, rr * 1.6);
+    rg.addColorStop(0, '#fffef8'); rg.addColorStop(.6, rgb([255, lerp(252, 200, low), lerp(235, 130, low)]));
+    rg.addColorStop(1, rgb([255, lerp(245, 170, low), lerp(200, 90, low)], 0));
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(sx, sy, rr * 1.6, 0, 6.283); ctx.fill();
+  }
+  // clouds
+  const [cc, ca] = lerpKeys(CLOUD, sun.alt);
+  const base = Math.min(W, H) * .07;
+  for (const c of clouds){
+    const x = ((c.x0 + ms / 1000 * .000018 * c.v) % 1.5 - .25) * W, y = c.y * horY;
+    for (const p of c.puffs){
+      const px = x + p.dx * base * c.s, py = y + p.dy * base * c.s, pr = p.r * base * c.s;
+      const rg = ctx.createRadialGradient(px, py, 0, px, py, pr);
+      rg.addColorStop(0, rgb(cc, ca * .5)); rg.addColorStop(.6, rgb(cc, ca * .22)); rg.addColorStop(1, rgb(cc, 0));
+      ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(px, py, pr, 0, 6.283); ctx.fill();
+    }
+  }
+}
+
+/* ---------- Lighting ---------- */
+const TINT = [[-90,[.12,.14,.26,.4]],[-18,[.12,.14,.26,.4]],[-10,[.16,.18,.32,.45]],[-6,[.26,.27,.42,.55]],
+  [-3,[.45,.42,.58,.7]],[0,[.78,.6,.6,.85]],[3,[1,.8,.68,1]],[8,[1.05,.95,.85,1.05]],[20,[1,1,.98,1.05]],[90,[1.02,1.02,1,1.05]]];
+function matrix([r, g, b, s]){
+  const lr = .2126 * (1 - s), lg = .7152 * (1 - s), lb = .0722 * (1 - s);
+  const f = v => v.toFixed(4);
+  return [f((lr + s) * r), f(lg * r), f(lb * r), 0, 0,
+          f(lr * g), f((lg + s) * g), f(lb * g), 0, 0,
+          f(lr * b), f(lg * b), f((lb + s) * b), 0, 0, 0, 0, 0, 1, 0].join(' ');
+}
+let lastTintKey = '';
+function updateTint(alt){
+  const t = lerpKeys(TINT, alt)[0];
+  const lamp = smooth(-0.5, -4.5, alt);
+  const flood = [.98, .82, .6, .9];
+  const tw = t.map((v, i) => lerp(v, Math.max(v, flood[i]), lamp * .85));
+  const key = t.map(v => v.toFixed(3)).join() + lamp.toFixed(3);
+  if (key === lastTintKey) return;
+  lastTintKey = key;
+  const m = matrix(t);
+  for (const id of ['mFar','mBack','mWorld','mTree']) $(id).setAttribute('values', m);
+  $('mTower').setAttribute('values', matrix(tw));
+  const hz = rgb(lerpKeys(SKY, alt)[1]);
+  document.querySelectorAll('feFlood.haze').forEach(f => f.setAttribute('flood-color', hz));
+  $('lampGlows').setAttribute('opacity', lamp.toFixed(3));
+}
+function asleep(w, h){
+  const bed = w.bed % 24;
+  return bed > w.wake ? (h >= bed || h < w.wake) : (h >= bed && h < w.wake);
+}
+function updateLights(alt, h){
+  for (const w of wins){
+    const on = !w.never && alt < w.onAlt && !asleep(w, h);
+    if (on !== w.on){ w.on = on; w.glow.classList.toggle('on', on); w.pane.classList.toggle('on', on); }
+  }
+}
+setInterval(() => {
+  for (const w of wins) if (w.tv && w.on){
+    const v = Math.random();
+    w.p.setAttribute('fill', v < .5 ? '#9fb6ff' : v < .8 ? '#c9d6ff' : '#7f95e0');
+  }
+}, 170);
+
+/* ---------- Bells ---------- */
+let A = null, bus = null, bellsOn = false, noiseBuf = null;
+function initAudio(){
+  if (A) return;
+  A = new (window.AudioContext || window.webkitAudioContext)();
+  const comp = A.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4; comp.connect(A.destination);
+  const master = A.createGain(); master.gain.value = .8; master.connect(comp);
+  bus = A.createGain(); bus.connect(master);
+  const len = A.sampleRate * 4, ir = A.createBuffer(2, len, A.sampleRate);
+  for (let c = 0; c < 2; c++){ const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+  const conv = A.createConvolver(); conv.buffer = ir;
+  const wet = A.createGain(); wet.gain.value = .38; bus.connect(conv); conv.connect(wet); wet.connect(master);
+  noiseBuf = A.createBuffer(1, A.sampleRate * .15, A.sampleRate);
+  const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+}
+const PARTIALS = [[.5,1,1],[1,.7,.75],[1.183,.5,.55],[1.506,.3,.45],[2,.55,.4],[2.514,.22,.3],[2.662,.15,.25],[3.011,.18,.22],[4.166,.08,.15],[5.433,.05,.1]];
+function bell(t, f, vol, dur){
+  const out = A.createGain(); out.gain.value = vol; out.connect(bus);
+  for (const [r, a, d] of PARTIALS){
+    for (const det of [0, 1]){
+      const o = A.createOscillator(), g = A.createGain();
+      o.frequency.value = f * r + det * (r < 1.1 ? .9 : .45);
+      const amp = a * (det ? .45 : 1) * .16, end = t + dur * d;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(amp, t + .005); g.gain.exponentialRampToValueAtTime(.0001, end);
+      o.connect(g); g.connect(out); o.start(t); o.stop(end + .05);
+    }
+  }
+  const n = A.createBufferSource(); n.buffer = noiseBuf;
+  const bp = A.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f * 4; bp.Q.value = 1.5;
+  const ng = A.createGain(); ng.gain.setValueAtTime(.3, t); ng.gain.exponentialRampToValueAtTime(.0001, t + .09);
+  n.connect(bp); bp.connect(ng); ng.connect(out); n.start(t); n.stop(t + .12);
+}
+function chime(q, hour, at){
+  if (!A) return;
+  if (A.state === 'suspended') A.resume();
+  let t = at ?? A.currentTime + .15;
+  const n = q === 0 ? 4 : q;
+  for (let i = 0; i < n; i++){ bell(t, 392, .55, 5); bell(t + .85, 329.6, .55, 5.5); t += 2.1; }
+  if (q === 0){ t += 1.6; for (let i = 0; i < hour; i++){ bell(t, 196, 1, 10); t += 2.7; } }
+}
+function chimeFor(qKey){
+  const z = zParts(qKey * 900000);
+  const q = Math.round(z.m / 15) % 4;
+  chime(q, (z.h % 12) || 12);
+}
+
+// Programa el proper quart sobre el rellotge d'àudio, amb antelació.
+// Així sona puntual encara que la pestanya estigui en segon pla (on els temporitzadors s'alenteixen).
+let scheduledQ = null;
+function scheduleBells(){
+  if (!bellsOn || !A) return;
+  if (A.state === 'suspended') A.resume();
+  const now = Date.now(), nextQ = Math.ceil(now / 900000);
+  const wait = (nextQ * 900000 - now) / 1000;
+  if (nextQ !== scheduledQ && wait < 90 && A.state === 'running'){
+    scheduledQ = nextQ;
+    const z = zParts(nextQ * 900000), q = Math.round(z.m / 15) % 4;
+    chime(q, (z.h % 12) || 12, A.currentTime + wait);
+  }
+}
+setInterval(scheduleBells, 1000);
+
+/* ---------- UI ---------- */
+// Els navegadors només permeten so després d'una interacció: el primer toc activa les campanes.
+const bellIcon = $('tBell');
+function setBells(on){
+  bellsOn = on; bellIcon.textContent = on ? '🔔' : '🔕';
+  bellIcon.title = on ? 'Campanes activades (toca per silenciar)' : 'Toca per activar les campanes';
+  if (on) scheduleBells();
+}
+function unlock(){
+  initAudio(); if (A.state === 'suspended') A.resume(); askTilt();
+  if (!bellsOn) setBells(true);
+  removeEventListener('pointerdown', unlock); removeEventListener('keydown', unlock);
+}
+addEventListener('pointerdown', unlock); addEventListener('keydown', unlock);
+bellIcon.addEventListener('click', e => { if (A) setBells(!bellsOn); });
+document.addEventListener('visibilitychange', () => { if (A && A.state === 'suspended') A.resume(); });
+setBells(false);
+const fmtShort = new Intl.DateTimeFormat('ca', { timeZone:'Europe/Zurich', weekday:'short', day:'numeric', month:'short' });
+
+// Temperatura actual a Zúric (Open-Meteo)
+async function loadTemp(){
+  try{
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m&timezone=Europe%2FZurich`);
+    const j = await r.json();
+    $('tTemp').textContent = Math.round(j.current.temperature_2m) + ' °C';
+  }catch(e){ /* manté el valor anterior */ }
+}
+loadTemp(); setInterval(loadTemp, 10 * 60 * 1000);
+
+/* ---------- Perspective / parallax ---------- */
+const layers = [...document.querySelectorAll('.layer')].map(el => ({ el, d: +el.dataset.depth }));
+const cam = { x:0, y:0, tx:0, ty:0, last:-1e9 };
+addEventListener('pointermove', e => { cam.tx = e.clientX / innerWidth * 2 - 1; cam.ty = e.clientY / innerHeight * 2 - 1; cam.last = performance.now(); });
+addEventListener('pointerleave', () => { cam.last = -1e9; });
+function onTilt(e){
+  if (e.gamma == null) return;
+  cam.tx = clamp(e.gamma / 25, -1, 1); cam.ty = clamp((e.beta - 50) / 25, -1, 1); cam.last = performance.now();
+}
+addEventListener('deviceorientation', onTilt);
+function askTilt(){
+  if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function')
+    DeviceOrientationEvent.requestPermission().catch(() => {});
+}
+function updateCamera(now){
+  if (now - cam.last > 3500){               // deriva lenta quan ningú no interactua
+    const t = now / 1000;
+    cam.tx = Math.sin(t * .11) * .75 + Math.sin(t * .047) * .25;
+    cam.ty = Math.sin(t * .073 + 1.3) * .5;
+  }
+  cam.x += (cam.tx - cam.x) * .045; cam.y += (cam.ty - cam.y) * .045;
+  const mx = Math.min(innerWidth, innerHeight) * .05, my = mx * .45;
+  for (const L of layers){
+    const s = 1 + L.d * .035;
+    L.el.style.transform = `translate3d(${(-cam.x * L.d * mx).toFixed(2)}px,${(-cam.y * L.d * my).toFixed(2)}px,0) scale(${s.toFixed(4)})`;
+  }
+  cv.style.transform = `translate3d(${(-cam.x * .02 * mx).toFixed(2)}px,${(-cam.y * .02 * my).toFixed(2)}px,0) scale(1.06)`;
+}
+
+/* ---------- Main loop ---------- */
+const hH = $('hH'), hM = $('hM');
+let lastTint = 0, lastLights = 0, lastUI = 0;
+function frame(now){
+  const ms = simNow(), z = zParts(ms);
+  const hLocal = z.h + z.m / 60 + (z.s + z.ms / 1000) / 3600;
+  const sun = sunPos(ms), moon = moonPos(ms, sun);
+
+  const minA = (z.m + (z.s + z.ms / 1000) / 60) * 6;
+  const hourA = ((z.h % 12) + z.m / 60 + z.s / 3600) * 30;
+  hM.setAttribute('transform', `translate(470 918) rotate(${minA.toFixed(2)})`);
+  hH.setAttribute('transform', `translate(470 918) rotate(${hourA.toFixed(2)})`);
+
+  drawSky(ms, sun, moon);
+  updateCamera(now);
+  if (now - lastTint > (speed > 1 ? 110 : 1000) || lastTint === 0){ updateTint(sun.alt); lastTint = now; }
+  if (now - lastLights > 400 || lastLights === 0){ updateLights(sun.alt, hLocal); lastLights = now; }
+
+
+  if (now - lastUI > 250){
+    lastUI = now;
+    $('tTime').textContent = pad(z.h) + ':' + pad(z.m);
+    $('tDate').textContent = (d => d.charAt(0).toUpperCase() + d.slice(1))(fmtShort.format(new Date(ms)).replace(/ de /g, ' '));
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
