@@ -75,7 +75,9 @@ button:focus-visible{outline:2px solid var(--lume-lo); outline-offset:2px}
 .watch svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
 #baseLayer,#bezelLayer{transition:filter .8s ease}
 #glowLayer{pointer-events:none; opacity:0; transition:opacity .8s ease}
-#bezelLayer{touch-action:none}
+#bezelLayer{pointer-events:none}
+#bezelHit{pointer-events:all; cursor:grab}
+#bezelLayer.drag #bezelHit{cursor:grabbing}
 #bezelLayer.drag{cursor:grabbing}
 #handsLayer{pointer-events:none}
 #glass{transition:opacity .8s}
@@ -212,10 +214,10 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
 <body>
 <main class="wrap">
   <div class="watch" id="watch" aria-label="Rellotge automàtic" role="img">
-    <svg id="baseLayer" viewBox="-370 -370 740 740"></svg>
-    <svg id="bezelLayer" viewBox="-370 -370 740 740"></svg>
-    <svg id="glowLayer" viewBox="-370 -370 740 740" aria-hidden="true"></svg>
-    <svg id="handsLayer" viewBox="-370 -370 740 740"></svg>
+    <svg id="baseLayer" viewBox="-446 -446 892 892"></svg>
+    <svg id="bezelLayer" viewBox="-446 -446 892 892"></svg>
+    <svg id="glowLayer" viewBox="-446 -446 892 892" aria-hidden="true"></svg>
+    <svg id="handsLayer" viewBox="-446 -446 892 892"></svg>
   </div>
 
   <div class="side">
@@ -262,7 +264,7 @@ const rad = d => d * Math.PI / 180;
 const P = (r, deg) => [ +(r * Math.sin(rad(deg))).toFixed(2), +(-r * Math.cos(rad(deg))).toFixed(2) ];
 const LUME = '#dfe8b2';
 const DOT_POS = [];
-const DIAL_ONLY = true;   // només l'esfera: sense caixa, anses, corona ni bisell
+const DIAL_ONLY = true;   // sense caixa, anses ni corona de rosca (el bisell giratori sí que hi és)
 
 /* sector d'anell (angles en graus, 0 = les 12, sentit horari) */
 function ringSector(r1, r2, a1, a2){
@@ -339,7 +341,7 @@ function buildBase(){
   /* --- caixa: anses (sense corretja), barres de molla, cos, corona --- */
   if (DIAL_ONLY){
     // només l'esfera: una base fosca que li fa ombra sobre el fons
-    s += `<circle r="359" fill="#050506" filter="url(#fCaseShadow)"/>`;
+    s += `<circle r="433" fill="#050506" filter="url(#fCaseShadow)"/>`;
   } else {
   const lug = `M198,-330 L208,-470 Q211,-488 228,-490 L278,-490 Q296,-488 299,-470 L318,-330 Z`;
   s += `<g filter="url(#fCaseShadow)">`;
@@ -489,6 +491,8 @@ function buildBezel(){
     </linearGradient>
   </defs>
   <g id="bezelRot">`;
+  // zona tàctil: només l'anell del bisell
+  const hitPath = `<path id="bezelHit" d="M0,-440 A440,440 0 1 1 -0.01,-440 Z M0,-356 A356,356 0 1 0 0.01,-356 Z" fill="#000" fill-opacity="0" fill-rule="evenodd"/>`;
   // vora exterior
   s += `<path d="${ringSector(360,433,0,359.99)}" fill="#0c0c0d"/>`;
   s += `<circle r="429" fill="none" stroke="url(#gBezEdge)" stroke-width="8"/>`;
@@ -531,7 +535,7 @@ function buildBezel(){
       <circle r="11" fill="url(#gLume)"/>
       <circle r="11" fill="none" stroke="#6d7074" stroke-width="1.5"/>
     </g>`;
-  s += `</g>`;
+  s += `</g>` + hitPath;
   document.getElementById('bezelLayer').innerHTML = s;
 }
 
@@ -543,6 +547,11 @@ function buildGlow(){
     <radialGradient id="gLumeN" cx="40%" cy="38%" r="65%">
       <stop offset="0" stop-color="#f2ffd6"/><stop offset=".5" stop-color="#c9f58c"/><stop offset="1" stop-color="#86c24e"/>
     </radialGradient>
+    <filter id="fBrandGlow" x="-30%" y="-80%" width="160%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 .25 0 0 0  0 0 .2 0 0  0 0 0 .75 0" result="rb"/>
+      <feMerge><feMergeNode in="rb"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
     <filter id="fLumeGlow" x="-200%" y="-200%" width="500%" height="500%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b1"/>
       <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b2"/>
@@ -550,7 +559,9 @@ function buildGlow(){
     </filter>
   </defs><g filter="url(#fLumeGlow)">`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="17.5" fill="url(#gLumeN)"/>`;
-  s += DIAL_ONLY ? `</g>` : `<g id="glowPip"><circle cx="0" cy="-404" r="10.5" fill="url(#gLumeN)"/></g></g>`;
+  s += `<g id="glowPip"><circle cx="0" cy="-404" r="10.5" fill="url(#gLumeN)"/></g></g>`;
+  // KOSTOV de nit: el vermell es manté viu i amb una lleugera aura
+  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">KOSTOV</text></g>`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="7" fill="#5f6a55"/><circle cx="${x-2}" cy="${y-2.5}" r="2.4" fill="#c9d3bd" opacity=".55"/>`;
   document.getElementById('glowLayer').innerHTML = s;
 }
@@ -659,40 +670,72 @@ function tick(){
 }
 
 /* bisell: gir antihorari per clics de 6° (arrossegar); doble clic el reinicia */
+/* so de carraca: un clic metàl·lic sintetitzat (Web Audio) per cada minut del bisell */
+let actx = null, clickBuf = null;
+function audioUnlock(){
+  try{
+    if (!actx){
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      const len = Math.floor(actx.sampleRate * 0.022);
+      clickBuf = actx.createBuffer(1, len, actx.sampleRate);
+      const d = clickBuf.getChannelData(0);
+      for (let i=0; i<len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 7);
+    }
+    if (actx.state === 'suspended') actx.resume();
+  }catch(e){}
+}
+function ratchet(){
+  if (!actx) return;
+  try{
+    const t = actx.currentTime;
+    const src = actx.createBufferSource(); src.buffer = clickBuf;
+    const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2900 + Math.random()*500; bp.Q.value = 3.5;
+    const g = actx.createGain(); g.gain.value = 1.1;
+    src.connect(bp); bp.connect(g); g.connect(actx.destination); src.start(t);
+    const o = actx.createOscillator(), og = actx.createGain();       // ressonància metàl·lica curta
+    o.type = 'triangle'; o.frequency.value = 4600 + Math.random()*300;
+    og.gain.setValueAtTime(0.09, t); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+    o.connect(og); og.connect(actx.destination); o.start(t); o.stop(t + 0.04);
+    if (navigator.vibrate) navigator.vibrate(4);
+  }catch(e){}
+}
+
+/* bisell: gir només antihorari, a clics de 6° (1 minut); doble clic el reinicia */
 function setupBezel(){
   const layer = document.getElementById('bezelLayer');
+  const hit = document.getElementById('bezelHit');
   const rot = document.getElementById('bezelRot');
   let angle = 0, dragging = false, prev = 0, acc = 0;
+  const setAngle = a => {
+    angle = a;
+    rot.setAttribute('transform', `rotate(${angle})`);
+    const gp = document.getElementById('glowPip'); if (gp) gp.setAttribute('transform', `rotate(${angle})`);
+  };
   const ptrAngle = e => {
     const r = layer.getBoundingClientRect();
     const x = e.clientX - (r.left + r.width/2), y = e.clientY - (r.top + r.height/2);
     return Math.atan2(x, -y) * 180/Math.PI;
   };
-  const onRing = e => {
-    const r = layer.getBoundingClientRect();
-    const x = e.clientX - (r.left + r.width/2), y = e.clientY - (r.top + r.height/2);
-    const d = Math.hypot(x,y) / (r.width/740);
-    return d > 355 && d < 440;
-  };
-  layer.addEventListener('pointerdown', e => {
-    if (!onRing(e)) return;
+  hit.addEventListener('touchstart', e => e.preventDefault(), {passive:false});   // dins l'anell, no fa desplaçar la pàgina
+  hit.addEventListener('pointerdown', e => {
+    audioUnlock();
     dragging = true; prev = ptrAngle(e); acc = 0;
-    layer.setPointerCapture(e.pointerId); layer.classList.add('drag');
+    hit.setPointerCapture(e.pointerId); layer.classList.add('drag');
   });
-  layer.addEventListener('pointermove', e => {
-    if (!dragging){ layer.style.cursor = onRing(e) ? 'grab' : 'default'; return; }
+  hit.addEventListener('pointermove', e => {
+    if (!dragging) return;
     const a = ptrAngle(e); let d = a - prev; prev = a;
     if (d > 180) d -= 360; if (d < -180) d += 360;
     acc += d;
-    while (acc <= -6){ angle -= 6; acc += 6; }
-    if (acc > 0) acc = 0;          // només gira en sentit antihorari
-    rot.setAttribute('transform', `rotate(${angle})`);
-    const gp = document.getElementById('glowPip'); if (gp) gp.setAttribute('transform', `rotate(${angle})`);
+    let steps = 0;
+    while (acc <= -6){ acc += 6; steps++; }
+    if (acc > 0) acc = 0;          // en sentit horari no gira (com un bisell de busseig)
+    if (steps){ setAngle(angle - 6*steps); for (let i=0; i<Math.min(steps,3); i++) setTimeout(ratchet, i*18); }
   });
   const end = () => { dragging = false; layer.classList.remove('drag'); };
-  layer.addEventListener('pointerup', end);
-  layer.addEventListener('pointercancel', end);
-  layer.addEventListener('dblclick', () => { angle = 0; rot.setAttribute('transform','rotate(0)'); const gp = document.getElementById('glowPip'); if (gp) gp.setAttribute('transform','rotate(0)'); });
+  hit.addEventListener('pointerup', end);
+  hit.addEventListener('pointercancel', end);
+  hit.addEventListener('dblclick', () => { audioUnlock(); setAngle(0); ratchet(); });
 }
 
 /* =========================================================
@@ -1151,7 +1194,7 @@ document.getElementById('themeSeg').addEventListener('click', e => {
 /* =========================================================
    Arrencada
    ========================================================= */
-buildBase(); if (!DIAL_ONLY) buildBezel(); buildGlow(); buildHands(); if (!DIAL_ONLY) setupBezel();
+buildBase(); buildBezel(); buildGlow(); buildHands(); setupBezel();
 const hSec = document.getElementById('hSec'), hMin = document.getElementById('hMin'), hHour = document.getElementById('hHour');
 buildCards();
 applyTheme();
