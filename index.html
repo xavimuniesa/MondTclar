@@ -9,7 +9,7 @@
 <script>(function(){var m='auto';try{m=localStorage.getItem('kostovTheme')||'auto'}catch(e){}var h=new Date().getHours()+new Date().getMinutes()/60;document.documentElement.dataset.theme=m==='auto'?((h>=7.5&&h<19.5)?'day':'night'):m;})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Russo+One&display=swap" rel="stylesheet">
 <style>
 /* ================= Temes: nit (per defecte) i dia ================= */
 :root, html[data-theme="night"]{
@@ -521,9 +521,10 @@ function buildBezel(){
   // números
   for (const m of [10,20,30,40,50]){
     const a=m*6, [x,y]=P(391,a);
-    const rot = (a<=90||a>=270) ? a : a-180;
+    // totes orientades des de l'eix: la part de dalt de la xifra mira enfora (com a l'original)
+    const rot = a;
     const fill = m<=20 ? '#0b0b0c' : '#d6d8da';
-    s += `<text x="${x}" y="${y}" transform="rotate(${rot} ${x} ${y})" text-anchor="middle" dominant-baseline="central" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="700" font-size="54" fill="${fill}">${m}</text>`;
+    s += `<text class="bznum" x="${x}" y="${y}" transform="rotate(${rot} ${x} ${y})" text-anchor="middle" dominant-baseline="central" font-family="'Russo One', 'Arial Black', sans-serif" font-size="54" letter-spacing="1" fill="${fill}">${m}</text>`;
   }
   // lluentor i ombra sobre la inserció (dona volum a l'anell)
   s += `<path d="M0,-422 A422,422 0 1 1 -0.01,-422 Z M0,-362 A362,362 0 1 0 0.01,-362 Z" fill="url(#gInsertSheen)" fill-rule="evenodd" pointer-events="none"/>`;
