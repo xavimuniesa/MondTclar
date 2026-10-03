@@ -3,13 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Rellotge Lunokhod</title>
+<title>KOSTOV</title>
 <meta name="description" content="Rellotge automàtic de busseig amb calendari de festius de Barcelona i el temps local.">
 <meta name="theme-color" content="#060607">
+<!-- App instal·lable -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KOSTOV">
 <script>(function(){var m='auto';try{m=localStorage.getItem('kostovTheme')||'auto'}catch(e){}var h=new Date().getHours()+new Date().getMinutes()/60;document.documentElement.dataset.theme=m==='auto'?((h>=7.5&&h<19.5)?'day':'night'):m;})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Russo+One&family=Saira:wdth,wght@125,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
 /* ================= Temes: nit (per defecte) i dia ================= */
 :root, html[data-theme="night"]{
@@ -73,22 +81,37 @@ button:focus-visible{outline:2px solid var(--lume-lo); outline-offset:2px}
 /* ---------------- rellotge ---------------- */
 .watch{position:relative; width:min(100%, calc(100vh - 2*clamp(16px,3vw,40px))); width:min(100%, calc(100svh - 2*clamp(16px,3vw,40px))); aspect-ratio:1/1; justify-self:center}
 .watch svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
-#baseLayer,#bezelLayer{transition:filter .8s ease}
-#glowLayer{pointer-events:none; opacity:0; transition:opacity .8s ease}
-#bezelLayer{pointer-events:none}
-#bezelHit{pointer-events:all; cursor:grab}
-#bezelLayer.drag #bezelHit{cursor:grabbing}
+#baseLayer,#bBase,.lyr-bezel{transition:filter .8s ease}
+.lyr-glow{pointer-events:none; opacity:0; transition:opacity .8s ease}
+.lyr-bezel{pointer-events:none}
+.bezel-hit{pointer-events:all; cursor:grab}
+.lyr-bezel.drag .bezel-hit{cursor:grabbing}
 #bezelLayer.drag{cursor:grabbing}
-#handsLayer{pointer-events:none}
-#glass{transition:opacity .8s}
-html[data-theme="night"] #baseLayer, html[data-theme="night"] #bezelLayer{filter:brightness(.5) saturate(.85)}
-html[data-theme="night"] #glowLayer{opacity:1}
-html[data-theme="night"] #glass{opacity:.35}
-html[data-theme="day"] #baseLayer, html[data-theme="day"] #bezelLayer{filter:brightness(1.06)}
+.lyr-hands{pointer-events:none}
+/* gir 3D: dues cares i capes de gruix (cilindre tancat) */
+.watch{cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent}
+.watch:focus-visible{outline:2px solid var(--lume-lo); outline-offset:6px; border-radius:50%}
+.flip{position:absolute; inset:0; transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+      transition:transform 8s cubic-bezier(.45,.05,.55,.95)}
+.face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden}
+.edge{position:absolute; inset:2.9%; border-radius:50%; pointer-events:none}
+#glass,#glassB{transition:opacity .8s}
+html[data-theme="night"] #baseLayer, html[data-theme="night"] #bBase, html[data-theme="night"] .lyr-bezel{filter:brightness(.5) saturate(.85)}
+html[data-theme="night"] .lyr-glow{opacity:1}
+html[data-theme="night"] #glass, html[data-theme="night"] #glassB{opacity:.35}
+html[data-theme="day"] #baseLayer, html[data-theme="day"] #bBase, html[data-theme="day"] .lyr-bezel{filter:brightness(1.06)}
 
 /* ---------------- columna lateral ---------------- */
 .side{display:flex; flex-direction:column; gap:12px; width:100%; max-width:clamp(300px, 22vw, 460px); justify-self:center; min-width:0}
-.topbar{display:flex; justify-content:flex-end}
+.topbar{display:flex; justify-content:flex-end; align-items:center; gap:8px}
+.install-btn{display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; margin-right:auto; border-radius:999px;
+  font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:var(--lume); color:#14160b; box-shadow:0 0 10px var(--glow)}
+.install-btn svg{width:15px; height:15px}
+.install-btn[hidden]{display:none}
+.ios-hint{font-size:13px; line-height:1.45; color:var(--ink); padding:10px 13px; border-radius:14px;
+  background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line); box-shadow:var(--card-shadow)}
+.ios-hint svg{width:15px; height:15px; vertical-align:-2px; color:var(--accent)}
+.ios-hint[hidden]{display:none}
 .seg{display:inline-flex; gap:2px; padding:3px; border-radius:999px; background:var(--btn-bg); border:1px solid var(--btn-bd)}
 .seg button{display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 11px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:.06em; color:var(--btn-ink); transition:background .25s,color .25s}
 .seg button svg{width:15px; height:15px}
@@ -213,15 +236,29 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
 </head>
 <body>
 <main class="wrap">
-  <div class="watch" id="watch" aria-label="Rellotge automàtic" role="img">
-    <svg id="baseLayer" viewBox="-446 -446 892 892"></svg>
-    <svg id="bezelLayer" viewBox="-446 -446 892 892"></svg>
-    <svg id="glowLayer" viewBox="-446 -446 892 892" aria-hidden="true"></svg>
-    <svg id="handsLayer" viewBox="-446 -446 892 892"></svg>
+  <div class="watch" id="watch" role="button" tabindex="0" aria-label="Rellotge KOSTOV. Toca per girar-lo.">
+    <div class="flip" id="watchFlip">
+      <div class="face front">
+        <svg id="baseLayer" viewBox="-446 -446 892 892"></svg>
+        <svg id="bezelLayer" class="lyr-bezel" viewBox="-446 -446 892 892"></svg>
+        <svg id="glowLayer" class="lyr-glow" viewBox="-446 -446 892 892" aria-hidden="true"></svg>
+        <svg id="handsLayer" class="lyr-hands" viewBox="-446 -446 892 892"></svg>
+      </div>
+      <div class="face back">
+        <svg id="bBase" viewBox="-446 -446 892 892"></svg>
+        <svg id="bBezel" class="lyr-bezel" viewBox="-446 -446 892 892"></svg>
+        <svg id="bGlow" class="lyr-glow" viewBox="-446 -446 892 892" aria-hidden="true"></svg>
+        <svg id="bHands" class="lyr-hands" viewBox="-446 -446 892 892"></svg>
+      </div>
+    </div>
   </div>
 
   <div class="side">
     <div class="topbar">
+      <button type="button" class="install-btn" id="installBtn" hidden>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.8 7 8 10.2 11.2 7M3 13.5h10"/></svg>
+        Instal·lar
+      </button>
       <div class="seg" role="group" aria-label="Aspecte de la pàgina" id="themeSeg">
         <button type="button" data-mode="auto" aria-pressed="true" title="Automàtic segons el sol">Auto</button>
         <button type="button" data-mode="day" aria-pressed="false" aria-label="Mode diürn" title="Mode diürn">
@@ -231,6 +268,12 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.6 1.4A6.6 6.6 0 1 0 14.6 11 5.4 5.4 0 0 1 10.6 1.4z"/></svg>
         </button>
       </div>
+    </div>
+
+    <div class="ios-hint" id="iosHint" hidden role="note">
+      Per instal·lar-la a l'iPhone: a Safari toca
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Comparteix"><path d="M8 1.5v8.5M5.3 4.2 8 1.5l2.7 2.7M4.5 7H3.5v7h9V7h-1"/></svg>
+      <b>Comparteix</b> i després <b>Afegeix a la pantalla d'inici</b>.
     </div>
 
     <section class="wx" aria-label="Indicadors del temps">
@@ -440,7 +483,7 @@ function buildBase(){
   s += `<text x="0" y="236" text-anchor="middle" dominant-baseline="central" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="13" letter-spacing="1" fill="#b4b7ba">H3 / T25</text>`;
 
   /* --- rètols (sense logotip de marca) --- */
-  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">VOSTOK</text>`;
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">KOSTOV</text>`;
   s += `<text x="0" y="-68" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="600" font-size="18" letter-spacing="5" fill="#c9ccce">AUTOMATIC</text>`;
   s += `<text x="0" y="92" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="31" letter-spacing="2.5" fill="#e4e6e7">CLAUDE</text>`;
   s += `<text x="0" y="121" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="17" letter-spacing="1.5" fill="#c3c6c8">WATER RESIST</text>`;
@@ -492,7 +535,7 @@ function buildBezel(){
   </defs>
   <g id="bezelRot">`;
   // zona tàctil: només l'anell del bisell
-  const hitPath = `<path id="bezelHit" d="M0,-440 A440,440 0 1 1 -0.01,-440 Z M0,-356 A356,356 0 1 0 0.01,-356 Z" fill="#000" fill-opacity="0" fill-rule="evenodd"/>`;
+  const hitPath = `<path id="bezelHit" class="bezel-hit" d="M0,-440 A440,440 0 1 1 -0.01,-440 Z M0,-356 A356,356 0 1 0 0.01,-356 Z" fill="#000" fill-opacity="0" fill-rule="evenodd"/>`;
   // vora exterior
   s += `<path d="${ringSector(360,433,0,359.99)}" fill="#0c0c0d"/>`;
   s += `<circle r="429" fill="none" stroke="url(#gBezEdge)" stroke-width="8"/>`;
@@ -643,6 +686,302 @@ function buildHands(){
 }
 
 /* =========================================================
+   CARA DEL DARRERE — diver blau "Grand Sake"
+   (mateixes coordenades que la cara davantera: centre 0,0)
+   ========================================================= */
+const B_CREAM = '#ece7d6';
+const B_IDX = [];   // formes de lluminescència dels índexs (per a la capa nocturna)
+
+function buildBackBezel(){
+  let s = `<defs>
+    <linearGradient id="bSteel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6f8fa"/><stop offset=".28" stop-color="#a7aeb6"/><stop offset=".5" stop-color="#eef1f3"/>
+      <stop offset=".74" stop-color="#7a828b"/><stop offset="1" stop-color="#cfd4d9"/>
+    </linearGradient>
+    <radialGradient id="bInsert" cx="50%" cy="50%" r="50%">
+      <stop offset=".7" stop-color="#080d18"/><stop offset=".84" stop-color="#111a2e"/><stop offset=".95" stop-color="#0c1424"/><stop offset="1" stop-color="#050910"/>
+    </radialGradient>
+    <linearGradient id="bInsertSheen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9fbfff" stop-opacity=".16"/><stop offset=".38" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".75" stop-color="#000" stop-opacity=".3"/><stop offset="1" stop-color="#9fbfff" stop-opacity=".08"/>
+    </linearGradient>
+    <linearGradient id="bTri" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdfdfd"/><stop offset=".5" stop-color="#9aa1a9"/><stop offset="1" stop-color="#e3e6e9"/>
+    </linearGradient>
+    <radialGradient id="bLumeD" cx="38%" cy="34%" r="70%">
+      <stop offset="0" stop-color="#fffdf4"/><stop offset=".6" stop-color="${B_CREAM}"/><stop offset="1" stop-color="#bdb69c"/>
+    </radialGradient>
+  </defs>
+  <g id="bezelRotB">`;
+  // cantell d'acer amb osques (corona dentada del bisell)
+  const N = 36, seg = 360/N;
+  let pts = [];
+  for (let i=0; i<N; i++){
+    const a0 = i*seg;
+    for (let a=a0; a<=a0+seg*0.72; a+=1) pts.push(P(433,a));
+    pts.push(P(425,a0+seg*0.76)); pts.push(P(425,a0+seg*0.96));
+  }
+  s += `<path d="M${pts.map(p=>p.join(',')).join(' L')} Z M0,-409 A409,409 0 1 0 0.01,-409 Z" fill="url(#bSteel)" fill-rule="evenodd" stroke="#6c737b" stroke-width="1.2"/>`;
+  s += `<circle r="431" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>`;
+  s += `<circle r="410" fill="none" stroke="#5d646c" stroke-width="2.4"/>`;
+  // inserció ceràmica blau fosc
+  s += `<path d="M0,-409 A409,409 0 1 1 -0.01,-409 Z M0,-318 A318,318 0 1 0 0.01,-318 Z" fill="url(#bInsert)" fill-rule="evenodd"/>`;
+  // punts de minut, barres i números (tots orientats des del centre)
+  let dots = '', bars = '';
+  for (let m=1; m<60; m++){
+    const a = m*6;
+    if (m%10===0) continue;
+    if (m%5===0){ const long = (m===15||m===45); bars += radialPill(long?350:360, 403, 9, a, 1.5); }
+    else { const [x,y] = P(397,a); dots += `<rect x="${x-2.6}" y="${y-2.6}" width="5.2" height="5.2" rx=".8" transform="rotate(${a} ${x} ${y})"/>`; }
+  }
+  s += `<g fill="${B_CREAM}">${dots}${bars}</g>`;
+  for (const m of [10,20,30,40,50]){
+    const a = m*6, [x,y] = P(366,a);
+    s += `<text x="${x}" y="${y}" transform="rotate(${a} ${x} ${y})" text-anchor="middle" dominant-baseline="central"
+            font-family="Saira, 'Russo One', 'Arial Black', sans-serif" font-weight="600" font-stretch="125%" font-size="56" letter-spacing="1"
+            fill="${B_CREAM}" stroke="#5f5c52" stroke-width="1.1" paint-order="stroke">${m}</text>`;
+  }
+  // triangle d'acer amb el punt lluminós a zero
+  s += `<g transform="translate(0,-382)">
+      <path d="M-33,-24 Q-36,-26 -33,-28 L33,-28 Q36,-26 33,-24 L3,26 Q0,30 -3,26 Z" fill="url(#bTri)" stroke="#7d848c" stroke-width="1.4"/>
+      <circle cx="0" cy="-8" r="12.5" fill="url(#bLumeD)" stroke="#23272d" stroke-width="3.2"/>
+    </g>`;
+  s += `<path d="M0,-409 A409,409 0 1 1 -0.01,-409 Z M0,-318 A318,318 0 1 0 0.01,-318 Z" fill="url(#bInsertSheen)" fill-rule="evenodd" pointer-events="none"/>`;
+  s += `<circle r="318.5" fill="none" stroke="#000" stroke-width="2.4" opacity=".8"/>`;
+  s += `</g>`;
+  s += `<path id="bezelHitB" class="bezel-hit" d="M0,-440 A440,440 0 1 1 -0.01,-440 Z M0,-312 A312,312 0 1 0 0.01,-312 Z" fill="#000" fill-opacity="0" fill-rule="evenodd"/>`;
+  document.getElementById('bBezel').innerHTML = s;
+}
+
+function buildBackDial(){
+  let s = `<defs>
+    <radialGradient id="bDialG" cx="40%" cy="36%" r="72%">
+      <stop offset="0" stop-color="#5b6caa"/><stop offset=".35" stop-color="#3b4c8b"/><stop offset=".7" stop-color="#27366b"/><stop offset="1" stop-color="#121b3f"/>
+    </radialGradient>
+    <filter id="bWave" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="turbulence" baseFrequency="0.006 0.022" numOctaves="3" seed="11" result="n"/>
+      <feDiffuseLighting in="n" surfaceScale="6" diffuseConstant="1.15" lighting-color="#ffffff" result="lit">
+        <feDistantLight azimuth="235" elevation="34"/>
+      </feDiffuseLighting>
+      <feComposite in="lit" in2="SourceGraphic" operator="arithmetic" k1="1.5" k2="0" k3="0.12" k4="-0.05" result="mix"/>
+      <feComposite in="mix" in2="SourceAlpha" operator="in"/>
+    </filter>
+    <radialGradient id="bVig" cx="50%" cy="50%" r="50%">
+      <stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset=".9" stop-color="#000814" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity=".8"/>
+    </radialGradient>
+    <radialGradient id="bShine" cx="34%" cy="26%" r="45%">
+      <stop offset="0" stop-color="#b8d4ff" stop-opacity=".22"/><stop offset="1" stop-color="#b8d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bRehaut" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#26324a"/><stop offset=".5" stop-color="#0f1626"/><stop offset="1" stop-color="#1b2438"/>
+    </linearGradient>
+    <linearGradient id="bFrame" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8a9198"/><stop offset=".22" stop-color="#ffffff"/><stop offset=".5" stop-color="#c3c9cf"/><stop offset=".78" stop-color="#f4f6f8"/><stop offset="1" stop-color="#737a82"/>
+    </linearGradient>
+    <linearGradient id="bLumeI" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d9d3bb"/><stop offset=".45" stop-color="#f8f5ea"/><stop offset="1" stop-color="#d2cbb0"/>
+    </linearGradient>
+    <filter id="bIdxShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="2" dy="4" stdDeviation="2.4" flood-color="#000" flood-opacity=".75"/>
+    </filter>
+  </defs>`;
+  if (DIAL_ONLY) s += `<circle r="433" fill="#050506" filter="url(#fCaseShadow)"/>`;
+  // anell inclinat (rehaut) amb les marques de minut
+  s += `<circle r="318" fill="url(#bRehaut)"/>`;
+  let t = '';
+  for (let m=0; m<60; m++){
+    const a = m*6;
+    if (m===30){ const [x,y]=P(303,a); t += `<path d="M${x-6},${y-6} L${x+6},${y-6} L${x},${y+5} Z" fill="${B_CREAM}"/>`; continue; }
+    t += radialPill(m%5===0?296:300, 312, m%5===0?4.4:2.6, a, .8);
+  }
+  s += `<g fill="${B_CREAM}" opacity=".92">${t}</g>`;
+  s += `<text x="0" y="0" transform="rotate(20) translate(0,283)" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="9.5" letter-spacing="1.5" fill="${B_CREAM}" opacity=".85">JAPAN</text>`;
+  // esfera d'onades
+  s += `<circle r="293" fill="url(#bDialG)" filter="url(#bWave)"/>`;
+  s += `<circle r="293" fill="url(#bShine)"/>`;
+  s += `<circle r="293" fill="url(#bVig)"/>`;
+  s += `<circle r="293" fill="url(#gInShadowDial)"/>`;
+  s += `<circle r="293.5" fill="none" stroke="#0a1222" stroke-width="2"/>`;
+
+  // índexs aplicats: marc d'acer polit + lluminescència
+  B_IDX.length = 0;
+  let idx = '';
+  const bar = (a) => {
+    const r1 = 192, r2 = 262, w = 34;
+    idx += `<g transform="rotate(${a})">
+        <rect x="${-w/2}" y="${-r2}" width="${w}" height="${r2-r1}" rx="2.5" fill="url(#bFrame)" stroke="#5b6168" stroke-width=".8"/>
+        <rect x="${-w/2+5.5}" y="${-r2+5.5}" width="${w-11}" height="${r2-r1-11}" rx="1.5" fill="url(#bLumeI)"/>
+      </g>`;
+    B_IDX.push(`<rect transform="rotate(${a})" x="${-w/2+5.5}" y="${-r2+5.5}" width="${w-11}" height="${r2-r1-11}" rx="1.5"/>`);
+  };
+  for (let h=1; h<12; h++) bar(h*30);
+  for (const sx of [-1,1]){
+    const o = `${sx*4},-266 ${sx*48},-266 ${sx*40},-190 ${sx*4},-190`;
+    const i = `${sx*9.5},-260.5 ${sx*41.5},-260.5 ${sx*35},-195.5 ${sx*9.5},-195.5`;
+    idx += `<polygon points="${o}" fill="url(#bFrame)" stroke="#5b6168" stroke-width=".8" stroke-linejoin="round"/><polygon points="${i}" fill="url(#bLumeI)"/>`;
+    B_IDX.push(`<polygon points="${i}"/>`);
+  }
+  s += `<g filter="url(#bIdxShadow)">${idx}</g>`;
+
+  // indicador de reserva de marxa (a les 8)
+  const pc = [-66, 126], rr = 80;
+  const arc = (r,a1,a2) => { const [x1,y1]=P(r,a1), [x2,y2]=P(r,a2); return `M${pc[0]+x1},${pc[1]+y1} A${r},${r} 0 0 0 ${pc[0]+x2},${pc[1]+y2}`; };
+  s += `<g fill="none" stroke-linecap="round">
+      <path d="${arc(rr,0,-100)}" stroke="#d9dde2" stroke-width="2.6"/>
+      <path d="${arc(rr,-62,-100)}" stroke="#d9dde2" stroke-width="7"/>
+      <path d="M${pc[0]+P(rr-9,0)[0]},${pc[1]+P(rr-9,0)[1]} L${pc[0]+P(rr+7,0)[0]},${pc[1]+P(rr+7,0)[1]}" stroke="#d9dde2" stroke-width="2.6"/>
+    </g>`;
+
+  // rètols (la marca canviada, amb el mateix estil de lletra gòtica)
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="'UnifrakturMaguntia', 'Old English Text MT', serif" font-size="40" fill="#efe6c9" style="filter:drop-shadow(0 1.5px 1.2px rgba(0,0,0,.7))">Grand Sake</text>`;
+  const sub = (y, txt, fs) => `<text x="0" y="${y}" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="${fs}" letter-spacing=".6" fill="#eae5d4">${txt}</text>`;
+  s += sub(102, 'AUTOMATIC', 13.5) + sub(128, 'UFA', 19) + sub(153, "DIVER'S 300m", 13.5);
+  document.getElementById('bBase').innerHTML = s;
+}
+
+function buildBackGlow(){
+  let s = `<defs>
+    <radialGradient id="gLumeNB" cx="40%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#eafff9"/><stop offset=".55" stop-color="#9ff2dc"/><stop offset="1" stop-color="#4fc9ad"/>
+    </radialGradient>
+    <filter id="fLumeGlowB" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b1"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="b2"/>
+      <feMerge><feMergeNode in="b1"/><feMergeNode in="b2"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#fLumeGlowB)" fill="#bff6e8">${B_IDX.join('')}
+    <g id="glowPipB"><circle cx="0" cy="-390" r="11" fill="url(#gLumeNB)"/></g>
+  </g>`;
+  document.getElementById('bGlow').innerHTML = s;
+}
+
+function buildBackHands(){
+  const s = `<defs>
+    <linearGradient id="bHandSteel" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8b939b"/><stop offset=".3" stop-color="#ffffff"/><stop offset=".5" stop-color="#b9c0c7"/><stop offset=".72" stop-color="#f1f3f5"/><stop offset="1" stop-color="#78808a"/>
+    </linearGradient>
+    <linearGradient id="bBrushed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef0f2"/><stop offset=".5" stop-color="#a9b0b7"/><stop offset="1" stop-color="#d7dbdf"/>
+    </linearGradient>
+    <linearGradient id="bHandLume" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d6d0b6"/><stop offset=".5" stop-color="#faf8ef"/><stop offset="1" stop-color="#d1caae"/>
+    </linearGradient>
+    <linearGradient id="gHandLumeNB" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6fdcc0"/><stop offset=".5" stop-color="#e3fff8"/><stop offset="1" stop-color="#76dfc4"/>
+    </linearGradient>
+    <filter id="fLumeGlowHB" x="-60%" y="-30%" width="220%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b1"/>
+      <feMerge><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="cGlassB"><circle r="318"/></clipPath>
+  </defs>
+
+  <!-- reserva de marxa: petita agulla d'acer -->
+  <g id="prHand" transform="translate(-66,126) rotate(-95)" filter="url(#fHandH)">
+    <path d="M-2.2,6 L-1.4,-74 L0,-78 L1.4,-74 L2.2,6 Z" fill="url(#bHandSteel)"/>
+  </g>
+  <circle cx="-66" cy="126" r="9.5" fill="url(#bBrushed)" stroke="#6d747c" stroke-width="1"/>
+
+  <!-- agulla de les hores: ampla, amb la cua raspallada -->
+  <g id="hHourB" filter="url(#fHandH)">
+    <path d="M-15,4 L-10,-30 L-24,-172 L24,-172 L10,-30 L15,4 L32,40 L0,58 L-32,40 Z" fill="url(#bBrushed)" stroke="#6d747c" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M-10,-30 L-24,-172 L24,-172 L10,-30 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1"/>
+    <path class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" d="M-6,-48 L-17,-164 L17,-164 L6,-48 Z" fill="url(#bHandLume)"/>
+  </g>
+
+  <!-- agulla dels minuts: tija fina i gran punta de fletxa -->
+  <g id="hMinB" filter="url(#fHandM)">
+    <path d="M-6,30 L-4.2,-206 L4.2,-206 L6,30 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1"/>
+    <path d="M0,-286 L-34,-206 L0,-219 L34,-206 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1.2" stroke-linejoin="round"/>
+    <path class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" d="M0,-270 L-21,-213 L0,-224 L21,-213 Z" fill="url(#bHandLume)"/>
+  </g>
+
+  <!-- segonera d'acer amb la rodona lluminosa a la cua -->
+  <g id="hSecB" filter="url(#fHandS)">
+    <path d="M-1.7,0 L-1.1,-292 L1.1,-292 L1.7,0 Z" fill="url(#bHandSteel)"/>
+    <rect x="-3" y="0" width="6" height="88" rx="1.5" fill="url(#bHandSteel)"/>
+    <circle cx="0" cy="106" r="20" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1"/>
+    <circle class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" cx="0" cy="106" r="14.5" fill="url(#bHandLume)"/>
+  </g>
+  <circle r="15" fill="url(#bBrushed)" stroke="#6d747c" stroke-width="1"/>
+  <circle r="7" fill="#1c2c4c" stroke="#9aa2aa" stroke-width="1.4"/>
+  <circle r="2.4" fill="#d9dde2"/>
+
+  <!-- vidre pla -->
+  <g id="glassB" pointer-events="none"><g clip-path="url(#cGlassB)">
+    <circle r="318" fill="#9fb3c8" opacity=".03"/>
+    <rect x="-600" y="-70" width="1200" height="150" fill="url(#gFlatRefl)" transform="rotate(-32) translate(0,-200)"/>
+    <rect x="-600" y="-9" width="1200" height="18" fill="#fff" opacity=".05" transform="rotate(-32) translate(0,-85)"/>
+    <rect x="-600" y="-40" width="1200" height="80" fill="url(#gFlatRefl)" opacity=".45" transform="rotate(-32) translate(0,270)"/>
+  </g>
+  <circle r="317.5" fill="none" stroke="url(#gGlassEdge)" stroke-width="1.6"/></g>`;
+  document.getElementById('bHands').innerHTML = s;
+}
+
+/* reserva de marxa: segons la bateria del dispositiu si el navegador la dona; si no, gairebé plena */
+let reserve = 0.9;
+function setReserve(f){
+  reserve = Math.max(0, Math.min(1, f));
+  const el = document.getElementById('prHand');
+  if (el) el.setAttribute('transform', `translate(-66,126) rotate(${(-100*reserve).toFixed(1)})`);
+}
+function initReserve(){
+  setReserve(reserve);
+  if (navigator.getBattery){
+    navigator.getBattery().then(b => {
+      const upd = () => setReserve(b.level);
+      upd(); b.addEventListener('levelchange', upd);
+    }).catch(()=>{});
+  }
+}
+
+/* =========================================================
+   GIR 3D (8 s): perspectiva, dues cares i capes de gruix.
+   Cada toc a l'esfera suma 180°, sempre en el mateix sentit.
+   ========================================================= */
+function initFlip(){
+  const watch = document.getElementById('watch');
+  const flip = document.getElementById('watchFlip');
+  const front = flip.querySelector('.face.front'), back = flip.querySelector('.face.back');
+  const edges = [];
+  // colors del cantell: negre (bisell KOSTOV) cap a acer (bisell Grand Sake)
+  const mix = (t) => { const a=[16,17,19], b=[150,157,165]; return a.map((v,i)=>Math.round(v+(b[i]-v)*t)); };
+  function layout(){
+    const w = watch.getBoundingClientRect().width || 600;
+    const th = Math.max(6, Math.round(w * 0.026));          // mig gruix
+    watch.style.perspective = Math.round(w * 2.6) + 'px';
+    front.style.transform = `translateZ(${th}px)`;
+    back.style.transform  = `rotateY(180deg) translateZ(${th}px)`;
+    edges.forEach(e => e.remove()); edges.length = 0;
+    for (let z = -th + 1; z <= th - 1; z += 2){
+      const t = (th - z) / (2*th);                              // 0 davant · 1 darrere
+      const [r,g,b] = mix(t);
+      const d = document.createElement('div');
+      d.className = 'edge';
+      d.style.transform = `translateZ(${z}px)`;
+      d.style.background = `radial-gradient(circle, rgb(${r*.55|0},${g*.55|0},${b*.55|0}) 0%, rgb(${r},${g},${b}) 88%, rgb(${r*.7|0},${g*.7|0},${b*.7|0}) 100%)`;
+      flip.insertBefore(d, flip.firstChild);
+      edges.push(d);
+    }
+  }
+  layout();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 120); });
+
+  let turns = 0;
+  const doFlip = () => {
+    turns += 1;
+    flip.style.transform = `rotateY(${turns * 180}deg)`;
+    watch.setAttribute('aria-label', turns % 2 ? 'Rellotge Grand Sake. Toca per girar-lo.' : 'Rellotge KOSTOV. Toca per girar-lo.');
+  };
+  watch.addEventListener('click', e => {
+    if (e.target.closest('.bezel-hit')) return;          // tocar el bisell el fa girar, no gira el rellotge
+    doFlip();
+  });
+  watch.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); doFlip(); } });
+}
+
+/* =========================================================
    Moviment automàtic: 6 batecs/s (21.600 a/h)
    ========================================================= */
 const BEAT = 1000/6;
@@ -660,6 +999,9 @@ function tick(){
     hSec.setAttribute('transform', `rotate(${(s*6).toFixed(3)})`);
     hMin.setAttribute('transform', `rotate(${(m*6).toFixed(3)})`);
     hHour.setAttribute('transform', `rotate(${(h*30).toFixed(3)})`);
+    hSecB.setAttribute('transform', `rotate(${(s*6).toFixed(3)})`);
+    hMinB.setAttribute('transform', `rotate(${(m*6).toFixed(3)})`);
+    hHourB.setAttribute('transform', `rotate(${(h*30).toFixed(3)})`);
     if (now.getDate() !== lastDay){
       lastDay = now.getDate();
       const dn = document.getElementById('dateNum'); dn.textContent = lastDay;
@@ -702,15 +1044,15 @@ function ratchet(){
 }
 
 /* bisell: gir només antihorari, a clics de 6° (1 minut); doble clic el reinicia */
-function setupBezel(){
-  const layer = document.getElementById('bezelLayer');
-  const hit = document.getElementById('bezelHit');
-  const rot = document.getElementById('bezelRot');
+function setupBezel(layerId='bezelLayer', hitId='bezelHit', rotId='bezelRot', pipId='glowPip'){
+  const layer = document.getElementById(layerId);
+  const hit = document.getElementById(hitId);
+  const rot = document.getElementById(rotId);
   let angle = 0, dragging = false, prev = 0, acc = 0;
   const setAngle = a => {
     angle = a;
     rot.setAttribute('transform', `rotate(${angle})`);
-    const gp = document.getElementById('glowPip'); if (gp) gp.setAttribute('transform', `rotate(${angle})`);
+    const gp = document.getElementById(pipId); if (gp) gp.setAttribute('transform', `rotate(${angle})`);
   };
   const ptrAngle = e => {
     const r = layer.getBoundingClientRect();
@@ -1167,9 +1509,9 @@ function isDayNow(){
   const h = n.getHours() + n.getMinutes()/60; return h >= 7.5 && h < 19.5;
 }
 function setNightLume(on){
-  document.querySelectorAll('#handsLayer .hl').forEach(el => {
+  document.querySelectorAll('.lyr-hands .hl').forEach(el => {
     if (!el.dataset.f) el.dataset.f = el.getAttribute('fill');
-    if (on){ el.setAttribute('fill','url(#gHandLumeN)'); el.setAttribute('filter','url(#fLumeGlowH)'); }
+    if (on){ el.setAttribute('fill',`url(#${el.dataset.n||'gHandLumeN'})`); el.setAttribute('filter',`url(#${el.dataset.g||'fLumeGlowH'})`); }
     else   { el.setAttribute('fill', el.dataset.f); el.removeAttribute('filter'); }
   });
 }
@@ -1193,10 +1535,36 @@ document.getElementById('themeSeg').addEventListener('click', e => {
 });
 
 /* =========================================================
+   App instal·lable: service worker (funciona sense connexió) i botó d'instal·lar
+   ========================================================= */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(err => console.warn('Service worker:', err)));
+}
+(function initInstall(){
+  const btn = document.getElementById('installBtn'), hint = document.getElementById('iosHint');
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let deferred = null;
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; if (!standalone) btn.hidden = false; });
+  // a l'iPhone no hi ha avís automàtic: el botó mostra com fer-ho des de Safari
+  if (isIOS && !standalone && location.protocol.startsWith('http')) btn.hidden = false;
+  btn.addEventListener('click', async () => {
+    if (deferred){ deferred.prompt(); await deferred.userChoice.catch(()=>{}); deferred = null; btn.hidden = true; }
+    else if (isIOS) hint.hidden = !hint.hidden;
+  });
+  hint.addEventListener('click', () => hint.hidden = true);
+  window.addEventListener('appinstalled', () => { btn.hidden = true; hint.hidden = true; });
+})();
+
+/* =========================================================
    Arrencada
    ========================================================= */
 buildBase(); buildBezel(); buildGlow(); buildHands(); setupBezel();
+buildBackDial(); buildBackBezel(); buildBackGlow(); buildBackHands();
+setupBezel('bBezel','bezelHitB','bezelRotB','glowPipB');
+initFlip(); initReserve();
 const hSec = document.getElementById('hSec'), hMin = document.getElementById('hMin'), hHour = document.getElementById('hHour');
+const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById('hMinB'), hHourB = document.getElementById('hHourB');
 buildCards();
 applyTheme();
 renderCalendar();

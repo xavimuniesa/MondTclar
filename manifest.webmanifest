@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "KOSTOV · Rellotge i calendari",
+  "short_name": "KOSTOV",
+  "description": "Rellotge automàtic de dues cares amb calendari de festius de Barcelona i el temps local.",
+  "lang": "ca",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#030304",
+  "theme_color": "#030304",
+  "categories": ["utilities", "lifestyle"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
