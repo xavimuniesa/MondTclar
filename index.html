@@ -713,43 +713,45 @@ function buildBackBezel(){
     </radialGradient>
   </defs>
   <g id="bezelRotB">`;
-  // cantell d'acer amb osques (corona dentada del bisell)
-  const N = 36, seg = 360/N;
+  // cantell d'acer amb dents planes (corona del bisell), com a la foto
+  const N = 30, seg = 360/N;
   let pts = [];
   for (let i=0; i<N; i++){
     const a0 = i*seg;
-    for (let a=a0; a<=a0+seg*0.72; a+=1) pts.push(P(433,a));
-    pts.push(P(425,a0+seg*0.76)); pts.push(P(425,a0+seg*0.96));
+    pts.push(P(425, a0)); pts.push(P(433, a0+0.6));
+    for (let a=a0+1.6; a<=a0+seg*0.56; a+=1.4) pts.push(P(433, a));
+    pts.push(P(433, a0+seg*0.58)); pts.push(P(425, a0+seg*0.6));
+    pts.push(P(425, a0+seg*0.99));
   }
-  s += `<path d="M${pts.map(p=>p.join(',')).join(' L')} Z M0,-409 A409,409 0 1 0 0.01,-409 Z" fill="url(#bSteel)" fill-rule="evenodd" stroke="#6c737b" stroke-width="1.2"/>`;
-  s += `<circle r="431" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>`;
-  s += `<circle r="410" fill="none" stroke="#5d646c" stroke-width="2.4"/>`;
-  // inserció ceràmica blau fosc
-  s += `<path d="M0,-409 A409,409 0 1 1 -0.01,-409 Z M0,-318 A318,318 0 1 0 0.01,-318 Z" fill="url(#bInsert)" fill-rule="evenodd"/>`;
-  // punts de minut, barres i números (tots orientats des del centre)
+  s += `<path d="M${pts.map(p=>p.join(',')).join(' L')} Z M0,-411 A411,411 0 1 0 0.01,-411 Z" fill="url(#bSteel)" fill-rule="evenodd" stroke="#6c737b" stroke-width="1.1" stroke-linejoin="round"/>`;
+  s += `<circle r="423.5" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1"/>`;
+  s += `<circle r="412" fill="none" stroke="#5d646c" stroke-width="2"/>`;
+  // inserció ceràmica: números i barres a la part de fora, punts de minut a la vora de dins
+  s += `<path d="M0,-411 A411,411 0 1 1 -0.01,-411 Z M0,-322 A322,322 0 1 0 0.01,-322 Z" fill="url(#bInsert)" fill-rule="evenodd"/>`;
   let dots = '', bars = '';
   for (let m=1; m<60; m++){
     const a = m*6;
     if (m%10===0) continue;
-    if (m%5===0){ const long = (m===15||m===45); bars += radialPill(long?350:360, 403, 9, a, 1.5); }
-    else { const [x,y] = P(397,a); dots += `<rect x="${x-2.6}" y="${y-2.6}" width="5.2" height="5.2" rx=".8" transform="rotate(${a} ${x} ${y})"/>`; }
+    if (m%5===0) bars += radialPill(337, 399, 9.5, a, 1.5);
+    else { const [x,y] = P(339,a); dots += `<rect x="${x-3}" y="${y-3}" width="6" height="6" rx=".8" transform="rotate(${a} ${x} ${y})"/>`; }
   }
+  for (const m of [10,20,30,40,50]){ const [x,y] = P(339, m*6); dots += `<rect x="${x-3}" y="${y-3}" width="6" height="6" rx=".8" transform="rotate(${m*6} ${x} ${y})"/>`; }
   s += `<g fill="${B_CREAM}">${dots}${bars}</g>`;
   for (const m of [10,20,30,40,50]){
-    const a = m*6, [x,y] = P(366,a);
+    const a = m*6, [x,y] = P(376,a);
     s += `<text x="${x}" y="${y}" transform="rotate(${a} ${x} ${y})" text-anchor="middle" dominant-baseline="central"
-            font-family="Saira, 'Russo One', 'Arial Black', sans-serif" font-weight="600" font-stretch="125%" font-size="56" letter-spacing="1"
+            font-family="Saira, 'Russo One', 'Arial Black', sans-serif" font-weight="600" font-stretch="125%" font-size="52" letter-spacing="1"
             fill="${B_CREAM}" stroke="#5f5c52" stroke-width="1.1" paint-order="stroke">${m}</text>`;
   }
-  // triangle d'acer amb el punt lluminós a zero
+  // triangle d'acer amb el punt lluminós a zero (a la part de fora; a sota hi segueixen els punts)
   s += `<g transform="translate(0,-382)">
-      <path d="M-33,-24 Q-36,-26 -33,-28 L33,-28 Q36,-26 33,-24 L3,26 Q0,30 -3,26 Z" fill="url(#bTri)" stroke="#7d848c" stroke-width="1.4"/>
-      <circle cx="0" cy="-8" r="12.5" fill="url(#bLumeD)" stroke="#23272d" stroke-width="3.2"/>
+      <path d="M-31,-23 Q-34,-25 -31,-27 L31,-27 Q34,-25 31,-23 L3,25 Q0,29 -3,25 Z" fill="url(#bTri)" stroke="#7d848c" stroke-width="1.4"/>
+      <circle cx="0" cy="-7" r="12" fill="url(#bLumeD)" stroke="#23272d" stroke-width="3.2"/>
     </g>`;
-  s += `<path d="M0,-409 A409,409 0 1 1 -0.01,-409 Z M0,-318 A318,318 0 1 0 0.01,-318 Z" fill="url(#bInsertSheen)" fill-rule="evenodd" pointer-events="none"/>`;
-  s += `<circle r="318.5" fill="none" stroke="#000" stroke-width="2.4" opacity=".8"/>`;
+  s += `<path d="M0,-411 A411,411 0 1 1 -0.01,-411 Z M0,-322 A322,322 0 1 0 0.01,-322 Z" fill="url(#bInsertSheen)" fill-rule="evenodd" pointer-events="none"/>`;
+  s += `<circle r="322.5" fill="none" stroke="#000" stroke-width="2.4" opacity=".8"/>`;
   s += `</g>`;
-  s += `<path id="bezelHitB" class="bezel-hit" d="M0,-440 A440,440 0 1 1 -0.01,-440 Z M0,-312 A312,312 0 1 0 0.01,-312 Z" fill="#000" fill-opacity="0" fill-rule="evenodd"/>`;
+  s += `<path id="bezelHitB" class="bezel-hit" d="M0,-440 A440,440 0 1 1 -0.01,-440 Z M0,-318 A318,318 0 1 0 0.01,-318 Z" fill="#000" fill-opacity="0" fill-rule="evenodd"/>`;
   document.getElementById('bBezel').innerHTML = s;
 }
 
@@ -773,7 +775,7 @@ function buildBackDial(){
       <stop offset="0" stop-color="#b8d4ff" stop-opacity=".22"/><stop offset="1" stop-color="#b8d4ff" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="bRehaut" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#26324a"/><stop offset=".5" stop-color="#0f1626"/><stop offset="1" stop-color="#1b2438"/>
+      <stop offset="0" stop-color="#1c2230"/><stop offset=".5" stop-color="#07090e"/><stop offset="1" stop-color="#141925"/>
     </linearGradient>
     <linearGradient id="bFrame" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#8a9198"/><stop offset=".22" stop-color="#ffffff"/><stop offset=".5" stop-color="#c3c9cf"/><stop offset=".78" stop-color="#f4f6f8"/><stop offset="1" stop-color="#737a82"/>
@@ -786,28 +788,30 @@ function buildBackDial(){
     </filter>
   </defs>`;
   if (DIAL_ONLY) s += `<circle r="433" fill="#050506" filter="url(#fCaseShadow)"/>`;
-  // anell inclinat (rehaut) amb les marques de minut
-  s += `<circle r="318" fill="url(#bRehaut)"/>`;
-  let t = '';
+  // anell negre inclinat entre el bisell i l'esfera, amb el filet clar i la 2a fila de marques tocant l'esfera
+  s += `<circle r="322" fill="url(#bRehaut)"/>`;
+  s += `<circle r="310" fill="none" stroke="#8d949c" stroke-width="1.6" opacity=".85"/>`;
+  s += `<circle r="308.6" fill="none" stroke="#000" stroke-width="1.2" opacity=".7"/>`;
+  let t = '', t5 = '';
   for (let m=0; m<60; m++){
     const a = m*6;
-    if (m===30){ const [x,y]=P(303,a); t += `<path d="M${x-6},${y-6} L${x+6},${y-6} L${x},${y+5} Z" fill="${B_CREAM}"/>`; continue; }
-    t += radialPill(m%5===0?296:300, 312, m%5===0?4.4:2.6, a, .8);
+    if (m%5===0) t5 += radialPill(270, 288, 6.5, a, .6);
+    else t += radialPill(272, 284, 1.6, a, .3);
   }
-  s += `<g fill="${B_CREAM}" opacity=".92">${t}</g>`;
-  s += `<text x="0" y="0" transform="rotate(20) translate(0,283)" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="9.5" letter-spacing="1.5" fill="${B_CREAM}" opacity=".85">JAPAN</text>`;
+  s += `<g fill="#c9ccd0" opacity=".9">${t}</g><g fill="#9aa0a7">${t5}</g>`;
   // esfera d'onades
-  s += `<circle r="293" fill="url(#bDialG)" filter="url(#bWave)"/>`;
-  s += `<circle r="293" fill="url(#bShine)"/>`;
-  s += `<circle r="293" fill="url(#bVig)"/>`;
-  s += `<circle r="293" fill="url(#gInShadowDial)"/>`;
-  s += `<circle r="293.5" fill="none" stroke="#0a1222" stroke-width="2"/>`;
+  s += `<circle r="270" fill="url(#bDialG)" filter="url(#bWave)"/>`;
+  s += `<circle r="270" fill="url(#bShine)"/>`;
+  s += `<circle r="270" fill="url(#bVig)"/>`;
+  s += `<circle r="270" fill="url(#gInShadowDial)"/>`;
+  s += `<circle r="270.5" fill="none" stroke="#0a1222" stroke-width="1.6"/>`;
+  s += `<text x="0" y="0" transform="rotate(24) translate(0,254)" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="8.5" letter-spacing="1.4" fill="${B_CREAM}" opacity=".8">JAPAN</text>`;
 
   // índexs aplicats: marc d'acer polit + lluminescència
   B_IDX.length = 0;
   let idx = '';
   const bar = (a) => {
-    const r1 = 192, r2 = 262, w = 34;
+    const r1 = 188, r2 = 258, w = 33;
     idx += `<g transform="rotate(${a})">
         <rect x="${-w/2}" y="${-r2}" width="${w}" height="${r2-r1}" rx="2.5" fill="url(#bFrame)" stroke="#5b6168" stroke-width=".8"/>
         <rect x="${-w/2+5.5}" y="${-r2+5.5}" width="${w-11}" height="${r2-r1-11}" rx="1.5" fill="url(#bLumeI)"/>
@@ -816,8 +820,8 @@ function buildBackDial(){
   };
   for (let h=1; h<12; h++) bar(h*30);
   for (const sx of [-1,1]){
-    const o = `${sx*4},-266 ${sx*48},-266 ${sx*40},-190 ${sx*4},-190`;
-    const i = `${sx*9.5},-260.5 ${sx*41.5},-260.5 ${sx*35},-195.5 ${sx*9.5},-195.5`;
+    const o = `${sx*4},-260 ${sx*46},-260 ${sx*38},-186 ${sx*4},-186`;
+    const i = `${sx*9.5},-254.5 ${sx*39.5},-254.5 ${sx*33},-191.5 ${sx*9.5},-191.5`;
     idx += `<polygon points="${o}" fill="url(#bFrame)" stroke="#5b6168" stroke-width=".8" stroke-linejoin="round"/><polygon points="${i}" fill="url(#bLumeI)"/>`;
     B_IDX.push(`<polygon points="${i}"/>`);
   }
@@ -851,7 +855,7 @@ function buildBackGlow(){
     </filter>
   </defs>
   <g filter="url(#fLumeGlowB)" fill="#bff6e8">${B_IDX.join('')}
-    <g id="glowPipB"><circle cx="0" cy="-390" r="11" fill="url(#gLumeNB)"/></g>
+    <g id="glowPipB"><circle cx="0" cy="-389" r="10.5" fill="url(#gLumeNB)"/></g>
   </g>`;
   document.getElementById('bGlow').innerHTML = s;
 }
@@ -874,7 +878,7 @@ function buildBackHands(){
       <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b1"/>
       <feMerge><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <clipPath id="cGlassB"><circle r="318"/></clipPath>
+    <clipPath id="cGlassB"><circle r="322"/></clipPath>
   </defs>
 
   <!-- reserva de marxa: petita agulla d'acer -->
@@ -883,23 +887,27 @@ function buildBackHands(){
   </g>
   <circle cx="-66" cy="126" r="9.5" fill="url(#bBrushed)" stroke="#6d747c" stroke-width="1"/>
 
-  <!-- agulla de les hores: ampla, amb la cua raspallada -->
+  <!-- agulla de les hores: un trapezi que surt ample de l'eix i s'estreta cap a la punta; la cua és el mateix trapezi -->
   <g id="hHourB" filter="url(#fHandH)">
-    <path d="M-15,4 L-10,-30 L-24,-172 L24,-172 L10,-30 L15,4 L32,40 L0,58 L-32,40 Z" fill="url(#bBrushed)" stroke="#6d747c" stroke-width="1.2" stroke-linejoin="round"/>
-    <path d="M-10,-30 L-24,-172 L24,-172 L10,-30 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1"/>
-    <path class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" d="M-6,-48 L-17,-164 L17,-164 L6,-48 Z" fill="url(#bHandLume)"/>
+    <path d="M-10.5,-180 L10.5,-180 L28,56 L-28,56 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M-23.9,0 L23.9,0 L28,56 L-28,56 Z" fill="url(#bBrushed)" opacity=".9"/>
+    <path d="M-23.9,0 L23.9,0" stroke="#7d848c" stroke-width="1"/>
+    <path class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" d="M-5.4,-171 L5.4,-171 L14.3,-46 L-14.3,-46 Z" fill="url(#bHandLume)"/>
   </g>
 
-  <!-- agulla dels minuts: tija fina i gran punta de fletxa -->
+  <!-- agulla dels minuts: el mateix trapezi, més llarg i més prim, amb la punta de fletxa triangular -->
   <g id="hMinB" filter="url(#fHandM)">
-    <path d="M-6,30 L-4.2,-206 L4.2,-206 L6,30 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1"/>
-    <path d="M0,-286 L-34,-206 L0,-219 L34,-206 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1.2" stroke-linejoin="round"/>
-    <path class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" d="M0,-270 L-21,-213 L0,-224 L21,-213 Z" fill="url(#bHandLume)"/>
+    <path d="M-9,-210 L9,-210 L22,50 L-22,50 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M-19.4,0 L19.4,0 L22,50 L-22,50 Z" fill="url(#bBrushed)" opacity=".9"/>
+    <path d="M-19.4,0 L19.4,0" stroke="#7d848c" stroke-width="1"/>
+    <path class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" d="M-4.4,-194 L4.4,-194 L11.6,-48 L-11.6,-48 Z" fill="url(#bHandLume)"/>
+    <path d="M0,-278 L-33,-204 L33,-204 Z" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1.2" stroke-linejoin="round"/>
+    <path class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" d="M0,-263 L-21,-210 L21,-210 Z" fill="url(#bHandLume)"/>
   </g>
 
   <!-- segonera d'acer amb la rodona lluminosa a la cua -->
   <g id="hSecB" filter="url(#fHandS)">
-    <path d="M-1.7,0 L-1.1,-292 L1.1,-292 L1.7,0 Z" fill="url(#bHandSteel)"/>
+    <path d="M-1.7,0 L-1.1,-282 L1.1,-282 L1.7,0 Z" fill="url(#bHandSteel)"/>
     <rect x="-3" y="0" width="6" height="88" rx="1.5" fill="url(#bHandSteel)"/>
     <circle cx="0" cy="106" r="20" fill="url(#bHandSteel)" stroke="#6d747c" stroke-width="1"/>
     <circle class="hl" data-n="gHandLumeNB" data-g="fLumeGlowHB" cx="0" cy="106" r="14.5" fill="url(#bHandLume)"/>
