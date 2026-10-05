@@ -131,12 +131,13 @@ html[data-theme="day"] #baseLayer, html[data-theme="day"] #bBase, html[data-them
 .wheel{position:relative; flex:1; min-height:0; border-radius:18px; overflow:hidden; outline:none; touch-action:none;
   container-type:size; background:var(--page); box-shadow:var(--shadow); -webkit-tap-highlight-color:transparent}
 .wheel:focus-visible{outline:2px solid var(--lume-lo); outline-offset:3px}
-.drum{position:absolute; inset:0; transform-style:preserve-3d; -webkit-transform-style:preserve-3d; transition:transform .75s cubic-bezier(.3,.75,.2,1)}
-.wface{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden;
+.drum{position:absolute; inset:0}
+.wface{position:absolute; inset:0; overflow:hidden; will-change:transform; transform-origin:50% 50%;
   border-radius:18px; border:1px solid var(--line); background:linear-gradient(180deg,var(--panel2),var(--panel));
   padding:2.6cqh 3.2cqw 6cqh; display:flex; flex-direction:column}
 .wface:not(.on){pointer-events:none}
-.wface .shade{position:absolute; inset:0; pointer-events:none; background:#000; opacity:0; transition:opacity .75s}
+.wface[hidden]{display:none}
+.wface .shade{position:absolute; inset:0; z-index:9; pointer-events:none; background:#000; opacity:0; border-radius:inherit}
 .wdots{position:absolute; z-index:6; left:50%; bottom:1.6cqh; transform:translateX(-50%); display:flex; gap:6px; pointer-events:none}
 .wdots i{width:6px; height:6px; border-radius:50%; background:var(--line); transition:background .3s, transform .3s}
 .wdots i.on{background:var(--lume-lo); transform:scale(1.3)}
@@ -321,9 +322,9 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
       <div class="pop" id="pop" role="status" aria-live="polite"><div class="pop-name"></div><div class="pop-date"></div><div class="pop-type"></div></div>
         </section>
         <section class="wface" id="fNow" aria-label="El temps ara"></section>
+        <section class="wface" id="fFore" aria-label="Previsió de 12 hores" hidden></section>
         <section class="wface" id="fPlace" aria-label="Lloc i sol"></section>
-        <section class="wface" id="fFore" aria-label="Previsió de 12 hores"></section>
-        <section class="wface alerts" id="fAlert" aria-label="Avisos meteorològics"></section>
+        <section class="wface alerts" id="fAlert" aria-label="Avisos meteorològics" hidden></section>
       </div>
       <div class="wdots" id="wdots" aria-hidden="true"></div>
     </div>
@@ -1442,34 +1443,70 @@ Object.assign(ICO, {
    (lliscar amunt/avall, roda del ratolí o fletxes; doble toc torna al calendari)
    ========================================================= */
 const wheelEl = document.getElementById('wheel'), drumEl = document.getElementById('drum');
-const FACES = [...drumEl.children], NF = FACES.length, STEP = 360 / NF;
-let wIdx = 0, wR = 0;
-const wActive = () => ((wIdx % NF) + NF) % NF;
+const ALLF = [...drumEl.children];
+ALLF.forEach(f => { const sh = document.createElement('div'); sh.className = 'shade'; f.appendChild(sh); });
+const WSTEP = 72;                        // graus entre cares (un tambor de 5 cares)
+let wList = ALLF.filter(f => !f.hidden), wPos = 0, wTarget = 0, wR = 0, wAnim = null;
 const wdots = document.getElementById('wdots');
-wdots.innerHTML = FACES.map(()=>'<i></i>').join('');
-function placeDrum(animate){
-  if (!animate){ drumEl.style.transition = 'none'; requestAnimationFrame(()=>requestAnimationFrame(()=>drumEl.style.transition = '')); }
-  drumEl.style.transform = `translateZ(${-wR}px) rotateX(${wIdx*STEP}deg)`;
+const wN = () => wList.length;
+const wActive = () => ((Math.round(wTarget) % wN()) + wN()) % wN();
+const wActiveFace = () => wList[wActive()];
+function paintWheel(){
+  const n = wN();
+  wList.forEach((f, k) => {
+    let rel = k - wPos; rel = ((rel % n) + n) % n; if (rel > n/2) rel -= n;      // posició relativa al davant, en el cercle
+    const vis = Math.abs(rel) < 1.15;
+    f.style.visibility = vis ? 'visible' : 'hidden';
+    if (!vis) return;
+    f.style.transform = `translateZ(${-wR}px) rotateX(${(-rel*WSTEP).toFixed(3)}deg) translateZ(${wR}px)`;
+    f.style.zIndex = String(100 - Math.round(Math.abs(rel)*50));
+    const sh = f.querySelector(':scope > .shade'); if (sh) sh.style.opacity = Math.min(.75, Math.abs(rel)*.9).toFixed(3);
+  });
+  ALLF.forEach(f => { if (f.hidden) f.style.visibility = 'hidden'; });
   const a = wActive();
-  FACES.forEach((f,i) => f.classList.toggle('on', i === a));
-  [...wdots.children].forEach((d,i) => d.classList.toggle('on', i === a));
+  wList.forEach((f,k) => f.classList.toggle('on', k === a));
+  [...wdots.children].forEach((d,k) => d.classList.toggle('on', k === a));
+}
+function buildDots(){
+  wdots.innerHTML = wList.map(f => `<i data-f="${f.id||'cal'}"></i>`).join('');
 }
 function layoutWheel(){
   const h = wheelEl.clientHeight || 300;
-  wR = (h/2) / Math.tan(Math.PI / NF);
-  wheelEl.style.perspective = Math.round(h * 3.4) + 'px';
-  FACES.forEach((f,i) => f.style.transform = `rotateX(${-i*STEP}deg) translateZ(${wR}px)`);
-  placeDrum(false);
+  wR = (h/2) / Math.tan(Math.PI * WSTEP / 360);
+  wheelEl.style.perspective = Math.round(h * 3.2) + 'px';
+  paintWheel();
+}
+function animateWheel(){
+  cancelAnimationFrame(wAnim);
+  const from = wPos, to = wTarget, t0 = performance.now(), dur = 650;
+  const step = now => {
+    const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    wPos = from + (to - from) * e; paintWheel();
+    if (k < 1) wAnim = requestAnimationFrame(step);
+  };
+  wAnim = requestAnimationFrame(step);
 }
 function spinWheel(n){
   if (!n) return;
-  wIdx += n; closePop(); placeDrum(true);
+  wTarget += n; closePop(); animateWheel();
   if (soundOn) for (let i=0; i<Math.min(Math.abs(n),3); i++) setTimeout(ratchet, i*70);
 }
 function wheelToCalendar(){
-  const a = wActive(); if (!a) return;
-  spinWheel(a <= NF/2 ? -a : NF - a);           // pel camí més curt
+  const a = wActive(), n = wN(); if (!a) return;
+  spinWheel(a <= n/2 ? -a : n - a);           // pel camí més curt
 }
+// quan una cara apareix o desapareix (avisos, previsió), la roda es refà sense salts
+function refreshWheelFaces(){
+  const cur = wActiveFace();
+  const next = ALLF.filter(f => !f.hidden);
+  if (next.length === wList.length && next.every((f,i) => f === wList[i])) return;
+  wList = next; buildDots();
+  const i = wList.indexOf(cur);
+  cancelAnimationFrame(wAnim);
+  wPos = wTarget = i < 0 ? 0 : i;
+  paintWheel();
+}
+buildDots();
 // dits i ratolí: lliscament vertical = girar la roda
 let wSw = null, wTap = 0;
 wheelEl.addEventListener('pointerdown', e => { wSw = {x:e.clientX, y:e.clientY}; });
@@ -1558,8 +1595,10 @@ function renderFaces(){
     fNow.innerHTML = head('Ara', place) + msg;
     fPlace.innerHTML = head('Lloc i sol', '') + `<div class="fbody"><div class="hero"><div><div class="hero-big">${place}</div><div class="hero-d">Ubicació</div></div></div></div>`;
     fFore.innerHTML = head('Previsió · 12 h') + msg;
-    fAlert.innerHTML = head('Avisos · 24 h') + msg; fAlert.classList.remove('active');
-    [...wdots.children][4].className = (wActive()===4?'on':'');
+    fAlert.innerHTML = ''; fAlert.classList.remove('active');
+    fFore.hidden = true; fAlert.hidden = true;
+    [fNow, fPlace].forEach(f => { const sh = document.createElement('div'); sh.className = 'shade'; f.appendChild(sh); });
+    refreshWheelFaces(); paintWheel();
     return;
   }
   const c = lastWx.current, H = lastWx.hourly || {}, D = lastWx.daily || {};
@@ -1601,8 +1640,8 @@ function renderFaces(){
   if (pmax >= RAIN_MIN) rows += row('rain', `${pmax}%`, 'Pluja', pAt===nowH ? 'ara mateix' : `màxim a les ${fmtH(pAt)}`);
   if (fogAt) rows += row('fog', fogAt===nowH ? 'Ara' : fmtH(fogAt), 'Boira', 'prevista en les properes 12 h');
   if (snowAt) rows += row('snow', snowAt===nowH ? 'Ara' : fmtH(snowAt), 'Neu', 'prevista en les properes 12 h');
-  fFore.innerHTML = head('Previsió · 12 h', place) + (rows ? `<div class="fbody">${rows}</div>`
-    : `<div class="calm">${ICO.clear}<div>Ni pluja, ni boira, ni neu previstes en les properes 12 hores.</div></div>`);
+  fFore.innerHTML = rows ? head('Previsió · 12 h', place) + `<div class="fbody">${rows}</div>` : '';
+  fFore.hidden = !rows;                                     // només apareix si hi ha alguna cosa prevista
   // AVISOS 24 h
   const A = computeAlerts(), top = A.length ? A[0].l : 0;
   fAlert.classList.toggle('active', !!A.length);
@@ -1610,7 +1649,11 @@ function renderFaces(){
     ? `<div class="alist">${A.slice(0,4).map(a => `<div class="al l${a.l}">${ICO[ALICO[a.k]]}<div><b>${a.t}</b><small>${a.d}</small></div><em>${LVL[a.l]}</em></div>`).join('')}</div>
        <div class="al-src">Calculats amb la previsió d'Open-Meteo. Consulta sempre els avisos oficials de Protecció Civil i el Meteocat.</div>`
     : `<div class="calm">${ICO.ok}<div>Cap fenomen extrem previst en les properes 24 hores.</div></div>`);
-  const d4 = wdots.children[4]; d4.className = (wActive()===4 ? 'on ' : '') + (top ? 'al'+top : '');
+  fAlert.hidden = !A.length;                                // només apareix si hi ha avisos
+  [fNow, fFore, fPlace, fAlert].forEach(f => { if (!f.querySelector('.shade')){ const sh = document.createElement('div'); sh.className = 'shade'; f.appendChild(sh); } });
+  refreshWheelFaces();
+  const dA = wdots.querySelector('[data-f="fAlert"]'); if (dA) dA.classList.add('al'+top);
+  paintWheel();
 }
 
 function renderWeather(){ renderFaces(); }
