@@ -71,15 +71,18 @@ body{
 }
 button{font:inherit; color:inherit; background:none; border:0; cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation}
 button:focus-visible{outline:2px solid var(--lume-lo); outline-offset:2px}
+/* ---------------- composició: 50 % esfera · 50 % calendari, dades i comandaments ---------------- */
 .wrap{
-  min-height:100vh; min-height:100svh; display:grid; grid-template-columns:minmax(0,1.7fr) minmax(250px,.55fr);
-  align-items:center; gap:clamp(16px,2.5vw,44px);
-  padding:max(clamp(16px,3vw,40px), env(safe-area-inset-top)) max(clamp(16px,4vw,64px), env(safe-area-inset-right)) max(clamp(16px,3vw,40px), env(safe-area-inset-bottom)) max(clamp(16px,4vw,64px), env(safe-area-inset-left));
-  max-width:2300px; margin:0 auto;
+  --pad:clamp(14px,3vh,40px);
+  --S:min(40vw, calc(100vh - 2*var(--pad)));
+  --S:min(40vw, calc(100svh - 2*var(--pad)));
+  min-height:100vh; min-height:100svh; display:grid; grid-template-columns:1fr 1fr;
+  align-items:center; justify-items:center; column-gap:0;
+  padding:max(var(--pad), env(safe-area-inset-top)) env(safe-area-inset-right) max(var(--pad), env(safe-area-inset-bottom)) env(safe-area-inset-left);
 }
 
 /* ---------------- rellotge ---------------- */
-.watch{position:relative; width:min(100%, calc(100vh - 2*clamp(16px,3vw,40px))); width:min(100%, calc(100svh - 2*clamp(16px,3vw,40px))); aspect-ratio:1/1; justify-self:center}
+.watch{position:relative; width:var(--S); aspect-ratio:1/1}
 .watch svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
 #baseLayer,#bBase,.lyr-bezel{transition:filter .8s ease}
 .lyr-glow{pointer-events:none; opacity:0; transition:opacity .8s ease}
@@ -101,78 +104,116 @@ html[data-theme="night"] .lyr-glow{opacity:1}
 html[data-theme="night"] #glass, html[data-theme="night"] #glassB{opacity:.35}
 html[data-theme="day"] #baseLayer, html[data-theme="day"] #bBase, html[data-theme="day"] .lyr-bezel{filter:brightness(1.06)}
 
-/* ---------------- columna lateral ---------------- */
-.side{display:flex; flex-direction:column; gap:12px; width:100%; max-width:clamp(300px, 22vw, 460px); justify-self:center; min-width:0}
-.topbar{display:flex; justify-content:flex-end; align-items:center; gap:8px}
-.install-btn{display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; margin-right:auto; border-radius:999px;
-  font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:var(--lume); color:#14160b; box-shadow:0 0 10px var(--glow)}
-.install-btn svg{width:15px; height:15px}
-.install-btn[hidden]{display:none}
-.ios-hint{font-size:13px; line-height:1.45; color:var(--ink); padding:10px 13px; border-radius:14px;
-  background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line); box-shadow:var(--card-shadow)}
-.ios-hint svg{width:15px; height:15px; vertical-align:-2px; color:var(--accent)}
-.ios-hint[hidden]{display:none}
-.seg{display:inline-flex; gap:2px; padding:3px; border-radius:999px; background:var(--btn-bg); border:1px solid var(--btn-bd)}
-.seg button{display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 11px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:.06em; color:var(--btn-ink); transition:background .25s,color .25s}
+/* ---------------- columna dreta: barra de comandaments + roda (mateixa mida que l'esfera) ---------------- */
+.side{position:relative; width:var(--S); height:var(--S); display:flex; flex-direction:column; gap:10px; min-width:0}
+.bar{display:flex; align-items:center; gap:8px; height:44px; flex:none}
+.ins-btn{height:36px; min-width:58px; padding:0 14px; border-radius:999px; font-family:"Barlow Condensed"; font-weight:700; font-size:16px; letter-spacing:.14em;
+  color:#0d1006; background:radial-gradient(circle at 40% 35%, #f6fbe0, #dfe8b2 55%, #b9c787);
+  box-shadow:0 0 0 1px rgba(255,255,255,.35) inset, 0 0 14px rgba(214,236,150,.75), 0 0 34px rgba(214,236,150,.35);
+  text-shadow:0 1px 0 rgba(255,255,255,.4); animation:insGlow 3.2s ease-in-out infinite}
+@keyframes insGlow{50%{box-shadow:0 0 0 1px rgba(255,255,255,.35) inset, 0 0 22px rgba(214,236,150,.95), 0 0 48px rgba(214,236,150,.45)}}
+.ins-btn[hidden]{display:none}
+.icon-btn{width:38px; height:38px; flex:none; border-radius:50%; display:grid; place-items:center; background:var(--btn-bg); border:1px solid var(--btn-bd); color:var(--btn-ink); transition:background .25s,color .25s}
+.icon-btn svg{width:19px; height:19px}
+.icon-btn[aria-pressed="true"]{background:var(--btn-on); color:var(--btn-on-ink)}
+.icon-btn.spinning svg{animation:spin 8s cubic-bezier(.45,.05,.55,.95)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.seg{display:inline-flex; gap:2px; padding:3px; margin-left:auto; border-radius:999px; background:var(--btn-bg); border:1px solid var(--btn-bd)}
+.seg button{display:inline-flex; align-items:center; gap:5px; height:30px; padding:0 11px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:.06em; color:var(--btn-ink); transition:background .25s,color .25s}
 .seg button svg{width:15px; height:15px}
 .seg button[aria-pressed="true"]{background:var(--btn-on); color:var(--btn-on-ink)}
+.ios-hint{position:absolute; z-index:20; left:0; right:0; top:52px; font-size:13px; line-height:1.45; color:var(--ink); padding:11px 14px; border-radius:14px;
+  background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line); box-shadow:0 16px 34px rgba(0,0,0,.4)}
+.ios-hint svg{width:15px; height:15px; vertical-align:-2px; color:var(--accent)}
+.ios-hint[hidden]{display:none}
 
-/* ---------------- indicadors (carrusel) ---------------- */
-.wx{position:relative; min-width:0}
-.wx-track{
-  display:flex; gap:8px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scrollbar-width:none;
-  padding:2px 2px 16px; margin-bottom:-12px; cursor:grab; touch-action:pan-x pan-y;
-  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 var(--fl,0px), #000 calc(100% - var(--fr,22px)), transparent 100%);
-          mask-image:linear-gradient(90deg, transparent 0, #000 var(--fl,0px), #000 calc(100% - var(--fr,22px)), transparent 100%);
-}
-.wx-track::-webkit-scrollbar{display:none}
-.wx-track.dragging{cursor:grabbing; scroll-snap-type:none}
-.card{
-  flex:0 0 clamp(96px, 31%, 132px); height:100px; scroll-snap-align:start;
-  display:flex; flex-direction:column; justify-content:space-between;
-  padding:10px 11px 9px; border-radius:16px; user-select:none;
-  background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line); box-shadow:var(--card-shadow);
-}
-.card.alert{background:var(--alert-bg); border-color:var(--alert-bd); box-shadow:var(--card-shadow), inset 0 0 0 1px var(--alert-bd)}
-.card.alert .c-val{color:var(--alert-ink)}
-.card.alert .c-lbl{color:var(--alert-lbl); white-space:normal; line-height:1.2}
-.card.alert .c-sub{display:block; color:var(--alert-lbl); opacity:.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.card[hidden]{display:none}
-.c-ico{height:26px; display:flex; align-items:center}
-.c-ico svg{height:100%; width:auto; max-width:44px}
-#c-sky .c-ico{height:36px; margin:-6px 0 -4px -5px}
-.c-val{font-family:"Barlow Condensed"; font-weight:600; font-size:25px; line-height:1; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.c-val.hot{color:var(--accent); text-shadow:var(--accent-glow)}
-.c-val.txt{font-size:16px; line-height:1.05; white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical}
-.c-lbl{font-size:9px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--ink2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.c-sub{font-weight:500; letter-spacing:.04em; text-transform:none; color:var(--ink3)}
-.wx-dots{display:flex; justify-content:center; gap:5px; margin-top:2px}
-.wx-dots i{width:5px; height:5px; border-radius:50%; background:var(--line); transition:background .2s, transform .2s}
-.wx-dots i.on{background:var(--lume-lo); transform:scale(1.25)}
+/* ---------------- la roda: un tambor 3D dins el quadre ---------------- */
+.wheel{position:relative; flex:1; min-height:0; border-radius:18px; overflow:hidden; outline:none; touch-action:none;
+  container-type:size; background:var(--page); box-shadow:var(--shadow); -webkit-tap-highlight-color:transparent}
+.wheel:focus-visible{outline:2px solid var(--lume-lo); outline-offset:3px}
+.drum{position:absolute; inset:0; transform-style:preserve-3d; -webkit-transform-style:preserve-3d; transition:transform .75s cubic-bezier(.3,.75,.2,1)}
+.wface{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden;
+  border-radius:18px; border:1px solid var(--line); background:linear-gradient(180deg,var(--panel2),var(--panel));
+  padding:2.6cqh 3.2cqw 6cqh; display:flex; flex-direction:column}
+.wface:not(.on){pointer-events:none}
+.wface .shade{position:absolute; inset:0; pointer-events:none; background:#000; opacity:0; transition:opacity .75s}
+.wdots{position:absolute; z-index:6; left:50%; bottom:1.6cqh; transform:translateX(-50%); display:flex; gap:6px; pointer-events:none}
+.wdots i{width:6px; height:6px; border-radius:50%; background:var(--line); transition:background .3s, transform .3s}
+.wdots i.on{background:var(--lume-lo); transform:scale(1.3)}
+.wdots i.al1{background:#f2c200} .wdots i.al2{background:#ff7a00} .wdots i.al3{background:#e3201b; animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 4px rgba(227,32,27,.25)}}
 
-/* ---------------- calendari ---------------- */
-.cal{
-  position:relative;
-  background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line);
-  border-radius:18px; padding:10px 12px 12px; box-shadow:var(--shadow); overflow:hidden;
-}
-.cal-head{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px; height:34px}
+/* capçalera de cada cara de dades */
+.fhead{display:flex; align-items:baseline; justify-content:space-between; gap:8px; height:9cqh; flex:none; border-bottom:1px solid var(--line); margin-bottom:3cqh}
+.ftitle{font-family:"Barlow Condensed"; font-weight:700; font-size:clamp(15px,6cqh,30px); letter-spacing:.08em; text-transform:uppercase}
+.fsub{font-size:clamp(11px,3.4cqh,16px); color:var(--ink2); letter-spacing:.05em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.fbody{flex:1; min-height:0; display:flex; flex-direction:column; gap:3cqh}
+.hero{display:flex; align-items:center; gap:4cqw; flex:1; min-height:0}
+.hero-ico{height:min(30cqh,34cqw); aspect-ratio:1; flex:none}
+.hero-ico svg{width:100%; height:100%}
+.hero-t{font-family:"Barlow Condensed"; font-weight:600; font-size:clamp(28px,20cqh,110px); line-height:.9; color:var(--accent); text-shadow:var(--accent-glow)}
+.hero-big{font-family:"Barlow Condensed"; font-weight:700; font-size:clamp(22px,12cqh,72px); line-height:1; letter-spacing:.02em}
+.hero-d{font-size:clamp(13px,4.6cqh,24px); color:var(--ink2); margin-top:1cqh}
+.kv4{display:grid; grid-template-columns:1fr 1fr; gap:2.4cqh 3cqw; flex:none}
+.kv{display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; column-gap:2.4cqw; align-items:center;
+  padding:1.8cqh 2.4cqw; border-radius:12px; background:var(--cell-bg); border:1px solid var(--cell-bd)}
+.kv svg{grid-row:1 / span 2; width:clamp(18px,7cqh,36px); height:clamp(18px,7cqh,36px); color:var(--ink2)}
+.kv b{font-family:"Barlow Condensed"; font-weight:600; font-size:clamp(17px,7.4cqh,40px); line-height:1}
+.kv span{font-size:clamp(9px,2.7cqh,13px); font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink2)}
+
+/* previsió: files grans, només si està previst */
+.frow{display:flex; align-items:center; gap:4cqw; padding:2.4cqh 3cqw; border-radius:14px; flex:1; max-height:26cqh;
+  background:var(--alert-bg); border:1px solid var(--alert-bd)}
+.frow svg{height:min(11cqh,16cqw); width:auto; flex:none}
+.frow b{font-family:"Barlow Condensed"; font-weight:700; font-size:clamp(20px,10cqh,58px); line-height:1; color:var(--alert-ink)}
+.frow .fr-t{display:flex; flex-direction:column; gap:.6cqh}
+.frow .fr-l{font-size:clamp(11px,3.6cqh,18px); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--alert-lbl)}
+.frow .fr-s{font-size:clamp(11px,3.4cqh,16px); color:var(--alert-lbl); opacity:.85}
+.calm{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2cqh; text-align:center; color:var(--ink2);
+  font-size:clamp(13px,4.4cqh,22px); padding:0 6cqw}
+.calm svg{width:min(22cqh,30cqw); height:auto; color:var(--accent)}
+
+/* avisos: colors d'emergència */
+.wface.alerts.active{background:linear-gradient(180deg,#2a0d0b,#160605); border-color:#7a1712}
+html[data-theme="day"] .wface.alerts.active{background:linear-gradient(180deg,#fff4ec,#ffe6d6); border-color:#f0a07a}
+.wface.alerts.active .ftitle{color:#ff5a3c}
+html[data-theme="day"] .wface.alerts.active .ftitle{color:#c4200f}
+.alist{display:flex; flex-direction:column; gap:2cqh; flex:1; min-height:0; overflow:hidden}
+.al{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:3cqw; padding:2cqh 3cqw; border-radius:12px;
+  color:#170800; position:relative; overflow:hidden}
+.al::before{content:""; position:absolute; left:0; top:0; bottom:0; width:1.6cqw; min-width:6px;
+  background:repeating-linear-gradient(45deg,#111 0 6px,transparent 6px 12px)}
+.al svg{height:min(9cqh,13cqw); width:auto; margin-left:1.2cqw}
+.al b{display:block; font-family:"Barlow Condensed"; font-weight:700; font-size:clamp(16px,6.4cqh,34px); line-height:1}
+.al small{display:block; font-size:clamp(11px,3.3cqh,16px); margin-top:.5cqh; opacity:.9}
+.al em{font-style:normal; font-family:"Barlow Condensed"; font-weight:700; font-size:clamp(11px,3.4cqh,17px); letter-spacing:.1em; text-transform:uppercase;
+  padding:.6cqh 2cqw; border-radius:999px; background:rgba(0,0,0,.18)}
+.al.l1{background:linear-gradient(180deg,#ffd84a,#f2c200)}
+.al.l2{background:linear-gradient(180deg,#ffa040,#ff7a00)}
+.al.l3{background:linear-gradient(180deg,#ff4a3c,#d4140c); color:#fff; animation:alarm 1.6s ease-in-out infinite}
+.al.l3::before{background:repeating-linear-gradient(45deg,#fff 0 6px,transparent 6px 12px); opacity:.7}
+.al.l3 em{background:rgba(255,255,255,.22)}
+@keyframes alarm{50%{box-shadow:0 0 0 3px rgba(255,74,60,.35), 0 0 22px rgba(255,74,60,.5)}}
+.al-src{flex:none; font-size:clamp(9px,2.5cqh,12px); color:var(--ink3); margin-top:1cqh}
+.wface.alerts.active .al-src{color:#c98b80}
+
+/* ---------------- calendari (cara 1 de la roda) ---------------- */
+.cal-head{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:1.4cqh; height:max(34px,9cqh); flex:none}
 .cal-title{display:flex; align-items:baseline; gap:8px; min-width:0; padding:2px 4px; margin-left:-4px; border-radius:8px; user-select:none}
-.cal-month{font-family:"Barlow Condensed"; font-weight:700; font-size:21px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap}
-.cal-year{font-family:"Barlow Condensed"; font-weight:500; font-size:16px; color:var(--ink2); letter-spacing:.1em}
+.cal-month{font-family:"Barlow Condensed"; font-weight:700; font-size:clamp(17px,6.4cqh,32px); letter-spacing:.06em; text-transform:uppercase; white-space:nowrap}
+.cal-year{font-family:"Barlow Condensed"; font-weight:500; font-size:clamp(13px,4.6cqh,24px); color:var(--ink2); letter-spacing:.1em}
 .cal-nav{display:flex; align-items:center; gap:4px; flex:none}
 .nav-btn{width:30px; height:30px; border-radius:50%; display:grid; place-items:center; background:var(--btn-bg); border:1px solid var(--btn-bd); color:var(--btn-ink)}
 .nav-btn svg{width:14px; height:14px}
 .today-btn{height:30px; padding:0 10px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
   background:var(--lume); color:#14160b; box-shadow:0 0 10px var(--glow); transition:opacity .2s, transform .2s}
 .today-btn[hidden]{display:inline-block; visibility:hidden; opacity:0; transform:scale(.9)}
-.grid{display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:auto repeat(6, auto); gap:4px; touch-action:pan-y}
-.dow{font-size:10px; font-weight:600; letter-spacing:.1em; text-align:center; color:var(--ink2); padding:2px 0 4px; text-transform:uppercase}
+.grid{flex:1; min-height:0; display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:auto repeat(6, minmax(0,1fr)); gap:.9cqh 4px}
+.dow{font-size:clamp(9px,3cqh,14px); font-weight:600; letter-spacing:.1em; text-align:center; color:var(--ink2); padding:2px 0 4px; text-transform:uppercase}
 .dow.we{color:var(--ink3)}
 .day{
-  position:relative; width:min(100%, 5vh); width:min(100%, 5svh); justify-self:center; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
-  border-radius:50%; font-family:"Barlow Condensed"; font-weight:600; font-size:clamp(13px,1.15vw,17px);
+  position:relative; height:100%; max-width:100%; justify-self:center; align-self:center; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+  border-radius:50%; font-family:"Barlow Condensed"; font-weight:600; font-size:clamp(12px,4.6cqh,24px);
   color:var(--ink); background:var(--cell-bg); border:1px solid var(--cell-bd);
 }
 .day.out{background:none; border-color:transparent; color:var(--out-ink); font-weight:500}
@@ -208,28 +249,15 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
 .pop.down::after{top:-6px; border-bottom:none; border-right:none}
 
 /* ---------------- adaptació ---------------- */
-@media (max-width:900px){
-  .wrap{grid-template-columns:1fr; align-items:start; gap:12px;
-        padding:max(14px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left))}
-  .watch{width:min(100%, 720px)}
-  .side{max-width:480px; padding:0 6px}
-  .day{width:min(100%, 40px); font-size:15px}
-  .card{flex-basis:clamp(100px, 30%, 140px)}
+/* mòbil i tauleta en vertical: l'esfera a dalt; barra i roda a sota, amb la mateixa amplada */
+@media (orientation:portrait){
+  .wrap{--S:min(calc(100vw - 24px), 640px); grid-template-columns:1fr; row-gap:14px; align-content:start;
+        padding:max(14px, env(safe-area-inset-top)) 12px max(18px, env(safe-area-inset-bottom))}
+  .side{height:max(var(--S), 380px)}
 }
-/* mòbil en horitzontal: rellotge i calendari de costat */
-@media (orientation:landscape) and (max-height:520px){
-  .wrap{grid-template-columns:auto minmax(0,1fr); align-items:start; gap:16px}
-  .watch{width:calc(100svh - 24px); position:sticky; top:12px}
-  .side{max-width:none; gap:10px; padding:0}
-  .day{width:min(100%, 34px); font-size:14px}
-  .card{flex-basis:118px; height:92px}
-}
-/* escriptori baix (p. ex. 1280×720): tot ha de cabre sense desplaçament */
-@media (min-width:901px) and (max-height:820px){
-  .wrap{padding-top:16px; padding-bottom:16px}
-  .watch{width:min(100%, calc(100svh - 32px))}
-  .side{gap:10px}
-  .card{height:92px}
+@media (orientation:portrait) and (max-width:380px){
+  .seg button{padding:0 8px}
+  .icon-btn{width:34px; height:34px}
 }
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
 </style>
@@ -254,10 +282,14 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
   </div>
 
   <div class="side">
-    <div class="topbar">
-      <button type="button" class="install-btn" id="installBtn" hidden>
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.8 7 8 10.2 11.2 7M3 13.5h10"/></svg>
-        Instal·lar
+    <div class="bar" role="toolbar" aria-label="Comandaments">
+      <button type="button" class="ins-btn" id="installBtn" title="Instal·lar l'app" hidden>INS</button>
+      <button type="button" class="icon-btn" id="flipBtn" aria-label="Girar l'esfera" title="Girar l'esfera">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 3.5v5h-5"/><ellipse cx="12" cy="12" rx="2.6" ry="6" opacity=".55"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="soundBtn" aria-pressed="true" aria-label="So i veu de les hores" title="So: carraca, grinyol i hores en rus">
+        <svg class="snd-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.4a8 8 0 0 1 0 11.2"/></svg>
+        <svg class="snd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/></svg>
       </button>
       <div class="seg" role="group" aria-label="Aspecte de la pàgina" id="themeSeg">
         <button type="button" data-mode="auto" aria-pressed="true" title="Automàtic segons el sol">Auto</button>
@@ -270,18 +302,11 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
       </div>
     </div>
 
-    <div class="ios-hint" id="iosHint" hidden role="note">
-      Per instal·lar-la a l'iPhone: a Safari toca
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Comparteix"><path d="M8 1.5v8.5M5.3 4.2 8 1.5l2.7 2.7M4.5 7H3.5v7h9V7h-1"/></svg>
-      <b>Comparteix</b> i després <b>Afegeix a la pantalla d'inici</b>.
-    </div>
+    <div class="ios-hint" id="iosHint" hidden role="note"></div>
 
-    <section class="wx" aria-label="Indicadors del temps">
-      <div class="wx-track" id="wxTrack"></div>
-      <div class="wx-dots" id="wxDots" aria-hidden="true"></div>
-    </section>
-
-    <section class="cal" aria-label="Calendari">
+    <div class="wheel" id="wheel" tabindex="0" aria-roledescription="roda" aria-label="Calendari i dades. Llisca amunt o avall per girar la roda; doble toc per tornar al calendari.">
+      <div class="drum" id="drum">
+        <section class="wface cal on" aria-label="Calendari">
       <div class="cal-head">
         <button type="button" class="cal-title" id="calTitle" title="Doble toc: tornar al mes actual">
           <span class="cal-month" id="calMonth"></span><span class="cal-year" id="calYear"></span>
@@ -294,7 +319,14 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
       </div>
       <div class="grid" id="calGrid"></div>
       <div class="pop" id="pop" role="status" aria-live="polite"><div class="pop-name"></div><div class="pop-date"></div><div class="pop-type"></div></div>
-    </section>
+        </section>
+        <section class="wface" id="fNow" aria-label="El temps ara"></section>
+        <section class="wface" id="fPlace" aria-label="Lloc i sol"></section>
+        <section class="wface" id="fFore" aria-label="Previsió de 12 hores"></section>
+        <section class="wface alerts" id="fAlert" aria-label="Avisos meteorològics"></section>
+      </div>
+      <div class="wdots" id="wdots" aria-hidden="true"></div>
+    </div>
   </div>
 </main>
 
@@ -483,7 +515,7 @@ function buildBase(){
   s += `<text x="0" y="236" text-anchor="middle" dominant-baseline="central" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="13" letter-spacing="1" fill="#b4b7ba">H3 / T25</text>`;
 
   /* --- rètols (sense logotip de marca) --- */
-  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">VOSTOK</text>`;
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">KOSTOV</text>`;
   s += `<text x="0" y="-68" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="600" font-size="18" letter-spacing="5" fill="#c9ccce">AUTOMATIC</text>`;
   s += `<text x="0" y="92" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="31" letter-spacing="2.5" fill="#e4e6e7">CLAUDE</text>`;
   s += `<text x="0" y="121" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="17" letter-spacing="1.5" fill="#c3c6c8">WATER RESIST</text>`;
@@ -605,7 +637,7 @@ function buildGlow(){
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="17.5" fill="url(#gLumeN)"/>`;
   s += `<g id="glowPip"><circle cx="0" cy="-404" r="10.5" fill="url(#gLumeN)"/></g></g>`;
   // KOSTOV de nit: el vermell es manté viu i amb una lleugera aura
-  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">VOSTOK</text></g>`;
+  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">KOSTOV</text></g>`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="7" fill="#5f6a55"/><circle cx="${x-2}" cy="${y-2.5}" r="2.4" fill="#c9d3bd" opacity=".55"/>`;
   document.getElementById('glowLayer').innerHTML = s;
 }
@@ -837,7 +869,7 @@ function buildBackDial(){
     </g>`;
 
   // rètols (la marca canviada, amb el mateix estil de lletra gòtica)
-  s += `<text x="0" y="-98" text-anchor="middle" font-family="'UnifrakturMaguntia', 'Old English Text MT', serif" font-size="40" fill="#efe6c9" style="filter:drop-shadow(0 1.5px 1.2px rgba(0,0,0,.7))">Grand Seiko</text>`;
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="'UnifrakturMaguntia', 'Old English Text MT', serif" font-size="40" fill="#efe6c9" style="filter:drop-shadow(0 1.5px 1.2px rgba(0,0,0,.7))">Grand Sake</text>`;
   const sub = (y, txt, fs) => `<text x="0" y="${y}" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="${fs}" letter-spacing=".6" fill="#eae5d4">${txt}</text>`;
   s += sub(102, 'AUTOMATIC', 13.5) + sub(128, 'UFA', 19) + sub(153, "DIVER'S 300m", 13.5);
   document.getElementById('bBase').innerHTML = s;
@@ -977,8 +1009,11 @@ function initFlip(){
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 120); });
 
   let turns = 0;
+  const flipBtn = document.getElementById('flipBtn');
   const doFlip = () => {
     turns += 1;
+    flipSound(8);
+    flipBtn.classList.remove('spinning'); void flipBtn.offsetWidth; flipBtn.classList.add('spinning');
     flip.style.transform = `rotateY(${turns * 180}deg)`;
     watch.setAttribute('aria-label', turns % 2 ? 'Rellotge Grand Sake. Toca per girar-lo.' : 'Rellotge KOSTOV. Toca per girar-lo.');
   };
@@ -987,6 +1022,7 @@ function initFlip(){
     doFlip();
   });
   watch.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); doFlip(); } });
+  flipBtn.addEventListener('click', () => { enableSound(); doFlip(); });
 }
 
 /* =========================================================
@@ -1010,6 +1046,7 @@ function tick(){
     hSecB.setAttribute('transform', `rotate(${(s*6).toFixed(3)})`);
     hMinB.setAttribute('transform', `rotate(${(m*6).toFixed(3)})`);
     hHourB.setAttribute('transform', `rotate(${(h*30).toFixed(3)})`);
+    checkHourVoice(now);
     if (now.getDate() !== lastDay){
       lastDay = now.getDate();
       const dn = document.getElementById('dateNum'); dn.textContent = lastDay;
@@ -1036,7 +1073,7 @@ function audioUnlock(){
   }catch(e){}
 }
 function ratchet(){
-  if (!actx) return;
+  if (!actx || !soundPref) return;
   try{
     const t = actx.currentTime;
     const src = actx.createBufferSource(); src.buffer = clickBuf;
@@ -1341,67 +1378,6 @@ const ICO = {
   place:`<svg viewBox="0 0 24 24"><path d="M12 22s7.5-7.6 7.5-12.7a7.5 7.5 0 0 0-15 0C4.5 14.4 12 22 12 22z" fill="none" style="stroke:var(--ico-a)" stroke-width="1.8"/><circle cx="12" cy="9.4" r="2.7" style="fill:var(--ico-a)"/></svg>`,
   alt:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M1.5 20.5 9 7l4.5 7.5 3-4.5 6 10.5z"/><path d="m7.3 10 1.7 1.6 1.6-1.4" stroke-linecap="round"/></svg>`
 };
-const CARDS = [
-  ['place','Localitat'], ['sky','Estat del cel'], ['temp','Temperatura'], ['feels','Sensació tèrmica'], ['hum','Humitat'],
-  ['rain','Pluja'], ['fog','Boira'], ['snow','Neu'], ['alt','Altitud']
-];
-const ALERT = ['rain','fog','snow'];   // només es mostren si hi ha previsió
-const wxTrack = document.getElementById('wxTrack'), wxDots = document.getElementById('wxDots');
-function buildCards(){
-  wxTrack.innerHTML = CARDS.map(([id,l]) =>
-    `<div class="card${ALERT.includes(id)?' alert':''}" id="c-${id}" role="group" aria-label="${l}"${ALERT.includes(id)?' hidden':''}>
-       <div class="c-ico">${ICO[id]||''}</div>
-       <div class="c-val${id==='sky'||id==='place'?' txt':''}">—</div>
-       <div class="c-lbl">${l}<span class="c-sub"></span></div>
-     </div>`).join('');
-  updateTrackUI();
-}
-const visibleCards = () => [...wxTrack.children].filter(c => !c.hidden);
-function setCard(id, val, o={}){
-  const c = document.getElementById('c-'+id); if (!c) return;
-  const v = c.querySelector('.c-val'); v.textContent = val;
-  v.classList.toggle('hot', !!o.hot);
-  c.querySelector('.c-sub').textContent = o.sub || '';
-  if (o.ico !== undefined) c.querySelector('.c-ico').innerHTML = o.ico;
-}
-function updateTrackUI(){
-  const sl = wxTrack.scrollLeft, max = wxTrack.scrollWidth - wxTrack.clientWidth;
-  wxTrack.style.setProperty('--fl', sl > 2 ? '22px' : '0px');
-  wxTrack.style.setProperty('--fr', sl < max - 2 ? '22px' : '0px');
-  const cards = visibleCards(), tr = wxTrack.getBoundingClientRect();
-  if (wxDots.children.length !== cards.length) wxDots.innerHTML = cards.map(()=>'<i></i>').join('');
-  [...wxDots.children].forEach((d,i) => {
-    const r = cards[i] && cards[i].getBoundingClientRect();
-    d.classList.toggle('on', !!r && r.left >= tr.left - r.width*.4 && r.right <= tr.right + r.width*.4);
-  });
-}
-wxTrack.addEventListener('scroll', () => requestAnimationFrame(updateTrackUI), {passive:true});
-window.addEventListener('resize', updateTrackUI);
-// ratolí: arrossegar i roda
-let tDrag = null;
-wxTrack.addEventListener('pointerdown', e => {
-  if (e.pointerType !== 'mouse') return;
-  tDrag = {x:e.clientX, sl:wxTrack.scrollLeft, moved:false};
-  wxTrack.setPointerCapture(e.pointerId);
-});
-wxTrack.addEventListener('pointermove', e => {
-  if (!tDrag) return;
-  const dx = e.clientX - tDrag.x;
-  if (Math.abs(dx) > 3){ tDrag.moved = true; wxTrack.classList.add('dragging'); }
-  wxTrack.scrollLeft = tDrag.sl - dx;
-});
-const endDrag = () => {
-  if (!tDrag) return; tDrag = null;
-  wxTrack.classList.remove('dragging');           // en tornar el "snap", s'ajusta a la targeta més propera
-};
-wxTrack.addEventListener('pointerup', endDrag);
-wxTrack.addEventListener('pointercancel', endDrag);
-wxTrack.addEventListener('wheel', e => {
-  if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && wxTrack.scrollWidth > wxTrack.clientWidth){
-    e.preventDefault(); wxTrack.scrollBy({left: e.deltaY, behavior:'auto'});
-  }
-}, {passive:false});
-
 function wxIcon(code, day, light){
   const L = light ? '#9fb043' : '#dfe8b2', LH = light ? '#e3eca8' : '#f5f8e2', LL = light ? '#7f8e2c' : '#a9b67a';
   const G1 = light ? '#aeb1b5' : '#9da0a4', G2 = light ? '#7f8388' : '#6a6d71', G3 = light ? '#55585d' : '#3f4246', R='#e3201b';
@@ -1447,35 +1423,197 @@ function locate(){
 const parseLocal = s => { const [d,t='00:00'] = s.split('T'); const [Y,M,D] = d.split('-').map(Number); const [h,m] = t.split(':').map(Number); return new Date(Y,M-1,D,h,m); };
 const hh = s => s ? s.slice(11,13) : '';
 
-function renderWeather(){
+/* icones addicionals per a les cares de dades i els avisos */
+Object.assign(ICO, {
+  wind: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 8.5h11a3 3 0 1 0-3-3M3 12.5h16a3 3 0 1 1-3 3M3 16.5h8"/></svg>`,
+  rise: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 18h16M7 18a5 5 0 0 1 10 0M12 4v5M9.5 6.5 12 4l2.5 2.5M3.5 13.5l1.6.9M20.5 13.5l-1.6.9"/></svg>`,
+  set:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 18h16M7 18a5 5 0 0 1 10 0M12 4v5M9.5 6.5 12 9l2.5-2.5M3.5 13.5l1.6.9M20.5 13.5l-1.6.9"/></svg>`,
+  day:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.2 2"/></svg>`,
+  minmax:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20V4M3.5 7.5 7 4l3.5 3.5"/><path d="M17 4v16M13.5 16.5 17 20l3.5-3.5"/></svg>`,
+  storm:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 15.5h11.5a4 4 0 0 0 .3-8A6 6 0 0 0 6.5 9 3.3 3.3 0 0 0 6 15.5z"/><path d="M12.5 13 10 17.5h3.5L11 22" stroke-linecap="round"/></svg>`,
+  frost:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9.5 3.6 12 6l2.5-2.4M9.5 20.4 12 18l2.5 2.4"/></svg>`,
+  heat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 4.2a2 2 0 0 1 4 0v9.6a4.2 4.2 0 1 1-4 0z"/><path d="M12 8v8"/><path d="M18 4.5c.8.8.8 1.7 0 2.5s-.8 1.7 0 2.5M21 4.5c.8.8.8 1.7 0 2.5s-.8 1.7 0 2.5"/></svg>`,
+  ok:   `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="19"/><path d="m15.5 24.5 6 6 11-12"/></svg>`,
+  clear:`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 28a15 15 0 0 1 30 0M4 34h40M12 40h24"/><path d="M24 6v4M10.5 11.5l2.8 2.8M37.5 11.5l-2.8 2.8"/></svg>`
+});
+
+/* =========================================================
+   LA RODA: calendari → ara → lloc i sol → previsió → avisos → calendari…
+   (lliscar amunt/avall, roda del ratolí o fletxes; doble toc torna al calendari)
+   ========================================================= */
+const wheelEl = document.getElementById('wheel'), drumEl = document.getElementById('drum');
+const FACES = [...drumEl.children], NF = FACES.length, STEP = 360 / NF;
+let wIdx = 0, wR = 0;
+const wActive = () => ((wIdx % NF) + NF) % NF;
+const wdots = document.getElementById('wdots');
+wdots.innerHTML = FACES.map(()=>'<i></i>').join('');
+function placeDrum(animate){
+  if (!animate){ drumEl.style.transition = 'none'; requestAnimationFrame(()=>requestAnimationFrame(()=>drumEl.style.transition = '')); }
+  drumEl.style.transform = `translateZ(${-wR}px) rotateX(${wIdx*STEP}deg)`;
+  const a = wActive();
+  FACES.forEach((f,i) => f.classList.toggle('on', i === a));
+  [...wdots.children].forEach((d,i) => d.classList.toggle('on', i === a));
+}
+function layoutWheel(){
+  const h = wheelEl.clientHeight || 300;
+  wR = (h/2) / Math.tan(Math.PI / NF);
+  wheelEl.style.perspective = Math.round(h * 3.4) + 'px';
+  FACES.forEach((f,i) => f.style.transform = `rotateX(${-i*STEP}deg) translateZ(${wR}px)`);
+  placeDrum(false);
+}
+function spinWheel(n){
+  if (!n) return;
+  wIdx += n; closePop(); placeDrum(true);
+  if (soundOn) for (let i=0; i<Math.min(Math.abs(n),3); i++) setTimeout(ratchet, i*70);
+}
+function wheelToCalendar(){
+  const a = wActive(); if (!a) return;
+  spinWheel(a <= NF/2 ? -a : NF - a);           // pel camí més curt
+}
+// dits i ratolí: lliscament vertical = girar la roda
+let wSw = null, wTap = 0;
+wheelEl.addEventListener('pointerdown', e => { wSw = {x:e.clientX, y:e.clientY}; });
+wheelEl.addEventListener('pointerup', e => {
+  if (!wSw) return;
+  const dx = e.clientX - wSw.x, dy = e.clientY - wSw.y; wSw = null;
+  if (Math.abs(dy) > 36 && Math.abs(dy) > 1.3*Math.abs(dx)){
+    suppressClick = true; setTimeout(() => suppressClick = false, 60);
+    spinWheel(dy < 0 ? 1 : -1);
+    return;
+  }
+  // doble toc damunt del quadre (fora del calendari) torna al calendari
+  if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && wActive() !== 0){
+    const t = performance.now();
+    if (t - wTap < 420){ wTap = 0; wheelToCalendar(); } else wTap = t;
+  }
+});
+wheelEl.addEventListener('pointercancel', () => wSw = null);
+let wAcc = 0, wLock = 0;
+wheelEl.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  wAcc += e.deltaY;
+  const now = performance.now();
+  if (Math.abs(wAcc) > 40 && now > wLock){ spinWheel(wAcc > 0 ? 1 : -1); wAcc = 0; wLock = now + 480; }
+}, {passive:false});
+wheelEl.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown'){ e.preventDefault(); spinWheel(1); }
+  else if (e.key === 'ArrowUp' || e.key === 'PageUp'){ e.preventDefault(); spinWheel(-1); }
+  else if (e.key === 'Escape') wheelToCalendar();
+});
+let wRt; window.addEventListener('resize', () => { clearTimeout(wRt); wRt = setTimeout(layoutWheel, 100); });
+
+/* ---------------- cares de dades ---------------- */
+const fNow = document.getElementById('fNow'), fPlace = document.getElementById('fPlace'),
+      fFore = document.getElementById('fFore'), fAlert = document.getElementById('fAlert');
+const kv = (ico, val, lbl) => `<div class="kv">${ICO[ico]||''}<b>${val}</b><span>${lbl}</span></div>`;
+const head = (t, sub='') => `<div class="fhead"><span class="ftitle">${t}</span><span class="fsub">${sub}</span></div>`;
+const hhmm = d => d ? `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` : '—';
+const DIRS = ['N','NE','E','SE','S','SO','O','NO'];
+const dirTxt = deg => deg==null ? '' : DIRS[Math.round(((deg%360)+360)%360/45)%8];
+const fmtH = s => s ? `${s.slice(11,13)} h` : '';
+
+/* avisos per fenòmens extrems, calculats amb la previsió de les properes 24 h
+   (llindars orientatius inspirats en els avisos de Protecció Civil / Meteocat) */
+function computeAlerts(){
+  const A = []; if (!lastWx) return A;
+  const H = lastWx.hourly || {}, T = H.time || [], n = Math.min(T.length, 24);
+  const ext = (arr, cmp) => { let v = null, at = null; for (let i=0;i<n;i++){ const x = arr && arr[i]; if (x==null) continue; if (v==null || cmp(x,v)){ v = x; at = T[i]; } } return [v, at]; };
+  const lvl = (v, th) => v==null ? 0 : v >= th[2] ? 3 : v >= th[1] ? 2 : v >= th[0] ? 1 : 0;
+  const sum = arr => { let t = 0; for (let i=0;i<n;i++) t += (arr && arr[i]) || 0; return t; };
+  // pluja intensa (mm en una hora) o acumulada (24 h)
+  const [pm, pat] = ext(H.precipitation, (a,b)=>a>b), ps = sum(H.precipitation);
+  const lr = Math.max(lvl(pm, [15, 25, 40]), lvl(ps, [50, 90, 150]));
+  if (lr) A.push({k:'rain', l:lr, t:'Pluja intensa', d:`Fins a ${Math.round(pm)} mm en una hora (${fmtH(pat)}) · ${Math.round(ps)} mm en 24 h`});
+  // vent: ratxes
+  const [gm, gat] = ext(H.wind_gusts_10m, (a,b)=>a>b), lw = lvl(gm, [70, 90, 110]);
+  if (lw) A.push({k:'wind', l:lw, t:'Vent fort', d:`Ratxes de ${Math.round(gm)} km/h (${fmtH(gat)})`});
+  // tempesta (i calamarsa)
+  let storm = 0, sat = null;
+  for (let i=0;i<n;i++){ const c = (H.weather_code||[])[i]; if (c>=95){ const l = c===95 ? 1 : 2; if (l > storm){ storm = l; sat = T[i]; } } }
+  if (storm) A.push({k:'storm', l:storm, t: storm>1 ? 'Tempesta amb calamarsa' : 'Tempesta', d:`Prevista a les ${fmtH(sat)}`});
+  // neu
+  const sn = sum(H.snowfall), ls = lvl(sn, [0.5, 5, 20]);
+  if (ls) A.push({k:'snow', l:ls, t:'Nevada', d:`${sn.toFixed(sn < 5 ? 1 : 0)} cm de neu en 24 h`});
+  // boira densa
+  const [vm, vat] = ext(H.visibility, (a,b)=>a<b);
+  const lf = vm==null ? 0 : vm <= 100 ? 3 : vm <= 200 ? 2 : vm <= 500 ? 1 : 0;
+  if (lf) A.push({k:'fog', l:lf, t:'Boira densa', d:`Visibilitat de ${Math.round(vm)} m (${fmtH(vat)})`});
+  // gelada i calor
+  const [tmin, tnat] = ext(H.temperature_2m, (a,b)=>a<b), [tmax, txat] = ext(H.temperature_2m, (a,b)=>a>b);
+  const lg = tmin==null ? 0 : tmin <= -8 ? 3 : tmin <= -4 ? 2 : tmin <= 0 ? 1 : 0;
+  if (lg) A.push({k:'frost', l:lg, t:'Gelada', d:`Mínima de ${Math.round(tmin)}° (${fmtH(tnat)})`});
+  const lc = lvl(tmax, [34, 37, 40]);
+  if (lc) A.push({k:'heat', l:lc, t:'Calor intensa', d:`Màxima de ${Math.round(tmax)}° (${fmtH(txat)})`});
+  return A.sort((a,b)=>b.l-a.l);
+}
+const LVL = ['', 'Groc', 'Taronja', 'Vermell'];
+const ALICO = {rain:'rain', wind:'wind', storm:'storm', snow:'snow', fog:'fog', frost:'frost', heat:'heat'};
+
+function renderFaces(){
   const light = document.documentElement.dataset.theme === 'day';
-  if (!lastWx){ setCard('sky', 'No disponible', {ico: wxIcon(3, true, light)}); return; }
-  const c = lastWx.current, H = lastWx.hourly || {};
-  setCard('sky', WX_TXT(c.weather_code), {ico: wxIcon(c.weather_code, c.is_day===1, light)});
-  setCard('temp', `${Math.round(c.temperature_2m)}°`, {hot:true});
-  setCard('feels', `${Math.round(c.apparent_temperature)}°`);
-  setCard('hum', `${Math.round(c.relative_humidity_2m)}%`);
-  // previsió de les properes 12 hores
-  const T = H.time || [], PP = H.precipitation_probability || [], WC = H.weather_code || [], VIS = H.visibility || [], SN = H.snowfall || [];
+  const place = (geo && geo.name) || '—';
+  if (!lastWx){
+    const msg = `<div class="calm">${ICO.clear}<div>Dades del temps no disponibles.<br>Es tornarà a provar d'aquí a poc.</div></div>`;
+    fNow.innerHTML = head('Ara', place) + msg;
+    fPlace.innerHTML = head('Lloc i sol', '') + `<div class="fbody"><div class="hero"><div><div class="hero-big">${place}</div><div class="hero-d">Ubicació</div></div></div></div>`;
+    fFore.innerHTML = head('Previsió · 12 h') + msg;
+    fAlert.innerHTML = head('Avisos · 24 h') + msg; fAlert.classList.remove('active');
+    [...wdots.children][4].className = (wActive()===4?'on':'');
+    return;
+  }
+  const c = lastWx.current, H = lastWx.hourly || {}, D = lastWx.daily || {};
+  // ARA
+  const tmax = D.temperature_2m_max ? Math.round(D.temperature_2m_max[0]) : null, tmin = D.temperature_2m_min ? Math.round(D.temperature_2m_min[0]) : null;
+  fNow.innerHTML = head('Ara', place) + `<div class="fbody">
+      <div class="hero"><div class="hero-ico">${wxIcon(c.weather_code, c.is_day===1, light)}</div>
+        <div><div class="hero-t">${Math.round(c.temperature_2m)}°</div><div class="hero-d">${WX_TXT(c.weather_code)}</div></div></div>
+      <div class="kv4">
+        ${kv('feels', `${Math.round(c.apparent_temperature)}°`, 'Sensació tèrmica')}
+        ${kv('hum', `${Math.round(c.relative_humidity_2m)}%`, 'Humitat')}
+        ${kv('wind', c.wind_speed_10m!=null ? `${Math.round(c.wind_speed_10m)} <small style="font-size:.5em">km/h ${dirTxt(c.wind_direction_10m)}</small>` : '—', 'Vent')}
+        ${kv('minmax', tmax!=null ? `${tmax}° / ${tmin}°` : '—', 'Màx. / mín. avui')}
+      </div></div>`;
+  // LLOC I SOL
+  const alt = (geo.alt!=null && isFinite(geo.alt)) ? geo.alt : lastWx.elevation;
+  const sr = sunTimes && sunTimes.rise[0], ss = sunTimes && sunTimes.set[0];
+  const dl = (sr && ss) ? Math.round((ss - sr)/60000) : null;
+  fPlace.innerHTML = head('Lloc i sol', geo.fallback ? 'per defecte' : '') + `<div class="fbody">
+      <div class="hero"><div class="hero-ico">${ICO.place}</div>
+        <div><div class="hero-big">${place}</div><div class="hero-d">${(+geo.lat).toFixed(3)}° N · ${(+geo.lon).toFixed(3)}° E</div></div></div>
+      <div class="kv4">
+        ${kv('alt', alt!=null ? `${Math.round(alt)} m` : '—', 'Altitud')}
+        ${kv('day', dl!=null ? `${Math.floor(dl/60)} h ${String(dl%60).padStart(2,'0')}` : '—', 'Hores de llum')}
+        ${kv('rise', hhmm(sr), 'Sortida del sol')}
+        ${kv('set', hhmm(ss), 'Posta del sol')}
+      </div></div>`;
+  // PREVISIÓ 12 h: només el que està previst
+  const T = (H.time||[]).slice(0,12), PP = H.precipitation_probability || [], WC = H.weather_code || [], VIS = H.visibility || [], SN = H.snowfall || [];
   let pmax = -1, pAt = null, fogAt = null, snowAt = null;
   for (let i=0; i<T.length; i++){
-    const p = PP[i];
-    if (p != null && p > pmax){ pmax = p; pAt = T[i]; }
+    const p = PP[i]; if (p != null && p > pmax){ pmax = p; pAt = T[i]; }
     if (!fogAt && (isFogCode(WC[i]) || (VIS[i] != null && VIS[i] < 1000))) fogAt = T[i];
     if (!snowAt && (isSnowCode(WC[i]) || (SN[i] || 0) > 0)) snowAt = T[i];
   }
   const nowH = T[0];
-  const show = (id, on) => { const c = document.getElementById('c-'+id); if (c) c.hidden = !on; };
-  const rainOn = pmax >= RAIN_MIN;
-  show('rain', rainOn); show('fog', !!fogAt); show('snow', !!snowAt);
-  if (rainOn) setCard('rain', `${pmax}%`, {sub: pAt===nowH ? 'ara mateix' : `màx. a les ${hh(pAt)} h`});
-  if (fogAt)  setCard('fog',  fogAt===nowH  ? 'Ara' : `${hh(fogAt)} h`,  {sub: 'properes 12 h'});
-  if (snowAt) setCard('snow', snowAt===nowH ? 'Ara' : `${hh(snowAt)} h`, {sub: 'properes 12 h'});
-  setCard('place', geo.name || '—', {sub: geo.fallback ? ' · per defecte' : ''});
-  const alt = (geo.alt!=null && isFinite(geo.alt)) ? geo.alt : lastWx.elevation;
-  setCard('alt', alt!=null ? `${Math.round(alt)} m` : '—');
-  updateTrackUI();
+  const row = (ico, big, lbl, sub) => `<div class="frow">${ICO[ico]}<div class="fr-t"><b>${big}</b><span class="fr-l">${lbl}</span><span class="fr-s">${sub}</span></div></div>`;
+  let rows = '';
+  if (pmax >= RAIN_MIN) rows += row('rain', `${pmax}%`, 'Pluja', pAt===nowH ? 'ara mateix' : `màxim a les ${fmtH(pAt)}`);
+  if (fogAt) rows += row('fog', fogAt===nowH ? 'Ara' : fmtH(fogAt), 'Boira', 'prevista en les properes 12 h');
+  if (snowAt) rows += row('snow', snowAt===nowH ? 'Ara' : fmtH(snowAt), 'Neu', 'prevista en les properes 12 h');
+  fFore.innerHTML = head('Previsió · 12 h', place) + (rows ? `<div class="fbody">${rows}</div>`
+    : `<div class="calm">${ICO.clear}<div>Ni pluja, ni boira, ni neu previstes en les properes 12 hores.</div></div>`);
+  // AVISOS 24 h
+  const A = computeAlerts(), top = A.length ? A[0].l : 0;
+  fAlert.classList.toggle('active', !!A.length);
+  fAlert.innerHTML = head('Avisos · 24 h', A.length ? `${A.length} ${A.length>1?'avisos':'avís'}` : place) + (A.length
+    ? `<div class="alist">${A.slice(0,4).map(a => `<div class="al l${a.l}">${ICO[ALICO[a.k]]}<div><b>${a.t}</b><small>${a.d}</small></div><em>${LVL[a.l]}</em></div>`).join('')}</div>
+       <div class="al-src">Calculats amb la previsió d'Open-Meteo. Consulta sempre els avisos oficials de Protecció Civil i el Meteocat.</div>`
+    : `<div class="calm">${ICO.ok}<div>Cap fenomen extrem previst en les properes 24 hores.</div></div>`);
+  const d4 = wdots.children[4]; d4.className = (wActive()===4 ? 'on ' : '') + (top ? 'al'+top : '');
 }
+
+function renderWeather(){ renderFaces(); }
 
 async function updateWeather(){
   try{
@@ -1483,9 +1621,9 @@ async function updateWeather(){
     const {lat,lon} = geo;
     const [wx, place] = await Promise.all([
       fetchJSON(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
-        + `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day`
-        + `&hourly=precipitation_probability,weather_code,visibility,snowfall&forecast_hours=12`
-        + `&daily=sunrise,sunset&forecast_days=2&timezone=auto`),
+        + `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m`
+        + `&hourly=precipitation_probability,precipitation,weather_code,visibility,snowfall,wind_gusts_10m,temperature_2m&forecast_hours=24`
+        + `&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min&forecast_days=2&timezone=auto`),
       geo.name ? Promise.resolve(null)
                : fetchJSON(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=ca`).catch(()=>null)
     ]);
@@ -1493,10 +1631,134 @@ async function updateWeather(){
     lastWx = wx;
     if (wx.daily && wx.daily.sunrise) sunTimes = {rise: wx.daily.sunrise.map(parseLocal), set: wx.daily.sunset.map(parseLocal)};
     applyTheme();
-    renderWeather();
+    renderFaces();
   }catch(e){
-    if (!lastWx){ renderWeather(); if (geo) setCard('place', geo.name || '—'); }
+    if (!lastWx) renderFaces();
   }
+}
+
+/* =========================================================
+   SO: interruptor general (carraca del bisell, roda, grinyol del gir i veu de les hores)
+   ========================================================= */
+const SOUND_KEY = 'kostovSound';
+let soundPref = true;
+try{ soundPref = localStorage.getItem(SOUND_KEY) !== 'off'; }catch(e){}
+let soundOn = false;
+const soundBtn = document.getElementById('soundBtn');
+function paintSound(){
+  soundBtn.setAttribute('aria-pressed', String(soundPref));
+  soundBtn.querySelector('.snd-on').style.display = soundPref ? '' : 'none';
+  soundBtn.querySelector('.snd-off').style.display = soundPref ? 'none' : '';
+}
+function enableSound(){
+  if (!soundPref) return;
+  try{ if (navigator.audioSession) navigator.audioSession.type = 'playback'; }catch(e){}
+  audioUnlock();
+  soundOn = !!actx;
+}
+// el navegador només deixa sonar després d'un gest: el primer toc a qualsevol lloc ho activa
+['pointerdown','keydown'].forEach(ev => window.addEventListener(ev, () => { if (soundPref && !soundOn) enableSound(); }, {capture:true, passive:true}));
+soundBtn.addEventListener('click', () => {
+  soundPref = !soundPref;
+  try{ localStorage.setItem(SOUND_KEY, soundPref ? 'on' : 'off'); }catch(e){}
+  if (soundPref){ enableSound(); sayRu('Звук включён.'); }
+  else { soundOn = false; try{ speechSynthesis.cancel(); }catch(e){} }
+  paintSound();
+});
+paintSound();
+
+/* ---- grinyol del gir: el mateix que el mur del quinqué (fricció de frontissa + cops de fusta) ---- */
+let dryBus = null;
+function ensureDry(){
+  if (dryBus || !actx) return;
+  const comp = actx.createDynamicsCompressor(); comp.threshold.value = -12; comp.ratio.value = 3;
+  dryBus = actx.createGain(); dryBus.gain.value = 0.9; dryBus.connect(comp); comp.connect(actx.destination);
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+let tickBufs = null, tickOut = null;
+function renderTick(tock, seed){
+  const sr=actx.sampleRate,len=Math.floor(sr*.32),buf=actx.createBuffer(1,len,sr),d=buf.getChannelData(0),rnd=mulberry32(seed);
+  const jit=()=>1+(rnd()-.5)*.03;
+  const metal=tock?[[1180,.34,.022],[1790,.24,.014],[2640,.14,.009],[3900,.06,.006],[760,.2,.03]]
+                  :[[1380,.32,.02],[2060,.22,.013],[3010,.13,.008],[4300,.05,.005],[880,.17,.026]];
+  const wood=[[112,.46,.050],[198,.54,.040],[296,.42,.030],[430,.28,.022],[615,.15,.015],[870,.07,.010]];
+  const woodGain=tock?1.3:1.05;
+  function hit(t0,amp,metalK,woodK){
+    const i0=Math.floor(t0*sr);
+    for(const[f0,a,tau]of metal){const f=f0*jit(),ph=rnd()*6.283,w=6.2832*f/sr,k=Math.exp(-1/(tau*.4*sr*jit()));let e=a*amp*metalK*.6;
+      for(let i=i0;i<len&&e>1e-5;i++){d[i]+=e*Math.sin(w*(i-i0)+ph);e*=k;}}
+    for(const[f0,a,tau]of wood){const f=f0*jit(),w=6.2832*f/sr,k=Math.exp(-1/(tau*sr));let e=a*amp*woodK*woodGain;
+      for(let i=i0;i<len&&e>1e-5;i++){const n=i-i0,att=n<sr*.0015?n/(sr*.0015):1;d[i]+=e*att*Math.sin(w*n);e*=k;}}
+    let e=.14*amp,prev=0;const k=Math.exp(-1/(.0012*sr));
+    for(let i=i0;i<len&&e>1e-5;i++){const x=rnd()*2-1;d[i]+=e*(x-prev);prev=x;e*=k;}
+  }
+  hit(0,1,1,1); hit(tock?.011:.009,.22,.6,.25);
+  let pk=0;for(let i=0;i<len;i++)pk=Math.max(pk,Math.abs(d[i]));
+  const g=(tock?.92:.78)/pk;for(let i=0;i<len;i++)d[i]*=g;
+  return buf;
+}
+function woodTick(t, tock, vol=1, rate=1){
+  ensureDry();
+  if (!tickBufs) tickBufs = { tic:[1,2,3].map(n=>renderTick(false,100+n)), toc:[1,2,3].map(n=>renderTick(true,200+n)) };
+  if (!tickOut){ tickOut=actx.createGain(); tickOut.gain.value=.4; const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2200; lp.Q.value=.5;
+    tickOut.connect(lp); lp.connect(dryBus); }
+  const arr = tock ? tickBufs.toc : tickBufs.tic, src = actx.createBufferSource();
+  src.buffer = arr[Math.floor(Math.random()*arr.length)]; src.playbackRate.value = rate*(1+(Math.random()-.5)*.006);
+  const g = actx.createGain(); g.gain.value = vol*(.94+Math.random()*.08); src.connect(g); g.connect(tickOut); src.start(t);
+}
+function creak(t,dur,vol,pitch){
+  ensureDry();
+  const r=Math.random,n=48,rate=new Float32Array(n);
+  for(let i=0;i<n;i++){const x=i/(n-1);rate[i]=(16+34*Math.pow(Math.sin(Math.PI*x),.7)+(r()-.5)*9)*pitch;}
+  const o=actx.createOscillator();o.type='sawtooth';o.frequency.setValueCurveAtTime(rate,t,dur);
+  const sum=actx.createGain();
+  [[690,10,1],[1380,14,.55],[2070,16,.3],[410,7,.45]].forEach(([f,q,a])=>{
+    const bp=actx.createBiquadFilter();bp.type='bandpass';bp.Q.value=q;
+    bp.frequency.setValueAtTime(f*pitch,t);bp.frequency.linearRampToValueAtTime(f*pitch*1.08,t+dur);
+    const g=actx.createGain();g.gain.value=a;o.connect(bp);bp.connect(g);g.connect(sum);});
+  const env=actx.createGain();env.gain.setValueAtTime(.0001,t);env.gain.exponentialRampToValueAtTime(vol,t+.09);
+  env.gain.setValueAtTime(vol,t+dur*.55);env.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;
+  sum.connect(env);env.connect(lp);lp.connect(dryBus);o.start(t);o.stop(t+dur+.05);
+}
+// so del gir: desbloqueig, grinyol llarg i cop en encaixar (adaptat als 8 s del gir)
+function flipSound(dur){
+  if (!soundOn || !actx) return;
+  if (actx.state === 'suspended') actx.resume();
+  const t = actx.currentTime;
+  woodTick(t, false, .22, .75);
+  creak(t+.12, dur*0.72, .045, 1);
+  woodTick(t+dur-0.06, true, .42, .5); woodTick(t+dur, false, .16, 1.1);
+}
+
+/* ---- hores en punt dites en rus ---- */
+const RU_NUM = ['ноль','один','два','три','четыре','пять','шесть','семь','восемь','девять','десять','одиннадцать','двенадцать',
+  'тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать','двадцать','двадцать один','двадцать два','двадцать три'];
+function ruHour(h){
+  if (h === 0) return 'Полночь.';
+  if (h === 12) return 'Полдень.';
+  if (h === 1) return 'Сейчас ровно час.';
+  const d = h % 10, word = (h >= 11 && h <= 14) ? 'часов' : d === 1 ? 'час' : (d >= 2 && d <= 4) ? 'часа' : 'часов';
+  return `Сейчас ровно ${RU_NUM[h]} ${word}.`;
+}
+let ruVoice = null;
+function pickRuVoice(){ try{ const v = speechSynthesis.getVoices(); ruVoice = v.find(x => /^ru(-|_|$)/i.test(x.lang) && /Milena|Yuri|Google/i.test(x.name)) || v.find(x => /^ru/i.test(x.lang)) || null; }catch(e){} }
+if ('speechSynthesis' in window){ pickRuVoice(); speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', pickRuVoice); }
+function sayRu(text){
+  if (!soundPref || !('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ru-RU'; if (ruVoice) u.voice = ruVoice; u.rate = .92; u.pitch = 1; u.volume = 1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+let lastSpokenHour = -1;
+function checkHourVoice(now){
+  if (now.getMinutes() !== 0 || now.getSeconds() > 2) return;
+  const h = now.getHours(); if (h === lastSpokenHour) return;
+  lastSpokenHour = h;
+  if (soundOn) sayRu(ruHour(h));
 }
 
 /* =========================================================
@@ -1553,12 +1815,17 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')){
   const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   let deferred = null;
-  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; if (!standalone) btn.hidden = false; });
-  // a l'iPhone no hi ha avís automàtic: el botó mostra com fer-ho des de Safari
-  if (isIOS && !standalone && location.protocol.startsWith('http')) btn.hidden = false;
+  if (!standalone) btn.hidden = false;                       // el botó INS sempre a la barra, fins que l'app s'instal·la
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; });
+  const share = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.5v8.5M5.3 4.2 8 1.5l2.7 2.7M4.5 7H3.5v7h9V7h-1"/></svg>`;
   btn.addEventListener('click', async () => {
-    if (deferred){ deferred.prompt(); await deferred.userChoice.catch(()=>{}); deferred = null; btn.hidden = true; }
-    else if (isIOS) hint.hidden = !hint.hidden;
+    if (deferred){ deferred.prompt(); await deferred.userChoice.catch(()=>{}); deferred = null; return; }
+    hint.innerHTML = isIOS
+      ? `Per instal·lar-la a l'iPhone: a Safari toca ${share} <b>Comparteix</b> i després <b>Afegeix a la pantalla d'inici</b>.`
+      : location.protocol.startsWith('http')
+        ? `Per instal·lar-la: obre el menú del navegador i tria <b>Instal·la l'aplicació</b> (Chrome, Edge) o <b>Afegeix a la pantalla d'inici</b>.`
+        : `L'app es pot instal·lar quan s'obre des de la seva adreça web (GitHub Pages), no des d'un fitxer.`;
+    hint.hidden = !hint.hidden;
   });
   hint.addEventListener('click', () => hint.hidden = true);
   window.addEventListener('appinstalled', () => { btn.hidden = true; hint.hidden = true; });
@@ -1573,8 +1840,9 @@ setupBezel('bBezel','bezelHitB','bezelRotB','glowPipB');
 initFlip(); initReserve();
 const hSec = document.getElementById('hSec'), hMin = document.getElementById('hMin'), hHour = document.getElementById('hHour');
 const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById('hMinB'), hHourB = document.getElementById('hHourB');
-buildCards();
+layoutWheel();
 applyTheme();
+renderFaces();
 renderCalendar();
 requestAnimationFrame(tick);
 refreshHolidays(false);
