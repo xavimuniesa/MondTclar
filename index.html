@@ -525,7 +525,7 @@ function buildBase(){
   s += `<text x="0" y="236" text-anchor="middle" dominant-baseline="central" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="13" letter-spacing="1" fill="#b4b7ba">H3 / T25</text>`;
 
   /* --- rètols (sense logotip de marca) --- */
-  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">KOSTOV</text>`;
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">VOSTOK</text>`;
   s += `<text x="0" y="-68" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="600" font-size="18" letter-spacing="5" fill="#c9ccce">AUTOMATIC</text>`;
   s += `<text x="0" y="92" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="31" letter-spacing="2.5" fill="#e4e6e7">CLAUDE</text>`;
   s += `<text x="0" y="121" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="17" letter-spacing="1.5" fill="#c3c6c8">WATER RESIST</text>`;
@@ -647,7 +647,7 @@ function buildGlow(){
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="17.5" fill="url(#gLumeN)"/>`;
   s += `<g id="glowPip"><circle cx="0" cy="-404" r="10.5" fill="url(#gLumeN)"/></g></g>`;
   // KOSTOV de nit: el vermell es manté viu i amb una lleugera aura
-  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">KOSTOV</text></g>`;
+  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">VOSTOK</text></g>`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="7" fill="#5f6a55"/><circle cx="${x-2}" cy="${y-2.5}" r="2.4" fill="#c9d3bd" opacity=".55"/>`;
   document.getElementById('glowLayer').innerHTML = s;
 }
