@@ -879,7 +879,7 @@ function buildBackDial(){
     </g>`;
 
   // rètols (la marca canviada, amb el mateix estil de lletra gòtica)
-  s += `<text x="0" y="-98" text-anchor="middle" font-family="'UnifrakturMaguntia', 'Old English Text MT', serif" font-size="40" fill="#efe6c9" style="filter:drop-shadow(0 1.5px 1.2px rgba(0,0,0,.7))">Grand Sake</text>`;
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="'UnifrakturMaguntia', 'Old English Text MT', serif" font-size="40" fill="#efe6c9" style="filter:drop-shadow(0 1.5px 1.2px rgba(0,0,0,.7))">Grand Seiko</text>`;
   const sub = (y, txt, fs) => `<text x="0" y="${y}" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="${fs}" letter-spacing=".6" fill="#eae5d4">${txt}</text>`;
   s += sub(102, 'AUTOMATIC', 13.5) + sub(128, 'UFA', 19) + sub(153, "DIVER'S 300m", 13.5);
   document.getElementById('bBase').innerHTML = s;
