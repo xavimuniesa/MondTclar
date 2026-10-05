@@ -252,9 +252,18 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
 /* ---------------- adaptació ---------------- */
 /* mòbil i tauleta en vertical: l'esfera a dalt; barra i roda a sota, amb la mateixa amplada */
 @media (orientation:portrait){
-  .wrap{--S:min(calc(100vw - 24px), 640px); grid-template-columns:1fr; row-gap:14px; align-content:start;
-        padding:max(14px, env(safe-area-inset-top)) 12px max(18px, env(safe-area-inset-bottom))}
-  .side{height:max(var(--S), 380px)}
+  /* tot en una sola pantalla: l'esfera s'encongeix si cal i el quadre ocupa exactament l'espai que queda */
+  .wrap{
+    --top:max(12px, env(safe-area-inset-top)); --bot:max(14px, env(safe-area-inset-bottom));
+    --wmin:clamp(280px, 44svh, 440px);
+    --S:max(230px, min(calc(100vw - 24px), 640px, calc(100svh - var(--top) - var(--bot) - 44px - 24px - var(--wmin))));
+    --S:max(230px, min(calc(100vw - 24px), 640px, calc(100dvh - var(--top) - var(--bot) - 44px - 24px - var(--wmin))));
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+    height:100svh; height:100dvh; min-height:0;
+    padding:var(--top) 12px var(--bot);
+  }
+  .watch{flex:none}
+  .side{width:min(calc(100vw - 24px), 640px); height:auto; flex:1; min-height:var(--wmin)}
 }
 @media (orientation:portrait) and (max-width:380px){
   .seg button{padding:0 8px}
