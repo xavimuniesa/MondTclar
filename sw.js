@@ -2,7 +2,7 @@
    - La pàgina i les icones: primer la xarxa (per rebre les versions noves), i si no n'hi ha, la còpia desada.
    - Les tipografies de Google: es desen el primer cop i després es fan servir des de la memòria.
    - El temps, la ràdio, els podcasts i les notícies no es desen aquí: necessiten connexió. */
-const VERSION = 'kostov-v7';
+const VERSION = 'kostov-v8';
 const SHELL = [
   './', './index.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './favicon-48.png'
