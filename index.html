@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>VOSTOK</title>
-<meta name="description" content="Rellotge VOSTOK de dues cares (VOSTOK i Tissot PRS 516) amb calendari de festius, el temps, ràdio, notícies, alarmes i mode Zz.">
+<title>KOSTOV</title>
+<meta name="description" content="Rellotge KOSTOV de dues cares (KOSTOV i Tissot PRS 516) amb calendari de festius, el temps, ràdio, notícies, alarmes i mode Zz.">
 <meta name="theme-color" id="theme-color-meta" content="#060607">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
@@ -12,8 +12,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="VOSTOK">
-<script>(function(){var m=null;try{m=localStorage.getItem('VOSTOK_theme')}catch(e){}var h=new Date().getHours();document.documentElement.dataset.theme=(m==='day'||m==='night'||m==='zz')?m:((h>=7&&h<20)?'day':'night');try{var l=localStorage.getItem('VOSTOK_lang');if(l)document.documentElement.lang=l}catch(e){}})();</script>
+<meta name="apple-mobile-web-app-title" content="KOSTOV">
+<script>(function(){var m=null;try{m=localStorage.getItem('kostov_theme')}catch(e){}var h=new Date().getHours();document.documentElement.dataset.theme=(m==='day'||m==='night'||m==='zz')?m:((h>=7&&h<20)?'day':'night');try{var l=localStorage.getItem('kostov_lang');if(l)document.documentElement.lang=l}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Russo+One&display=swap" rel="stylesheet">
@@ -274,7 +274,7 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
 
 /* =====================================================================
-   NOVES PECES (portades del PRS 516) amb l'aspecte VOSTOK
+   NOVES PECES (portades del PRS 516) amb l'aspecte KOSTOV
    ===================================================================== */
 @font-face{font-family:'TissotBricolage'; font-weight:600; font-style:normal; src:url(data:font/woff2;base64,d09GMgABAAAAAAP8ABAAAAAACCwAAAOgAAEAQgAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbgSQcKgZgP1NUQVRWAEQRCAqCSII0ATYCJAMUCwwABCAFhigHIAwHG/YGIxE2g1GaSfFXCTYYU3u4XwCTSQjG2BYtDR/rNlCEX08uRy5CoQsn5zwnMx76/Pv/dtXpez+JMZFJyiDHsyZ6HQANOyu/rzz5h99fgm0NPlrv8+7e54RQl9gqlNL6+mMx9d3/XE5vLLwDG1P4wM5sjdbHBkdrept6HoWQJrTG84CPLBA5CsTTTUUG6bPDZwQnEkpOM0mgOyCFUIRAV+PNles3brmjnkfud+LReipQq0AccdDxR+uMQCi66Cx0FhKdpcUK1tpW0QJB/RcAqB1d6/+of9en2JRYdUgNc1AopuaJJtODS3J/yd65qxZ5ee6KLT6ZGHubG0vJbu1WKSkLAgDW7Ljl9l7fzI7NnR0pl8a1CMhueSNG6yGEzhr012C6PObYE04PnHLgiYdGilMOOfTECKmtr5ECopueCCGjnwMRkuiUu4JEnYs4rJiNzjpLbGYbO9Z6kB1usT5frQgAIWrVC7RAV7RxMG4GCiCkkKVfn4WldGt1K/tlcfnnqY/zvvii2xWfsc79FHaWQZxXQdfLScO5n73xWbM8dpfXN+r2A3lt99XPF7477Rqz4/2Tr747Yd5/uP7KZwuekTk3fpbDo5etbzz3Rgd13/QYba6mvC7y+ccrttgtCjW5mvpuhx1UN/kapYkAZ8amQNNZ5SzncNpyNiWRdW03ftaysK77moN2YhZpZvmY0Zu2HmE2hrZ39g4fNg786rrnkLRaE7F63DXGUMjzumDzgDkWBigoVr79tyf433rr7/6dhySVmpjN5a1f6he+uvGcG9dOJjeOAEGs3eF32/bptfy/c9P8iW96bHEX/Pjdvtdg7dtsrkJHW4JgMdH4DtNxy5aQ79LKa20dw22dHyzIS8zKuQYItBygbRdtAQAagR7ubETpgrcRJezsbSX1jKFK4+CYvF6aSsvOcbXctm38OhIMzvmhhO65pZK65q5KJ71zf6WbznnN8dBvdKzTw5A6Z3AU4wQmg8kkqGBAEGLwMZwO0QKNVyBHGizNB15AidxY940HeQ6DDCtQYBxHsS69HsU5jB/pxnCmH3JgigOGY/DhuX7ksxmlY8Npo+y46FmDGYYemBSTZTDDASXUUF6cFsaoMxiM7mAlU3LfnwUfs2CsRWufMiwO54L430IRDsIp2zbonDqzWTcBJw41ajA5gdGJdF1z+b6jRYc5gfXkBaiDLVmExyfcdEXNaDm53DZSNBtOl6G+MmX/81EverxcBQAA) format('woff2')}
 
@@ -330,7 +330,7 @@ html[data-theme="day"] .calendar-day-cell.holiday.sun{background:radial-gradient
 .calendar-day-cell.today.holiday{border:3px solid var(--red); color:#b3140f}
 .cal-title{cursor:pointer}
 
-/* rètol del festiu (com la finestreta del VOSTOK) */
+/* rètol del festiu (com la finestreta del KOSTOV) */
 .holiday-tip{position:fixed; z-index:60; transform:translate(-50%, calc(-100% - 10px)); max-width:260px; padding:9px 12px 10px; border-radius:12px; pointer-events:none;
   background:var(--pop-bg); border:1px solid var(--pop-bd); border-left:3px solid var(--red); color:var(--hol-ink);
   font-family:"Barlow Condensed"; font-weight:700; font-size:17px; line-height:1.15; letter-spacing:.02em;
@@ -606,48 +606,36 @@ html[data-theme="day"] .wface.alerts .ftitle{color:#c4200f}
 /* ---------- Mode Zz: negre i un sol color; només el rellotge ---------- */
 .zz-velo{position:fixed; inset:0; z-index:70; background:#000; opacity:0; pointer-events:none; transition:opacity .4s}
 html[data-theme="zz"] .zz-velo{opacity:var(--zz-dim, .1)}
-.zz-info{display:none}
 html[data-theme="zz"]{--page:#000; --body-bg:#000}
 html[data-theme="zz"] body{background:#000}
-html[data-theme="zz"] .face{filter:url(#zz-tint)}
-html[data-theme="zz"] #bBase, html[data-theme="zz"] #bHands{filter:invert(1)}
+/* Zz amb dos tons: el rellotge en el to A, el lume i les finestres en el to B (poden ser iguals) */
+html[data-theme="zz"] #baseLayer, html[data-theme="zz"] #bezelLayer, html[data-theme="zz"] #bBezel{filter:url(#zz-a-dim)}
+html[data-theme="zz"] #handsLayer{filter:url(#zz-a)}
+html[data-theme="zz"] #bBase, html[data-theme="zz"] #bHands{filter:url(#zz-a-inv)}
 html[data-theme="zz"] #bBase .t-lume, html[data-theme="zz"] #bHands .hl{filter:url(#fInv)}
+html[data-theme="zz"] .lyr-glow{filter:url(#zz-b)}
 html[data-theme="zz"] #bGlow{opacity:.55}
 html[data-theme="zz"] .edge{background:#000!important}
-html[data-theme="zz"] .wrap{display:flex; align-items:center; justify-content:center; --S:min(92vw, calc(100svh - 230px), 720px)}
-html[data-theme="zz"] .side{position:fixed; left:0; right:0; top:0; height:auto; width:auto; visibility:hidden; pointer-events:none; padding:max(12px,env(safe-area-inset-top)) 16px 0; z-index:75; display:flex; align-items:center}
-html[data-theme="zz"] .side > :not(.bar){display:none}
-html[data-theme="zz"] .bar{width:min(640px,100%); opacity:0; transition:opacity .35s}
-html[data-theme="zz"].zz-show .bar{visibility:visible; pointer-events:auto; opacity:.9; filter:url(#zz-tint)}
-.watch{touch-action:manipulation}
+html[data-theme="zz"] .side, html[data-theme="zz"] .dialeg, html[data-theme="zz"] .alarm-overlay,
+html[data-theme="zz"] .toast, html[data-theme="zz"] .holiday-tip{filter:url(#zz-b)}
 html[data-theme="zz"] .watch{touch-action:none}
-html[data-theme="zz"] .zz-info{display:flex; position:fixed; inset:0; z-index:60; flex-direction:column; justify-content:space-between; align-items:center; pointer-events:none;
-  padding:max(26px, calc(env(safe-area-inset-top) + 14px)) 16px max(22px, calc(env(safe-area-inset-bottom) + 12px)); color:var(--zz-c, #ff8a2b);
-  font-family:"Barlow Condensed"; text-transform:uppercase; text-align:center}
-html[data-theme="zz"].zz-show .zz-top{opacity:0}
-.zz-top{font-weight:600; font-size:clamp(14px,2.2vh,19px); letter-spacing:.3em; opacity:.6; transition:opacity .3s}
-.zz-bottom{display:flex; flex-direction:column; align-items:center; gap:14px}
-.zz-alarm{font-weight:600; font-size:clamp(17px,2.6vh,23px); letter-spacing:.2em; opacity:.72}
-.zz-alarm:empty{display:none}
-.zz-dots{display:flex; gap:14px; pointer-events:auto}
-.zz-dots button{width:30px; height:30px; display:grid; place-items:center; padding:0}
-.zz-dots button::before{content:""; width:20px; height:20px; border-radius:50%; background:var(--c); opacity:.75; box-sizing:border-box}
-.zz-dots button[aria-pressed="true"]::before{opacity:1; box-shadow:0 0 0 2px #000, 0 0 0 4px var(--c)}
-.zz-lum{position:relative; width:180px; height:4px; border-radius:2px; background:rgba(255,255,255,.12)}
-.zz-lum i{position:absolute; left:0; top:0; bottom:0; border-radius:2px; background:currentColor}
-.zz-hint{font-weight:500; font-size:12px; letter-spacing:.16em; line-height:1.7; opacity:.45; transition:opacity 1.2s}
-.zz-hint.off{opacity:0}
+.wake-video{position:fixed; left:0; bottom:0; width:2px; height:2px; opacity:0; pointer-events:none}
 
 @media (max-width:380px){
   .placa-sona .ara-sona-temps{display:none}
 }
+/* en Zz el vermell quedaria fosc: els festius i els avisos, clars */
+html[data-theme="zz"] .calendar-day-cell.holiday{color:#fff; border-color:rgba(255,255,255,.75); background:rgba(255,255,255,.16); box-shadow:none}
+html[data-theme="zz"] .calendar-day-cell.today.holiday{color:#000; background:#fff}
+html[data-theme="zz"] .holiday-tip,html[data-theme="zz"] .fe-fila.prop .fe-nom,html[data-theme="zz"] .avis-info{color:#fff}
+html[data-theme="zz"] .data-alert{background:rgba(255,255,255,.85); color:#000}
 
 html,body{overscroll-behavior:none}
 </style>
 </head>
 <body translate="no">
 <main class="wrap">
-  <div class="watch" id="watch" role="button" tabindex="0" aria-label="VOSTOK">
+  <div class="watch" id="watch" role="button" tabindex="0" aria-label="KOSTOV">
     <div class="flip" id="watchFlip">
       <div class="face front">
         <svg id="baseLayer" viewBox="-446 -446 892 892"></svg>
@@ -898,17 +886,6 @@ html,body{overscroll-behavior:none}
   </div>
 </main>
 
-<!-- mode Zz: data, alarma i controls de color i intensitat -->
-<div class="zz-info" id="zz-info" aria-hidden="true">
-  <div class="zz-top" id="zz-date"></div>
-  <div class="zz-bottom">
-    <div class="zz-alarm" id="zz-alarm"></div>
-    <div class="zz-dots" id="zz-dots"></div>
-    <div class="zz-lum"><i id="zz-lum-bar"></i></div>
-    <div class="zz-hint" id="zz-hint"></div>
-  </div>
-</div>
-
 <div class="holiday-tip" id="holiday-tip" role="tooltip" hidden></div>
 <div class="zz-velo" aria-hidden="true"></div>
 
@@ -957,16 +934,17 @@ html,body{overscroll-behavior:none}
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <filter id="zz-tint" color-interpolation-filters="sRGB">
-    <feColorMatrix type="matrix" values="0.2220 0.7473 0.0755 0 0  0.1169 0.3934 0.0397 0 0  0.0328 0.1101 0.0111 0 0  0 0 0 1 0"/>
-  </filter>
+  <filter id="zz-a" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" class="zt-a" values="0.2220 0.7473 0.0755 0 0  0.1169 0.3934 0.0397 0 0  0.0328 0.1101 0.0111 0 0  0 0 0 1 0"/></filter>
+  <filter id="zz-a-dim" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" class="zt-a" data-k=".5" values="0.2220 0.7473 0.0755 0 0  0.1169 0.3934 0.0397 0 0  0.0328 0.1101 0.0111 0 0  0 0 0 1 0"/></filter>
+  <filter id="zz-a-inv" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"/><feColorMatrix type="matrix" class="zt-a" values="0.2220 0.7473 0.0755 0 0  0.1169 0.3934 0.0397 0 0  0.0328 0.1101 0.0111 0 0  0 0 0 1 0"/></filter>
+  <filter id="zz-b" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" class="zt-b" values="0.2220 0.7473 0.0755 0 0  0.1169 0.3934 0.0397 0 0  0.0328 0.1101 0.0111 0 0  0 0 0 1 0"/></filter>
   <filter id="fInv" color-interpolation-filters="sRGB">
     <feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"/>
   </filter>
 </svg>
 
 <script>
-/* ===== Rellotge VOSTOK (davant) ===== */
+/* ===== Rellotge KOSTOV (davant) ===== */
 /* =========================================================
    Utilitats
    ========================================================= */
@@ -1151,7 +1129,7 @@ function buildBase(){
   s += `<text x="0" y="236" text-anchor="middle" dominant-baseline="central" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="13" letter-spacing="1" fill="#b4b7ba">H3 / T25</text>`;
 
   /* --- rètols (sense logotip de marca) --- */
-  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">VOSTOK</text>`;
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">KOSTOV</text>`;
   s += `<text x="0" y="-68" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="600" font-size="18" letter-spacing="5" fill="#c9ccce">AUTOMATIC</text>`;
   s += `<text x="0" y="92" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="31" letter-spacing="2.5" fill="#e4e6e7">CLAUDE</text>`;
   s += `<text x="0" y="121" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="17" letter-spacing="1.5" fill="#c3c6c8">WATER RESIST</text>`;
@@ -1272,8 +1250,8 @@ function buildGlow(){
   </defs><g filter="url(#fLumeGlow)">`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="17.5" fill="url(#gLumeN)"/>`;
   s += `<g id="glowPip"><circle cx="0" cy="-404" r="10.5" fill="url(#gLumeN)"/></g></g>`;
-  // VOSTOK de nit: el vermell es manté viu i amb una lleugera aura
-  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">VOSTOK</text></g>`;
+  // KOSTOV de nit: el vermell es manté viu i amb una lleugera aura
+  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">KOSTOV</text></g>`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="7" fill="#5f6a55"/><circle cx="${x-2}" cy="${y-2.5}" r="2.4" fill="#c9d3bd" opacity=".55"/>`;
   document.getElementById('glowLayer').innerHTML = s;
 }
@@ -1573,7 +1551,7 @@ function initFlip(){
   const flip = document.getElementById('watchFlip');
   const front = flip.querySelector('.face.front'), back = flip.querySelector('.face.back');
   const edges = [];
-  // colors del cantell: negre (bisell VOSTOK) cap al bisell del Tissot
+  // colors del cantell: negre (bisell KOSTOV) cap al bisell del Tissot
   const mix = (t) => { const a=[16,17,19], b=[22,22,22]; return a.map((v,i)=>Math.round(v+(b[i]-v)*t)); };
   function layout(){
     const w = watch.getBoundingClientRect().width || 600;
@@ -1715,7 +1693,7 @@ function setupBezel(layerId='bezelLayer', hitId='bezelHit', rotId='bezelRot', pi
 /* =========================================================
    SO: interruptor general (carraca del bisell, roda, grinyol del gir i veu de les hores)
    ========================================================= */
-const SOUND_KEY = 'VOSTOKSound';
+const SOUND_KEY = 'kostovSound';
 let soundPref = true;
 try{ soundPref = localStorage.getItem(SOUND_KEY) !== 'off'; }catch(e){}
 let soundOn = false;
@@ -1862,7 +1840,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // l'app surt d'aquí; t('clau', ...) retorna el text de l'idioma triat.
     // ------------------------------------------------------------------
     const LANGS = ['ca', 'fr', 'de', 'it', 'en'];
-    const LANG_STORAGE_KEY = 'VOSTOK_lang';
+    const LANG_STORAGE_KEY = 'kostov_lang';
     const WMO_CODES = [0, 1, 2, 3, 45, 48, 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 71, 73, 75, 77, 80, 81, 82, 85, 86, 95, 96, 99];
 
     const I18N = {
@@ -2179,11 +2157,11 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       }
     };
 
-    // Textos propis del VOSTOK (barra, gir, so, instal·lació i mode Zz)
+    // Textos propis del KOSTOV (barra, gir, so, instal·lació i mode Zz)
     Object.assign(I18N.ca, {
-      flipBtn: "Girar el rellotge (VOSTOK ↔ Tissot)", soundBtn: 'Sons mecànics: carraca del bisell i de la roda, grinyol del gir',
+      flipBtn: "Girar el rellotge (KOSTOV ↔ Tissot)", soundBtn: 'Sons mecànics: carraca del bisell i de la roda, grinyol del gir',
       prevMonth: 'Mes anterior', nextMonth: 'Mes següent',
-      watchFront: 'Rellotge VOSTOK. Toca per girar-lo.', watchBack: 'Rellotge Tissot PRS 516. Toca per girar-lo.',
+      watchFront: 'Rellotge KOSTOV. Toca per girar-lo.', watchBack: 'Rellotge Tissot PRS 516. Toca per girar-lo.',
       insIos: s => `Per instal·lar-la a l'iPhone: a Safari toca ${s} <b>Comparteix</b> i després <b>Afegeix a la pantalla d'inici</b>.`,
       insMenu: "Per instal·lar-la: obre el menú del navegador i tria <b>Instal·la l'aplicació</b> (Chrome, Edge) o <b>Afegeix a la pantalla d'inici</b>.",
       insFile: "L'app es pot instal·lar quan s'obre des de la seva adreça web (GitHub Pages), no des d'un fitxer.",
@@ -2191,9 +2169,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['taronja', 'vermell', 'groc', 'verd', 'blau'], weekWord: 'Setmana'
     });
     Object.assign(I18N.fr, {
-      flipBtn: 'Retourner la montre (VOSTOK ↔ Tissot)', soundBtn: 'Sons mécaniques : cliquet de la lunette et de la roue, grincement du retournement',
+      flipBtn: 'Retourner la montre (KOSTOV ↔ Tissot)', soundBtn: 'Sons mécaniques : cliquet de la lunette et de la roue, grincement du retournement',
       prevMonth: 'Mois précédent', nextMonth: 'Mois suivant',
-      watchFront: 'Montre VOSTOK. Touchez pour la retourner.', watchBack: 'Montre Tissot PRS 516. Touchez pour la retourner.',
+      watchFront: 'Montre KOSTOV. Touchez pour la retourner.', watchBack: 'Montre Tissot PRS 516. Touchez pour la retourner.',
       insIos: s => `Pour l'installer sur l'iPhone : dans Safari, touchez ${s} <b>Partager</b> puis <b>Sur l'écran d'accueil</b>.`,
       insMenu: "Pour l'installer : ouvrez le menu du navigateur et choisissez <b>Installer l'application</b> (Chrome, Edge) ou <b>Ajouter à l'écran d'accueil</b>.",
       insFile: "L'app s'installe quand elle est ouverte depuis son adresse web (GitHub Pages), pas depuis un fichier.",
@@ -2201,9 +2179,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['orange', 'rouge', 'jaune', 'vert', 'bleu'], weekWord: 'Semaine'
     });
     Object.assign(I18N.de, {
-      flipBtn: 'Uhr umdrehen (VOSTOK ↔ Tissot)', soundBtn: 'Mechanische Geräusche: Ratsche von Lünette und Rad, Knarren beim Drehen',
+      flipBtn: 'Uhr umdrehen (KOSTOV ↔ Tissot)', soundBtn: 'Mechanische Geräusche: Ratsche von Lünette und Rad, Knarren beim Drehen',
       prevMonth: 'Voriger Monat', nextMonth: 'Nächster Monat',
-      watchFront: 'VOSTOK-Uhr. Tippen zum Umdrehen.', watchBack: 'Tissot PRS 516. Tippen zum Umdrehen.',
+      watchFront: 'KOSTOV-Uhr. Tippen zum Umdrehen.', watchBack: 'Tissot PRS 516. Tippen zum Umdrehen.',
       insIos: s => `Installieren auf dem iPhone: in Safari ${s} <b>Teilen</b> und dann <b>Zum Home-Bildschirm</b> tippen.`,
       insMenu: 'Installieren: Browsermenü öffnen und <b>App installieren</b> (Chrome, Edge) oder <b>Zum Startbildschirm</b> wählen.',
       insFile: 'Die App lässt sich installieren, wenn sie über ihre Webadresse (GitHub Pages) geöffnet wird, nicht als Datei.',
@@ -2211,9 +2189,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['Orange', 'Rot', 'Gelb', 'Grün', 'Blau'], weekWord: 'Woche'
     });
     Object.assign(I18N.it, {
-      flipBtn: "Girare l'orologio (VOSTOK ↔ Tissot)", soundBtn: 'Suoni meccanici: cricchetto della ghiera e della ruota, cigolio del giro',
+      flipBtn: "Girare l'orologio (KOSTOV ↔ Tissot)", soundBtn: 'Suoni meccanici: cricchetto della ghiera e della ruota, cigolio del giro',
       prevMonth: 'Mese precedente', nextMonth: 'Mese successivo',
-      watchFront: 'Orologio VOSTOK. Tocca per girarlo.', watchBack: 'Orologio Tissot PRS 516. Tocca per girarlo.',
+      watchFront: 'Orologio KOSTOV. Tocca per girarlo.', watchBack: 'Orologio Tissot PRS 516. Tocca per girarlo.',
       insIos: s => `Per installarla sull'iPhone: in Safari tocca ${s} <b>Condividi</b> e poi <b>Aggiungi alla schermata Home</b>.`,
       insMenu: "Per installarla: apri il menu del browser e scegli <b>Installa app</b> (Chrome, Edge) o <b>Aggiungi alla schermata Home</b>.",
       insFile: "L'app si può installare quando si apre dal suo indirizzo web (GitHub Pages), non da un file.",
@@ -2221,9 +2199,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['arancione', 'rosso', 'giallo', 'verde', 'blu'], weekWord: 'Settimana'
     });
     Object.assign(I18N.en, {
-      flipBtn: 'Flip the watch (VOSTOK ↔ Tissot)', soundBtn: 'Mechanical sounds: bezel and wheel ratchet, flip creak',
+      flipBtn: 'Flip the watch (KOSTOV ↔ Tissot)', soundBtn: 'Mechanical sounds: bezel and wheel ratchet, flip creak',
       prevMonth: 'Previous month', nextMonth: 'Next month',
-      watchFront: 'VOSTOK watch. Tap to flip it.', watchBack: 'Tissot PRS 516 watch. Tap to flip it.',
+      watchFront: 'KOSTOV watch. Tap to flip it.', watchBack: 'Tissot PRS 516 watch. Tap to flip it.',
       insIos: s => `To install it on iPhone: in Safari tap ${s} <b>Share</b> and then <b>Add to Home Screen</b>.`,
       insMenu: 'To install it: open the browser menu and choose <b>Install app</b> (Chrome, Edge) or <b>Add to Home screen</b>.',
       insFile: 'The app can be installed when opened from its web address (GitHub Pages), not from a file.',
@@ -2291,14 +2269,14 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
 
     // ------------------------------------------------------------------
     // Festius: UNA sola font per al calendari i per a les finestretes de
-    // data del Tissot i del VOSTOK.
+    // data del Tissot i del KOSTOV.
     //  1. Dades obertes de la Generalitat (festius estatals i catalans +
     //     festes locals del municipi on ets, per defecte Barcelona).
     //  2. Si l'API falla o encara no ha publicat l'any, càlcul local a
     //     partir de regles fixes i de la data de Pasqua, i es reintenta
     //     al cap d'una hora.
     // ------------------------------------------------------------------
-    const HOLIDAYS_CACHE_KEY = 'VOSTOK_holidays_v1';
+    const HOLIDAYS_CACHE_KEY = 'kostov_holidays_v1';
     const HOLIDAYS_TTL_MS = 24 * 60 * 60 * 1000;   // dades de l'API: refresc diari
     const HOLIDAYS_RETRY_MS = 60 * 60 * 1000;      // reserva local: reintent cada hora
     const DEFAULT_MUNICIPALITY = 'Barcelona';
@@ -2528,7 +2506,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     }
 
     // ------------------------------------------------------------------
-    // Finestretes de dia i data (Tissot i VOSTOK): només s'actualitzen
+    // Finestretes de dia i data (Tissot i KOSTOV): només s'actualitzen
     // quan canvia el dia, no a cada fotograma.
     // ------------------------------------------------------------------
     let lastDateKey = '';
@@ -2842,7 +2820,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // l'última. Dins d'algunes finestres hi ha subpanells laterals.
     // ------------------------------------------------------------------
     // ------------------------------------------------------------------
-    // LA RODA (tambor 3D del VOSTOK): les finestres giren com les cares
+    // LA RODA (tambor 3D del KOSTOV): les finestres giren com les cares
     // d'un tambor. Amunt o avall: següent o anterior, en cercle.
     // ------------------------------------------------------------------
     const fullsBox = document.getElementById('fulls');
@@ -4080,7 +4058,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     //  - Botó: des del mode automàtic recorre els altres dos temes i torna a
     //    automàtic; cada toc canvia el que es veu.
     // ------------------------------------------------------------------
-    const THEME_STORAGE_KEY = 'VOSTOK_theme'; // 'day' | 'night' | 'zz' | absent = automàtic
+    const THEME_STORAGE_KEY = 'kostov_theme'; // 'day' | 'night' | 'zz' | absent = automàtic
     const THEMES = ['day', 'night', 'zz'];
     const THEME_COLORS = { day: '#e4e5e0', night: '#030304', zz: '#000000' };
     let lastAppliedTheme = '';
@@ -4342,7 +4320,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // Safari (iPhone) només deixa parlar després d'un primer toc a la
     // pantalla, i només mentre l'app és oberta i la pantalla encesa.
     // ------------------------------------------------------------------
-    const VOICE_STORAGE_KEY = 'VOSTOK_veu';
+    const VOICE_STORAGE_KEY = 'kostov_veu';
     const SPEAKER_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.4a8 8 0 0 1 0 11.2"/></svg>';
     const SPEAKER_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>';
 
@@ -5029,7 +5007,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // Aniversari (secret: doble toc a la placa de Població). Només es desa
     // en aquest aparell. El dia de l'aniversari surt una placa a la cinta.
     // ------------------------------------------------------------------
-    const BIRTHDAY_KEY = 'VOSTOK_aniv';
+    const BIRTHDAY_KEY = 'kostov_aniv';
     function readBirthday() {
       try { const v = JSON.parse(localStorage.getItem(BIRTHDAY_KEY)); return v && v.d && v.m ? v : null; } catch (e) { return null; }
     }
@@ -5093,36 +5071,41 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // (taronja, vermell, groc, verd, blau); un doble toc gira l'esfera.
     // ------------------------------------------------------------------
     const ZZ_TINTS = { orange: [255, 138, 43], red: [255, 90, 69], yellow: [242, 197, 61], green: [61, 220, 132], blue: [74, 166, 255] };
-    const ZZ_ORDER = ['orange', 'red', 'yellow', 'green', 'blue'];
-    const ZZ_KEY = 'VOSTOK_zz_tint';
+    // Un sol to o dos: el primer per al rellotge, el segon per al lume i les finestres
+    const ZZ_ORDER = ['orange', 'red', 'yellow', 'green', 'blue', 'orange+blue', 'red+yellow', 'green+orange', 'blue+yellow', 'yellow+green'];
+    const ZZ_KEY = 'kostov_zz_tint';
     let zzTint = (() => { try { const v = localStorage.getItem(ZZ_KEY); return ZZ_ORDER.includes(v) ? v : 'orange'; } catch (e) { return 'orange'; } })();
+    const zzPair = k => { const [a, b] = k.split('+'); return [a, b || a]; };
+    const zzName = k => zzPair(k).filter((c, i, arr) => arr.indexOf(c) === i).map(c => t('zzColors')[['orange', 'red', 'yellow', 'green', 'blue'].indexOf(c)]).join(' · ');
     function applyZzTint() {
       document.documentElement.setAttribute('data-zz', zzTint);
-      const [r, g, b] = ZZ_TINTS[zzTint].map(v => v / 255);
       const w = [0.2126, 0.7152, 0.0722];   // el blanc dona exactament el color del to
-      const row = k => w.map(x => (x * k).toFixed(4)).join(' ');
-      const m = document.querySelector('#zz-tint feColorMatrix');
-      if (m) m.setAttribute('values', `${row(r)} 0 0  ${row(g)} 0 0  ${row(b)} 0 0  0 0 0 1 0`);
-      document.documentElement.style.setProperty('--zz-c', `rgb(${ZZ_TINTS[zzTint].join(',')})`);
-      if (window.__zzSync) window.__zzSync();
+      const mat = (rgb, k) => {
+        const [r, g, b] = rgb.map(v => v / 255);
+        const row = c => w.map(x => (x * c * k).toFixed(4)).join(' ');
+        return `${row(r)} 0 0  ${row(g)} 0 0  ${row(b)} 0 0  0 0 0 1 0`;
+      };
+      const [a, b] = zzPair(zzTint);
+      document.querySelectorAll('feColorMatrix.zt-a').forEach(m => m.setAttribute('values', mat(ZZ_TINTS[a], +(m.dataset.k || 1))));
+      document.querySelectorAll('feColorMatrix.zt-b').forEach(m => m.setAttribute('values', mat(ZZ_TINTS[b], 1)));
     }
     function cycleZzTint() {
       zzTint = ZZ_ORDER[(ZZ_ORDER.indexOf(zzTint) + 1) % ZZ_ORDER.length];
       try { localStorage.setItem(ZZ_KEY, zzTint); } catch (e) {}
       applyZzTint();
       applyZzLum();
+      showToast(zzName(zzTint), 1300);
     }
     applyZzTint();
 
     // Intensitat de cada color (de 25% a 100%): lliscar el dit amunt o avall
     // damunt l'esfera (o la roda del ratolí). S'aplica igual a tota la pantalla.
-    const ZZ_LUM_KEY = 'VOSTOK_zz_lum';
+    const ZZ_LUM_KEY = 'kostov_zz_lum';
     const ZZ_LUM_MIN = 0.25, ZZ_LUM_DEFAULT = 0.9;
     let zzLum = (() => { try { return JSON.parse(localStorage.getItem(ZZ_LUM_KEY)) || {}; } catch (e) { return {}; } })();
     const lumFor = tint => (typeof zzLum[tint] === 'number' ? zzLum[tint] : ZZ_LUM_DEFAULT);
     function applyZzLum() {
       document.documentElement.style.setProperty('--zz-dim', (1 - lumFor(zzTint)).toFixed(3));
-      const zb = document.getElementById('zz-lum-bar'); if (zb) zb.style.width = `${Math.round(lumFor(zzTint) * 100)}%`;
     }
     function setZzLum(v) {
       zzLum[zzTint] = Math.max(ZZ_LUM_MIN, Math.min(1, v));
@@ -5176,8 +5159,8 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // ------------------------------------------------------------------
     const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const IS_ANDROID = /Android/i.test(navigator.userAgent);
-    const SHORTCUT_NAME = 'Alarma VOSTOK';
-    const SHORTCUT_KEY = 'VOSTOK_drecera';
+    const SHORTCUT_NAME = 'Alarma KOSTOV';
+    const SHORTCUT_KEY = 'kostov_drecera';
     let pendingAlarm = null;
     const openUrl = url => { window.location.href = url; };
     function iosAlarm(time) { openUrl(`shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(time)}`); }
@@ -5230,50 +5213,50 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     };
     const HELP = {
       ca: { title: 'Com funciona', sections: [
-        ['watch', 'El rellotge', ["Doble toc a l'esfera: gira en 8 segons, com un cilindre, VOSTOK ↔ Tissot PRS 516.", "La corona exterior de totes dues cares gira: arrossega-la amb el dit (només en sentit antihorari, a clics). Doble toc a la corona: torna a zero.", 'Totes dues marquen l\'hora real; el Tissot mostra el dia i la data a la finestreta.']],
+        ['watch', 'El rellotge', ["Doble toc a l'esfera: gira en 8 segons, com un cilindre, KOSTOV ↔ Tissot PRS 516.", "La corona exterior de totes dues cares gira: arrossega-la amb el dit (només en sentit antihorari, a clics). Doble toc a la corona: torna a zero.", 'Totes dues marquen l\'hora real; el Tissot mostra el dia i la data a la finestreta.']],
         ['swipe', 'La roda', ['Dit amunt o avall al quadre: finestra següent o anterior (en cercle). Doble toc: torna al calendari.', 'Calendari · Data · Temperatura · El temps · Avui · Properament · Ubicació · Avisos · Aire · Ràdio · Podcasts · Notícies · Alarmes.', 'Dit de costat: canvia de mes o de subpanell (punts de dalt).', 'Avisos només surt quan n\'hi ha (temps extrem o festiu avui o demà).']],
         ['cal', 'El calendari', ['Festius en vermell: toca\'ls per veure\'n el nom.', '«Avui» o doble toc al mes: torna al mes actual.', 'Les festes, només en català (amb les locals del municipi).']],
-        ['moon', 'Temes i mode Zz', ['Botó del tema: A · dia · nit · Zz. A: dia o nit segons el sol, i Zz si es carrega de nit.', 'Zz: negre i un sol color, només el rellotge; la pantalla no s\'apaga.', 'En Zz: un toc canvia el color, doble toc el gira, dit amunt o avall n\'ajusta la intensitat; un toc fora del rellotge mostra la barra.']],
+        ['moon', 'Temes i mode Zz', ['Botó del tema: A · dia · nit · Zz. A: dia o nit segons el sol, i Zz si es carrega de nit.', 'Zz: fons negre i tot en un o dos tons (el rellotge en un, el lume i les finestres en l\'altre); la pantalla no s\'apaga.', 'En Zz: un toc al rellotge canvia els tons (taronja, vermell, groc, verd, blau i cinc combinacions), doble toc el gira, dit amunt o avall sobre el rellotge n\'ajusta la intensitat.']],
         ['row', 'La barra', ['INS: instal·la l\'app · roda dentada: sons mecànics (corona, roda i gir) · ?: aquesta ajuda.', 'Idioma: CA · FR · DE · IT · EN.', 'Tema: A (automàtic) · dia · nit · Zz.', 'Altaveu: un toc diu l\'hora; dos tocs apaguen la veu. Diu les hores en punt.', 'Quan sona la ràdio, «Ara sona» surt a sota de la roda: temporitzador (15–90 min), pausa i ✕.', 'Aniversari: doble toc al nom de la població, a la finestra Ubicació.']],
         ['bell', 'Alarmes', ['Tres alarmes: toca l\'hora per canviar-la i tria els dies.', 'Sonen amb l\'app oberta. El botó del mòbil les passa al rellotge del telèfon.']],
         ['radio', 'Ràdio, podcasts i notícies', ['Emissores i notícies de l\'idioma triat.', 'Podcasts de RAC1 (en català).']],
         ['app', "Instal·lar l'app", ["Botó INS de la barra.", "iPhone: Safari › Compartir › Afegeix a la pantalla d'inici."]]
       ] },
       fr: { title: 'Mode d\'emploi', sections: [
-        ['watch', 'La montre', ['Double toucher sur le cadran : il se retourne en 8 secondes, comme un cylindre, VOSTOK ↔ Tissot PRS 516.', 'La lunette des deux faces tourne : faites-la glisser du doigt (sens antihoraire, par crans). Double toucher sur la lunette : retour à zéro.', 'Les deux faces indiquent l\'heure réelle ; la Tissot affiche le jour et la date.']],
+        ['watch', 'La montre', ['Double toucher sur le cadran : il se retourne en 8 secondes, comme un cylindre, KOSTOV ↔ Tissot PRS 516.', 'La lunette des deux faces tourne : faites-la glisser du doigt (sens antihoraire, par crans). Double toucher sur la lunette : retour à zéro.', 'Les deux faces indiquent l\'heure réelle ; la Tissot affiche le jour et la date.']],
         ['swipe', 'La roue', ['Doigt vers le haut ou le bas : fenêtre suivante ou précédente (en boucle). Double toucher : retour au calendrier.', 'Calendrier · Date · Température · Météo · Aujourd\'hui · Lieu · Alertes · Air · Radio · Actualités · Réveils.', 'Doigt sur le côté : mois ou sous-panneau (points en haut).', 'Alertes n\'apparaît que s\'il y en a.']],
         ['cal', 'Le calendrier', ['« Auj. » ou double toucher sur le mois : retour au mois actuel.', 'Les jours fériés ne s\'affichent qu\'en catalan.']],
-        ['moon', 'Thèmes et mode Zz', ['A · jour · nuit · Zz, dans la barre. A : selon le soleil, et Zz en charge la nuit.', 'Zz : noir et une seule couleur, seulement la montre ; l\'écran reste allumé.', 'En Zz : un toucher change la couleur, un double toucher retourne la montre, glisser règle l\'intensité ; toucher à côté affiche la barre.']],
+        ['moon', 'Thèmes et mode Zz', ['Bouton du thème : A · jour · nuit · Zz. A : selon le soleil, et Zz en charge la nuit.', 'Zz : fond noir, tout en une ou deux teintes (la montre dans l\'une, la lumière et les fenêtres dans l\'autre) ; l\'écran reste allumé.', 'En Zz : un toucher sur la montre change les teintes (cinq couleurs et cinq combinaisons), un double toucher la retourne, glisser sur la montre règle l\'intensité.']],
         ['row', 'La barre', ['INS : installer l\'app · roue dentée : sons mécaniques (lunette, roue, retournement) · ? : cette aide.', 'Langue : CA · FR · DE · IT · EN.', 'Thème : A (automatique) · jour · nuit · Zz.', 'Haut-parleur : un toucher dit l\'heure ; deux touchers coupent la voix. Annonce les heures pile.', 'Radio en cours : « En écoute » apparaît sous la roue, avec minuterie (15–90 min), pause et ✕.', 'Anniversaire : double toucher sur le nom de la localité, fenêtre Lieu.']],
         ['bell', 'Réveils', ['Trois réveils : touchez l\'heure et choisissez les jours.', 'Ils sonnent avec l\'app ouverte. Le bouton téléphone les ajoute à l\'horloge du téléphone.']],
         ['radio', 'Radio et actualités', ['Stations et actualités de la langue choisie.']],
         ['app', 'Installer l\'app', ['Bouton INS de la barre.', 'iPhone : Safari › Partager › Sur l\'écran d\'accueil.']]
       ] },
       de: { title: 'So funktioniert es', sections: [
-        ['watch', 'Die Uhr', ['Doppeltippen auf das Zifferblatt dreht die Uhr in 8 Sekunden wie einen Zylinder: VOSTOK ↔ Tissot PRS 516.', 'Die Lünette beider Seiten dreht sich: mit dem Finger ziehen (gegen den Uhrzeigersinn, rastend). Doppeltippen auf die Lünette: zurück auf null.', 'Beide zeigen die echte Zeit; die Tissot zeigt Wochentag und Datum.']],
+        ['watch', 'Die Uhr', ['Doppeltippen auf das Zifferblatt dreht die Uhr in 8 Sekunden wie einen Zylinder: KOSTOV ↔ Tissot PRS 516.', 'Die Lünette beider Seiten dreht sich: mit dem Finger ziehen (gegen den Uhrzeigersinn, rastend). Doppeltippen auf die Lünette: zurück auf null.', 'Beide zeigen die echte Zeit; die Tissot zeigt Wochentag und Datum.']],
         ['swipe', 'Das Rad', ['Finger nach oben oder unten: nächstes oder voriges Fenster (im Kreis). Doppeltippen: zurück zum Kalender.', 'Kalender · Datum · Temperatur · Wetter · Heute · Standort · Warnungen · Luft · Radio · Nachrichten · Wecker.', 'Finger zur Seite: Monat oder Unterseite (Punkte oben).', 'Warnungen erscheinen nur, wenn es welche gibt.']],
         ['cal', 'Der Kalender', ['„Heute“ oder Doppeltippen auf den Monat: zurück zum aktuellen Monat.', 'Feiertage werden nur auf Katalanisch angezeigt.']],
-        ['moon', 'Modi und Zz-Modus', ['A · Tag · Nacht · Zz in der Leiste. A: nach der Sonne, Zz beim Laden in der Nacht.', 'Zz: schwarz mit einer Farbe, nur die Uhr; der Bildschirm bleibt an.', 'In Zz: Tippen wechselt die Farbe, Doppeltippen dreht die Uhr, Wischen ändert die Helligkeit; daneben tippen zeigt die Leiste.']],
+        ['moon', 'Modi und Zz-Modus', ['Modus-Taste: A · Tag · Nacht · Zz. A: nach der Sonne, Zz beim Laden in der Nacht.', 'Zz: schwarzer Grund, alles in einem oder zwei Farbtönen (die Uhr im einen, Leuchtmasse und Fenster im anderen); der Bildschirm bleibt an.', 'In Zz: Tippen auf die Uhr wechselt die Farbtöne (fünf Farben und fünf Kombinationen), Doppeltippen dreht sie, Wischen über die Uhr ändert die Helligkeit.']],
         ['row', 'Die Leiste', ['INS: App installieren · Zahnrad: mechanische Geräusche (Lünette, Rad, Drehen) · ?: diese Hilfe.', 'Sprache: CA · FR · DE · IT · EN.', 'Modus: A (automatisch) · Tag · Nacht · Zz.', 'Lautsprecher: Tippen sagt die Uhrzeit; zweimal tippen schaltet die Stimme aus. Volle Stunden werden angesagt.', 'Läuft Radio, erscheint unter dem Rad die Anzeige mit Sleep-Timer (15–90 Min.), Pause und ✕.', 'Geburtstag: Doppeltippen auf den Ortsnamen im Fenster Standort.']],
         ['bell', 'Wecker', ['Drei Wecker: Uhrzeit antippen und Tage wählen.', 'Sie klingeln bei geöffneter App. Die Handy-Taste überträgt sie in die Uhr des Telefons.']],
         ['radio', 'Radio und Nachrichten', ['Sender und Nachrichten der gewählten Sprache.']],
         ['app', 'App installieren', ['INS-Taste in der Leiste.', 'iPhone: Safari › Teilen › Zum Home-Bildschirm.']]
       ] },
       it: { title: 'Come funziona', sections: [
-        ['watch', "L'orologio", ['Doppio tocco sul quadrante: si gira in 8 secondi, come un cilindro, VOSTOK ↔ Tissot PRS 516.', 'La ghiera di entrambe le facce ruota: trascinala con il dito (in senso antiorario, a scatti). Doppio tocco sulla ghiera: torna a zero.', "Entrambe segnano l'ora reale; la Tissot mostra giorno e data."]],
+        ['watch', "L'orologio", ['Doppio tocco sul quadrante: si gira in 8 secondi, come un cilindro, KOSTOV ↔ Tissot PRS 516.', 'La ghiera di entrambe le facce ruota: trascinala con il dito (in senso antiorario, a scatti). Doppio tocco sulla ghiera: torna a zero.', "Entrambe segnano l'ora reale; la Tissot mostra giorno e data."]],
         ['swipe', 'La ruota', ['Dito su o giù: finestra successiva o precedente (in cerchio). Doppio tocco: torna al calendario.', 'Calendario · Data · Temperatura · Meteo · Oggi · Posizione · Allerte · Aria · Radio · Notizie · Sveglie.', 'Dito di lato: mese o sottopannello (punti in alto).', 'Allerte compare solo se ce ne sono.']],
         ['cal', 'Il calendario', ['«Oggi» o doppio tocco sul mese: torna al mese corrente.', 'Le feste si vedono solo in catalano.']],
-        ['moon', 'Temi e modalità Zz', ['A · giorno · notte · Zz nella barra. A: secondo il sole, e Zz in carica di notte.', 'Zz: nero e un solo colore, solo l\'orologio; lo schermo resta acceso.', "In Zz: un tocco cambia il colore, doppio tocco gira l'orologio, scorrere regola l'intensità; toccare fuori mostra la barra."]],
+        ['moon', 'Temi e modalità Zz', ['Tasto del tema: A · giorno · notte · Zz. A: secondo il sole, e Zz in carica di notte.', "Zz: fondo nero e tutto in uno o due toni (l'orologio in uno, la luminescenza e le finestre nell'altro); lo schermo resta acceso.", "In Zz: un tocco sull'orologio cambia i toni (cinque colori e cinque combinazioni), doppio tocco lo gira, scorrere sull'orologio regola l'intensità."]],
         ['row', 'La barra', ["INS: installa l'app · ruota dentata: suoni meccanici (ghiera, ruota, giro) · ?: questo aiuto.", 'Lingua: CA · FR · DE · IT · EN.', 'Tema: A (automatico) · giorno · notte · Zz.', "Altoparlante: un tocco dice l'ora; due tocchi spengono la voce. Annuncia le ore in punto.", 'Radio in ascolto: sotto la ruota compare il riquadro con timer (15–90 min), pausa e ✕.', 'Compleanno: doppio tocco sul nome della località, finestra Posizione.']],
         ['bell', 'Sveglie', ["Tre sveglie: tocca l'ora e scegli i giorni.", "Suonano con l'app aperta. Il tasto del telefono le passa all'orologio del telefono."]],
         ['radio', 'Radio e notizie', ['Emittenti e notizie della lingua scelta.']],
         ['app', "Installare l'app", ['Tasto INS nella barra.', 'iPhone: Safari › Condividi › Aggiungi alla schermata Home.']]
       ] },
       en: { title: 'How it works', sections: [
-        ['watch', 'The watch', ['Double-tap the dial: it turns over in 8 seconds, like a cylinder, VOSTOK ↔ Tissot PRS 516.', 'The outer bezel of both faces turns: drag it with your finger (anticlockwise, in clicks). Double-tap the bezel: back to zero.', 'Both show the real time; the Tissot shows the day and date.']],
+        ['watch', 'The watch', ['Double-tap the dial: it turns over in 8 seconds, like a cylinder, KOSTOV ↔ Tissot PRS 516.', 'The outer bezel of both faces turns: drag it with your finger (anticlockwise, in clicks). Double-tap the bezel: back to zero.', 'Both show the real time; the Tissot shows the day and date.']],
         ['swipe', 'The wheel', ['Finger up or down: next or previous panel (in a loop). Double-tap: back to the calendar.', 'Calendar · Date · Temperature · Weather · Today · Location · Alerts · Air · Radio · News · Alarms.', 'Finger sideways: month or sub-panel (dots at the top).', 'Alerts only appears when there are any.']],
         ['cal', 'The calendar', ['“Today” or double-tap the month: back to the current month.', 'Holidays are shown in Catalan only.']],
-        ['moon', 'Themes and Zz mode', ['A · day · night · Zz in the bar. A follows the sun, and Zz while charging at night.', 'Zz: black with a single colour, just the watch; the screen stays on.', 'In Zz: tap changes the colour, double-tap flips the watch, swipe sets the brightness; tap outside to show the bar.']],
+        ['moon', 'Themes and Zz mode', ['Theme button: A · day · night · Zz. A follows the sun, and Zz while charging at night.', 'Zz: black background, everything in one or two tones (the watch in one, the lume and panels in the other); the screen stays on.', 'In Zz: tap the watch to change tones (five colours and five combinations), double-tap flips it, swipe on the watch sets the brightness.']],
         ['row', 'The bar', ['INS: install the app · cog: mechanical sounds (bezel, wheel, flip) · ?: this help.', 'Language: CA · FR · DE · IT · EN.', 'Theme: A (automatic) · day · night · Zz.', 'Speaker: tap says the time; double-tap mutes the voice. It announces the hours.', 'While radio plays, a strip under the wheel has the sleep timer (15–90 min), pause and ✕.', 'Birthday: double-tap the town name in the Location panel.']],
         ['bell', 'Alarms', ['Three alarms: tap the time and pick the days.', 'They ring while the app is open. The phone button adds them to the phone\'s clock.']],
         ['radio', 'Radio and news', ['Stations and news in the chosen language.']],
@@ -5314,7 +5297,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // dita en veu alta, vibració si el telèfon en té, i botons per aturar
     // o posposar 5 minuts. Sonen encara que el so de l'altaveu sigui apagat.
     // ------------------------------------------------------------------
-    const ALARM_STORAGE_KEY = 'VOSTOK_alarms';
+    const ALARM_STORAGE_KEY = 'kostov_alarms';
     const ALARM_DEFAULTS = [
       { on: false, time: '07:00', days: [1, 2, 3, 4, 5] },
       { on: false, time: '08:00', days: [0, 6] },
@@ -5590,7 +5573,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       if (currentCoords) refreshWeather(currentCoords.lat, currentCoords.lon);
     }, WEATHER_REFRESH_MS);
     // ------------------------------------------------------------------
-    // VOSTOK: lume nocturn de les agulles, instal·lació, mode Zz i arrencada
+    // KOSTOV: lume nocturn de les agulles, instal·lació, mode Zz i arrencada
     // ------------------------------------------------------------------
     function setNightLume(on) {
       document.querySelectorAll('.lyr-hands .hl').forEach(el => {
@@ -5648,61 +5631,37 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       });
     })();
 
-    // ---- Mode Zz: només el rellotge, la data, l'alarma i els controls de color ----
-    const zzDots = document.getElementById('zz-dots');
-    zzDots.innerHTML = ZZ_ORDER.map(k => `<button type="button" data-tint="${k}" style="--c:rgb(${ZZ_TINTS[k].join(',')})"></button>`).join('');
-    zzDots.addEventListener('click', (e) => {
-      const b = e.target.closest('button[data-tint]');
-      if (!b) return;
-      e.stopPropagation();
-      zzTint = b.dataset.tint;
-      try { localStorage.setItem(ZZ_KEY, zzTint); } catch (err) {}
-      applyZzTint(); applyZzLum();
-    });
-    let zzHintTimer = null, zzShowTimer = null, zzWas = false;
-    function zzReveal(on) {
-      document.documentElement.classList.toggle('zz-show', !!on);
-      clearTimeout(zzShowTimer);
-      if (on) zzShowTimer = setTimeout(() => zzReveal(false), 6000);
-    }
-    function renderZzInfo() {
-      const now = new Date();
-      document.getElementById('zz-date').textContent =
-        `${t('longDays')[now.getDay()]} ${now.getDate()} · ${t('months')[now.getMonth()]}`;
-      let best = null;
-      (typeof alarms !== 'undefined' ? alarms : []).forEach(a => { const d = nextAlarmDate(a, now); if (d && (!best || d < best)) best = d; });
-      document.getElementById('zz-alarm').textContent =
-        best && best - now < 24 * 3600 * 1000 ? `${t('alarmWord')} ${pad2(best.getHours())}:${pad2(best.getMinutes())}` : '';
-      [...zzDots.children].forEach(b => {
-        b.setAttribute('aria-pressed', String(b.dataset.tint === zzTint));
-        b.setAttribute('aria-label', t('zzColors')[ZZ_ORDER.indexOf(b.dataset.tint)]);
+    // ---- Mode Zz: la pantalla no s'apaga ----
+    // Wake Lock quan el navegador el té i, a més, un vídeo mut i invisible en
+    // bucle (com NoSleep.js): a l'iPhone, en l'app instal·lada, el Wake Lock
+    // no sempre funciona i el vídeo és el que manté la pantalla encesa.
+    const WAKE_WEBM = "data:video/webm;base64,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";
+    const WAKE_MP4 = "data:video/mp4;base64,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";
+    let wakeVideo = null;
+    function wakeVideoEl() {
+      if (wakeVideo) return wakeVideo;
+      wakeVideo = document.createElement('video');
+      wakeVideo.className = 'wake-video';
+      wakeVideo.setAttribute('playsinline', ''); wakeVideo.setAttribute('muted', ''); wakeVideo.setAttribute('aria-hidden', 'true');
+      wakeVideo.muted = true; wakeVideo.loop = true; wakeVideo.preload = 'auto';
+      [['webm', WAKE_WEBM], ['mp4', WAKE_MP4]].forEach(([type, src]) => { const so = document.createElement('source'); so.src = src; so.type = `video/${type}`; wakeVideo.appendChild(so); });
+      wakeVideo.addEventListener('loadedmetadata', () => {
+        if (wakeVideo.duration > 1) wakeVideo.addEventListener('timeupdate', () => { if (wakeVideo.currentTime > 0.5) wakeVideo.currentTime = Math.random(); });
       });
-      document.getElementById('zz-lum-bar').style.width = `${Math.round(lumFor(zzTint) * 100)}%`;
-      document.getElementById('zz-hint').innerHTML = t('zzHint');
+      document.body.appendChild(wakeVideo);
+      return wakeVideo;
     }
-    window.__zzSync = () => {
-      const zz = document.documentElement.getAttribute('data-theme') === 'zz';
-      if (zz) {
-        renderZzInfo();
-        if (!zzWas) {
-          const h = document.getElementById('zz-hint');
-          h.classList.remove('off');
-          clearTimeout(zzHintTimer);
-          zzHintTimer = setTimeout(() => h.classList.add('off'), 7000);
-        }
-      } else zzReveal(false);
-      if (zz !== zzWas) {
-        zzWas = zz;
-        requestAnimationFrame(() => { window.dispatchEvent(new Event('resize')); layoutWheel(); });
-      }
-    };
-    // Un toc fora del rellotge, en Zz, mostra la barra uns segons (per sortir-ne)
-    document.addEventListener('click', (e) => {
-      if (document.documentElement.getAttribute('data-theme') !== 'zz') return;
-      if (e.target.closest('#watch, #zz-dots, .bar, .dialeg, .alarm-overlay')) return;
-      zzReveal(!document.documentElement.classList.contains('zz-show'));
-    });
-    setInterval(() => { if (document.documentElement.getAttribute('data-theme') === 'zz') renderZzInfo(); }, 30 * 1000);
+    const isZzNow = () => document.documentElement.getAttribute('data-theme') === 'zz';
+    function keepAwake() {
+      if (!isZzNow() || document.visibilityState !== 'visible') return;
+      if (typeof requestWakeLock === 'function') requestWakeLock();
+      const v = wakeVideoEl();
+      if (v.paused) { const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); }
+    }
+    function letSleep() { if (wakeVideo && !wakeVideo.paused) wakeVideo.pause(); }
+    ['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, keepAwake, { passive: true, capture: true }));
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
+    window.__zzSync = () => { if (isZzNow()) keepAwake(); else letSleep(); };
 
     // Etiqueta del rellotge en l'idioma triat
     function labelWatch() {
