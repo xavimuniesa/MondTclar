@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KOSTOV</title>
-<meta name="description" content="Rellotge KOSTOV de dues cares (KOSTOV i Tissot PRS 516) amb calendari de festius, el temps, ràdio, notícies, alarmes i mode Zz.">
+<title>VOSTOK</title>
+<meta name="description" content="Rellotge VOSTOK de dues cares (VOSTOK i Tissot PRS 516) amb calendari de festius, el temps, ràdio, notícies, alarmes i mode Zz.">
 <meta name="theme-color" id="theme-color-meta" content="#060607">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
@@ -12,8 +12,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="KOSTOV">
-<script>(function(){var m=null;try{m=localStorage.getItem('kostov_theme')}catch(e){}var h=new Date().getHours();document.documentElement.dataset.theme=(m==='day'||m==='night'||m==='zz')?m:((h>=7&&h<20)?'day':'night');try{var l=localStorage.getItem('kostov_lang');if(l)document.documentElement.lang=l}catch(e){}})();</script>
+<meta name="apple-mobile-web-app-title" content="VOSTOK">
+<script>(function(){var m=null;try{m=localStorage.getItem('VOSTOK_theme')}catch(e){}var h=new Date().getHours();document.documentElement.dataset.theme=(m==='day'||m==='night'||m==='zz')?m:((h>=7&&h<20)?'day':'night');try{var l=localStorage.getItem('VOSTOK_lang');if(l)document.documentElement.lang=l}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Russo+One&display=swap" rel="stylesheet">
@@ -274,7 +274,7 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
 
 /* =====================================================================
-   NOVES PECES (portades del PRS 516) amb l'aspecte KOSTOV
+   NOVES PECES (portades del PRS 516) amb l'aspecte VOSTOK
    ===================================================================== */
 @font-face{font-family:'TissotBricolage'; font-weight:600; font-style:normal; src:url(data:font/woff2;base64,d09GMgABAAAAAAP8ABAAAAAACCwAAAOgAAEAQgAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbgSQcKgZgP1NUQVRWAEQRCAqCSII0ATYCJAMUCwwABCAFhigHIAwHG/YGIxE2g1GaSfFXCTYYU3u4XwCTSQjG2BYtDR/rNlCEX08uRy5CoQsn5zwnMx76/Pv/dtXpez+JMZFJyiDHsyZ6HQANOyu/rzz5h99fgm0NPlrv8+7e54RQl9gqlNL6+mMx9d3/XE5vLLwDG1P4wM5sjdbHBkdrept6HoWQJrTG84CPLBA5CsTTTUUG6bPDZwQnEkpOM0mgOyCFUIRAV+PNles3brmjnkfud+LReipQq0AccdDxR+uMQCi66Cx0FhKdpcUK1tpW0QJB/RcAqB1d6/+of9en2JRYdUgNc1AopuaJJtODS3J/yd65qxZ5ee6KLT6ZGHubG0vJbu1WKSkLAgDW7Ljl9l7fzI7NnR0pl8a1CMhueSNG6yGEzhr012C6PObYE04PnHLgiYdGilMOOfTECKmtr5ECopueCCGjnwMRkuiUu4JEnYs4rJiNzjpLbGYbO9Z6kB1usT5frQgAIWrVC7RAV7RxMG4GCiCkkKVfn4WldGt1K/tlcfnnqY/zvvii2xWfsc79FHaWQZxXQdfLScO5n73xWbM8dpfXN+r2A3lt99XPF7477Rqz4/2Tr747Yd5/uP7KZwuekTk3fpbDo5etbzz3Rgd13/QYba6mvC7y+ccrttgtCjW5mvpuhx1UN/kapYkAZ8amQNNZ5SzncNpyNiWRdW03ftaysK77moN2YhZpZvmY0Zu2HmE2hrZ39g4fNg786rrnkLRaE7F63DXGUMjzumDzgDkWBigoVr79tyf433rr7/6dhySVmpjN5a1f6he+uvGcG9dOJjeOAEGs3eF32/bptfy/c9P8iW96bHEX/Pjdvtdg7dtsrkJHW4JgMdH4DtNxy5aQ79LKa20dw22dHyzIS8zKuQYItBygbRdtAQAagR7ubETpgrcRJezsbSX1jKFK4+CYvF6aSsvOcbXctm38OhIMzvmhhO65pZK65q5KJ71zf6WbznnN8dBvdKzTw5A6Z3AU4wQmg8kkqGBAEGLwMZwO0QKNVyBHGizNB15AidxY940HeQ6DDCtQYBxHsS69HsU5jB/pxnCmH3JgigOGY/DhuX7ksxmlY8Npo+y46FmDGYYemBSTZTDDASXUUF6cFsaoMxiM7mAlU3LfnwUfs2CsRWufMiwO54L430IRDsIp2zbonDqzWTcBJw41ajA5gdGJdF1z+b6jRYc5gfXkBaiDLVmExyfcdEXNaDm53DZSNBtOl6G+MmX/81EverxcBQAA) format('woff2')}
 
@@ -330,7 +330,7 @@ html[data-theme="day"] .calendar-day-cell.holiday.sun{background:radial-gradient
 .calendar-day-cell.today.holiday{border:3px solid var(--red); color:#b3140f}
 .cal-title{cursor:pointer}
 
-/* rètol del festiu (com la finestreta del KOSTOV) */
+/* rètol del festiu (com la finestreta del VOSTOK) */
 .holiday-tip{position:fixed; z-index:60; transform:translate(-50%, calc(-100% - 10px)); max-width:260px; padding:9px 12px 10px; border-radius:12px; pointer-events:none;
   background:var(--pop-bg); border:1px solid var(--pop-bd); border-left:3px solid var(--red); color:var(--hol-ink);
   font-family:"Barlow Condensed"; font-weight:700; font-size:17px; line-height:1.15; letter-spacing:.02em;
@@ -647,7 +647,7 @@ html,body{overscroll-behavior:none}
 </head>
 <body translate="no">
 <main class="wrap">
-  <div class="watch" id="watch" role="button" tabindex="0" aria-label="KOSTOV">
+  <div class="watch" id="watch" role="button" tabindex="0" aria-label="VOSTOK">
     <div class="flip" id="watchFlip">
       <div class="face front">
         <svg id="baseLayer" viewBox="-446 -446 892 892"></svg>
@@ -956,7 +956,7 @@ html,body{overscroll-behavior:none}
 </svg>
 
 <script>
-/* ===== Rellotge KOSTOV (davant) ===== */
+/* ===== Rellotge VOSTOK (davant) ===== */
 /* =========================================================
    Utilitats
    ========================================================= */
@@ -1141,7 +1141,7 @@ function buildBase(){
   s += `<text x="0" y="236" text-anchor="middle" dominant-baseline="central" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="13" letter-spacing="1" fill="#b4b7ba">H3 / T25</text>`;
 
   /* --- rètols (sense logotip de marca) --- */
-  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">KOSTOV</text>`;
+  s += `<text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#e3201b" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))">VOSTOK</text>`;
   s += `<text x="0" y="-68" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="600" font-size="18" letter-spacing="5" fill="#c9ccce">AUTOMATIC</text>`;
   s += `<text x="0" y="92" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="31" letter-spacing="2.5" fill="#e4e6e7">CLAUDE</text>`;
   s += `<text x="0" y="121" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="500" font-size="17" letter-spacing="1.5" fill="#c3c6c8">WATER RESIST</text>`;
@@ -1262,8 +1262,8 @@ function buildGlow(){
   </defs><g filter="url(#fLumeGlow)">`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="17.5" fill="url(#gLumeN)"/>`;
   s += `<g id="glowPip"><circle cx="0" cy="-404" r="10.5" fill="url(#gLumeN)"/></g></g>`;
-  // KOSTOV de nit: el vermell es manté viu i amb una lleugera aura
-  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">KOSTOV</text></g>`;
+  // VOSTOK de nit: el vermell es manté viu i amb una lleugera aura
+  s += `<g class="night-brand" filter="url(#fBrandGlow)"><text x="0" y="-98" text-anchor="middle" font-family="Barlow, Arial, sans-serif" font-weight="700" font-size="40" letter-spacing="4" fill="#ff3b2f">VOSTOK</text></g>`;
   for (const [x,y] of DOT_POS) s += `<circle cx="${x}" cy="${y}" r="7" fill="#5f6a55"/><circle cx="${x-2}" cy="${y-2.5}" r="2.4" fill="#c9d3bd" opacity=".55"/>`;
   document.getElementById('glowLayer').innerHTML = s;
 }
@@ -1563,7 +1563,7 @@ function initFlip(){
   const flip = document.getElementById('watchFlip');
   const front = flip.querySelector('.face.front'), back = flip.querySelector('.face.back');
   const edges = [];
-  // colors del cantell: negre (bisell KOSTOV) cap al bisell del Tissot
+  // colors del cantell: negre (bisell VOSTOK) cap al bisell del Tissot
   const mix = (t) => { const a=[16,17,19], b=[22,22,22]; return a.map((v,i)=>Math.round(v+(b[i]-v)*t)); };
   function layout(){
     const w = watch.getBoundingClientRect().width || 600;
@@ -1705,7 +1705,7 @@ function setupBezel(layerId='bezelLayer', hitId='bezelHit', rotId='bezelRot', pi
 /* =========================================================
    SO: interruptor general (carraca del bisell, roda, grinyol del gir i veu de les hores)
    ========================================================= */
-const SOUND_KEY = 'kostovSound';
+const SOUND_KEY = 'VOSTOKSound';
 let soundPref = true;
 try{ soundPref = localStorage.getItem(SOUND_KEY) !== 'off'; }catch(e){}
 let soundOn = false;
@@ -1856,7 +1856,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // l'app surt d'aquí; t('clau', ...) retorna el text de l'idioma triat.
     // ------------------------------------------------------------------
     const LANGS = ['ca', 'fr', 'de', 'it', 'en'];
-    const LANG_STORAGE_KEY = 'kostov_lang';
+    const LANG_STORAGE_KEY = 'VOSTOK_lang';
     const WMO_CODES = [0, 1, 2, 3, 45, 48, 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 71, 73, 75, 77, 80, 81, 82, 85, 86, 95, 96, 99];
 
     const I18N = {
@@ -2173,12 +2173,12 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       }
     };
 
-    // Textos propis del KOSTOV (barra, gir, so, instal·lació i mode Zz)
+    // Textos propis del VOSTOK (barra, gir, so, instal·lació i mode Zz)
     Object.assign(I18N.ca, {
       zzNames: { orange: 'taronja', red: 'vermell', yellow: 'groc', green: 'verd', blue: 'blau', amber: 'ambre', teal: 'turquesa', cyan: 'cian', violet: 'violeta', ice: 'blanc gel' },
-      flipBtn: "Girar el rellotge (KOSTOV ↔ Tissot)", soundBtn: 'Sons mecànics: carraca del bisell i de la roda, grinyol del gir',
+      flipBtn: "Girar el rellotge (VOSTOK ↔ Tissot)", soundBtn: 'Sons mecànics: carraca del bisell i de la roda, grinyol del gir',
       prevMonth: 'Mes anterior', nextMonth: 'Mes següent',
-      watchFront: 'Rellotge KOSTOV. Toca per girar-lo.', watchBack: 'Rellotge Tissot PRS 516. Toca per girar-lo.',
+      watchFront: 'Rellotge VOSTOK. Toca per girar-lo.', watchBack: 'Rellotge Tissot PRS 516. Toca per girar-lo.',
       insIos: s => `Per instal·lar-la a l'iPhone: a Safari toca ${s} <b>Comparteix</b> i després <b>Afegeix a la pantalla d'inici</b>.`,
       insMenu: "Per instal·lar-la: obre el menú del navegador i tria <b>Instal·la l'aplicació</b> (Chrome, Edge) o <b>Afegeix a la pantalla d'inici</b>.",
       insFile: "L'app es pot instal·lar quan s'obre des de la seva adreça web (GitHub Pages), no des d'un fitxer.",
@@ -2187,9 +2187,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     });
     Object.assign(I18N.fr, {
       zzNames: { orange: 'orange', red: 'rouge', yellow: 'jaune', green: 'vert', blue: 'bleu', amber: 'ambre', teal: 'turquoise', cyan: 'cyan', violet: 'violet', ice: 'blanc glacé' },
-      flipBtn: 'Retourner la montre (KOSTOV ↔ Tissot)', soundBtn: 'Sons mécaniques : cliquet de la lunette et de la roue, grincement du retournement',
+      flipBtn: 'Retourner la montre (VOSTOK ↔ Tissot)', soundBtn: 'Sons mécaniques : cliquet de la lunette et de la roue, grincement du retournement',
       prevMonth: 'Mois précédent', nextMonth: 'Mois suivant',
-      watchFront: 'Montre KOSTOV. Touchez pour la retourner.', watchBack: 'Montre Tissot PRS 516. Touchez pour la retourner.',
+      watchFront: 'Montre VOSTOK. Touchez pour la retourner.', watchBack: 'Montre Tissot PRS 516. Touchez pour la retourner.',
       insIos: s => `Pour l'installer sur l'iPhone : dans Safari, touchez ${s} <b>Partager</b> puis <b>Sur l'écran d'accueil</b>.`,
       insMenu: "Pour l'installer : ouvrez le menu du navigateur et choisissez <b>Installer l'application</b> (Chrome, Edge) ou <b>Ajouter à l'écran d'accueil</b>.",
       insFile: "L'app s'installe quand elle est ouverte depuis son adresse web (GitHub Pages), pas depuis un fichier.",
@@ -2198,9 +2198,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     });
     Object.assign(I18N.de, {
       zzNames: { orange: 'Orange', red: 'Rot', yellow: 'Gelb', green: 'Grün', blue: 'Blau', amber: 'Bernstein', teal: 'Türkis', cyan: 'Cyan', violet: 'Violett', ice: 'Eisweiß' },
-      flipBtn: 'Uhr umdrehen (KOSTOV ↔ Tissot)', soundBtn: 'Mechanische Geräusche: Ratsche von Lünette und Rad, Knarren beim Drehen',
+      flipBtn: 'Uhr umdrehen (VOSTOK ↔ Tissot)', soundBtn: 'Mechanische Geräusche: Ratsche von Lünette und Rad, Knarren beim Drehen',
       prevMonth: 'Voriger Monat', nextMonth: 'Nächster Monat',
-      watchFront: 'KOSTOV-Uhr. Tippen zum Umdrehen.', watchBack: 'Tissot PRS 516. Tippen zum Umdrehen.',
+      watchFront: 'VOSTOK-Uhr. Tippen zum Umdrehen.', watchBack: 'Tissot PRS 516. Tippen zum Umdrehen.',
       insIos: s => `Installieren auf dem iPhone: in Safari ${s} <b>Teilen</b> und dann <b>Zum Home-Bildschirm</b> tippen.`,
       insMenu: 'Installieren: Browsermenü öffnen und <b>App installieren</b> (Chrome, Edge) oder <b>Zum Startbildschirm</b> wählen.',
       insFile: 'Die App lässt sich installieren, wenn sie über ihre Webadresse (GitHub Pages) geöffnet wird, nicht als Datei.',
@@ -2209,9 +2209,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     });
     Object.assign(I18N.it, {
       zzNames: { orange: 'arancione', red: 'rosso', yellow: 'giallo', green: 'verde', blue: 'blu', amber: 'ambra', teal: 'turchese', cyan: 'ciano', violet: 'viola', ice: 'bianco ghiaccio' },
-      flipBtn: "Girare l'orologio (KOSTOV ↔ Tissot)", soundBtn: 'Suoni meccanici: cricchetto della ghiera e della ruota, cigolio del giro',
+      flipBtn: "Girare l'orologio (VOSTOK ↔ Tissot)", soundBtn: 'Suoni meccanici: cricchetto della ghiera e della ruota, cigolio del giro',
       prevMonth: 'Mese precedente', nextMonth: 'Mese successivo',
-      watchFront: 'Orologio KOSTOV. Tocca per girarlo.', watchBack: 'Orologio Tissot PRS 516. Tocca per girarlo.',
+      watchFront: 'Orologio VOSTOK. Tocca per girarlo.', watchBack: 'Orologio Tissot PRS 516. Tocca per girarlo.',
       insIos: s => `Per installarla sull'iPhone: in Safari tocca ${s} <b>Condividi</b> e poi <b>Aggiungi alla schermata Home</b>.`,
       insMenu: "Per installarla: apri il menu del browser e scegli <b>Installa app</b> (Chrome, Edge) o <b>Aggiungi alla schermata Home</b>.",
       insFile: "L'app si può installare quando si apre dal suo indirizzo web (GitHub Pages), non da un file.",
@@ -2220,9 +2220,9 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     });
     Object.assign(I18N.en, {
       zzNames: { orange: 'orange', red: 'red', yellow: 'yellow', green: 'green', blue: 'blue', amber: 'amber', teal: 'teal', cyan: 'cyan', violet: 'violet', ice: 'ice white' },
-      flipBtn: 'Flip the watch (KOSTOV ↔ Tissot)', soundBtn: 'Mechanical sounds: bezel and wheel ratchet, flip creak',
+      flipBtn: 'Flip the watch (VOSTOK ↔ Tissot)', soundBtn: 'Mechanical sounds: bezel and wheel ratchet, flip creak',
       prevMonth: 'Previous month', nextMonth: 'Next month',
-      watchFront: 'KOSTOV watch. Tap to flip it.', watchBack: 'Tissot PRS 516 watch. Tap to flip it.',
+      watchFront: 'VOSTOK watch. Tap to flip it.', watchBack: 'Tissot PRS 516 watch. Tap to flip it.',
       insIos: s => `To install it on iPhone: in Safari tap ${s} <b>Share</b> and then <b>Add to Home Screen</b>.`,
       insMenu: 'To install it: open the browser menu and choose <b>Install app</b> (Chrome, Edge) or <b>Add to Home screen</b>.',
       insFile: 'The app can be installed when opened from its web address (GitHub Pages), not from a file.',
@@ -2290,14 +2290,14 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
 
     // ------------------------------------------------------------------
     // Festius: UNA sola font per al calendari i per a les finestretes de
-    // data del Tissot i del KOSTOV.
+    // data del Tissot i del VOSTOK.
     //  1. Dades obertes de la Generalitat (festius estatals i catalans +
     //     festes locals del municipi on ets, per defecte Barcelona).
     //  2. Si l'API falla o encara no ha publicat l'any, càlcul local a
     //     partir de regles fixes i de la data de Pasqua, i es reintenta
     //     al cap d'una hora.
     // ------------------------------------------------------------------
-    const HOLIDAYS_CACHE_KEY = 'kostov_holidays_v1';
+    const HOLIDAYS_CACHE_KEY = 'VOSTOK_holidays_v1';
     const HOLIDAYS_TTL_MS = 24 * 60 * 60 * 1000;   // dades de l'API: refresc diari
     const HOLIDAYS_RETRY_MS = 60 * 60 * 1000;      // reserva local: reintent cada hora
     const DEFAULT_MUNICIPALITY = 'Barcelona';
@@ -2527,7 +2527,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     }
 
     // ------------------------------------------------------------------
-    // Finestretes de dia i data (Tissot i KOSTOV): només s'actualitzen
+    // Finestretes de dia i data (Tissot i VOSTOK): només s'actualitzen
     // quan canvia el dia, no a cada fotograma.
     // ------------------------------------------------------------------
     let lastDateKey = '';
@@ -2841,7 +2841,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // l'última. Dins d'algunes finestres hi ha subpanells laterals.
     // ------------------------------------------------------------------
     // ------------------------------------------------------------------
-    // LA RODA (tambor 3D del KOSTOV): les finestres giren com les cares
+    // LA RODA (tambor 3D del VOSTOK): les finestres giren com les cares
     // d'un tambor. Amunt o avall: següent o anterior, en cercle.
     // ------------------------------------------------------------------
     const fullsBox = document.getElementById('fulls');
@@ -4079,7 +4079,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     //  - Botó: des del mode automàtic recorre els altres dos temes i torna a
     //    automàtic; cada toc canvia el que es veu.
     // ------------------------------------------------------------------
-    const THEME_STORAGE_KEY = 'kostov_theme'; // 'day' | 'night' | 'zz' | absent = automàtic
+    const THEME_STORAGE_KEY = 'VOSTOK_theme'; // 'day' | 'night' | 'zz' | absent = automàtic
     const THEMES = ['day', 'night', 'zz'];
     const THEME_COLORS = { day: '#e4e5e0', night: '#030304', zz: '#000000' };
     let lastAppliedTheme = '';
@@ -4341,7 +4341,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // Safari (iPhone) només deixa parlar després d'un primer toc a la
     // pantalla, i només mentre l'app és oberta i la pantalla encesa.
     // ------------------------------------------------------------------
-    const VOICE_STORAGE_KEY = 'kostov_veu';
+    const VOICE_STORAGE_KEY = 'VOSTOK_veu';
     const SPEAKER_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.4a8 8 0 0 1 0 11.2"/></svg>';
     const SPEAKER_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>';
 
@@ -5028,7 +5028,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // Aniversari (secret: doble toc a la placa de Població). Només es desa
     // en aquest aparell. El dia de l'aniversari surt una placa a la cinta.
     // ------------------------------------------------------------------
-    const BIRTHDAY_KEY = 'kostov_aniv';
+    const BIRTHDAY_KEY = 'VOSTOK_aniv';
     function readBirthday() {
       try { const v = JSON.parse(localStorage.getItem(BIRTHDAY_KEY)); return v && v.d && v.m ? v : null; } catch (e) { return null; }
     }
@@ -5096,7 +5096,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // Un sol to o dos: el primer per al rellotge, el segon per al lume i les finestres
     const ZZ_ORDER = ['orange', 'red', 'yellow', 'green', 'blue',
                       'red+yellow', 'green+orange', 'blue+yellow', 'ice+orange', 'violet+amber', 'teal+orange', 'blue+orange', 'cyan+amber'];
-    const ZZ_KEY = 'kostov_zz_tint';
+    const ZZ_KEY = 'VOSTOK_zz_tint';
     let zzTint = (() => { try { const v = localStorage.getItem(ZZ_KEY); return ZZ_ORDER.includes(v) ? v : 'orange'; } catch (e) { return 'orange'; } })();
     const zzPair = k => { const [a, b] = k.split('+'); return [a, b || a]; };
     const zzName = k => zzPair(k).filter((c, i, arr) => arr.indexOf(c) === i).map(c => t('zzNames')[c] || c).join(' · ');
@@ -5148,7 +5148,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
 
     // Intensitat de cada color (de 25% a 100%): lliscar el dit amunt o avall
     // damunt l'esfera (o la roda del ratolí). S'aplica igual a tota la pantalla.
-    const ZZ_LUM_KEY = 'kostov_zz_lum';
+    const ZZ_LUM_KEY = 'VOSTOK_zz_lum';
     const ZZ_LUM_MIN = 0.25, ZZ_LUM_DEFAULT = 0.9;
     let zzLum = (() => { try { return JSON.parse(localStorage.getItem(ZZ_LUM_KEY)) || {}; } catch (e) { return {}; } })();
     const lumFor = tint => (typeof zzLum[tint] === 'number' ? zzLum[tint] : ZZ_LUM_DEFAULT);
@@ -5207,8 +5207,8 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // ------------------------------------------------------------------
     const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const IS_ANDROID = /Android/i.test(navigator.userAgent);
-    const SHORTCUT_NAME = 'Alarma KOSTOV';
-    const SHORTCUT_KEY = 'kostov_drecera';
+    const SHORTCUT_NAME = 'Alarma VOSTOK';
+    const SHORTCUT_KEY = 'VOSTOK_drecera';
     let pendingAlarm = null;
     const openUrl = url => { window.location.href = url; };
     function iosAlarm(time) { openUrl(`shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(time)}`); }
@@ -5261,7 +5261,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     };
     const HELP = {
       ca: { title: 'Com funciona', sections: [
-        ['watch', 'El rellotge', ["Doble toc a l'esfera: gira en 8 segons, com un cilindre, KOSTOV ↔ Tissot PRS 516.", "La corona exterior de totes dues cares gira: arrossega-la amb el dit (només en sentit antihorari, a clics). Doble toc a la corona: torna a zero.", 'Totes dues marquen l\'hora real; el Tissot mostra el dia i la data a la finestreta.']],
+        ['watch', 'El rellotge', ["Doble toc a l'esfera: gira en 8 segons, com un cilindre, VOSTOK ↔ Tissot PRS 516.", "La corona exterior de totes dues cares gira: arrossega-la amb el dit (només en sentit antihorari, a clics). Doble toc a la corona: torna a zero.", 'Totes dues marquen l\'hora real; el Tissot mostra el dia i la data a la finestreta.']],
         ['swipe', 'La roda', ['Dit amunt o avall al quadre: finestra següent o anterior (en cercle). Doble toc: torna al calendari.', 'Calendari · Data · Temperatura · El temps · Avui · Properament · Ubicació · Avisos · Aire · Ràdio · Podcasts · Notícies · Alarmes.', 'Dit de costat: canvia de mes o de subpanell (punts de dalt).', 'Avisos només surt quan n\'hi ha (temps extrem o festiu avui o demà).']],
         ['cal', 'El calendari', ['Festius en vermell: toca\'ls per veure\'n el nom.', '«Avui» o doble toc al mes: torna al mes actual.', 'Les festes, només en català (amb les locals del municipi).']],
         ['moon', 'Temes i mode Zz', ['Botó del tema: A · dia · nit · Zz. A: dia o nit segons el sol, i Zz si es carrega de nit.', 'Zz: fons negre i tot en un o dos tons (el rellotge en un, el lume i les finestres en l\'altre); la pantalla no s\'apaga.', 'En Zz: un toc al rellotge canvia els tons (taronja, vermell, groc, verd, blau i vuit combinacions), doble toc el gira, dit amunt o avall sobre el rellotge n\'ajusta la intensitat.']],
@@ -5271,7 +5271,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['app', "Instal·lar l'app", ["Botó INS de la barra.", "iPhone: Safari › Compartir › Afegeix a la pantalla d'inici."]]
       ] },
       fr: { title: 'Mode d\'emploi', sections: [
-        ['watch', 'La montre', ['Double toucher sur le cadran : il se retourne en 8 secondes, comme un cylindre, KOSTOV ↔ Tissot PRS 516.', 'La lunette des deux faces tourne : faites-la glisser du doigt (sens antihoraire, par crans). Double toucher sur la lunette : retour à zéro.', 'Les deux faces indiquent l\'heure réelle ; la Tissot affiche le jour et la date.']],
+        ['watch', 'La montre', ['Double toucher sur le cadran : il se retourne en 8 secondes, comme un cylindre, VOSTOK ↔ Tissot PRS 516.', 'La lunette des deux faces tourne : faites-la glisser du doigt (sens antihoraire, par crans). Double toucher sur la lunette : retour à zéro.', 'Les deux faces indiquent l\'heure réelle ; la Tissot affiche le jour et la date.']],
         ['swipe', 'La roue', ['Doigt vers le haut ou le bas : fenêtre suivante ou précédente (en boucle). Double toucher : retour au calendrier.', 'Calendrier · Date · Température · Météo · Aujourd\'hui · Lieu · Alertes · Air · Radio · Actualités · Réveils.', 'Doigt sur le côté : mois ou sous-panneau (points en haut).', 'Alertes n\'apparaît que s\'il y en a.']],
         ['cal', 'Le calendrier', ['« Auj. » ou double toucher sur le mois : retour au mois actuel.', 'Les jours fériés ne s\'affichent qu\'en catalan.']],
         ['moon', 'Thèmes et mode Zz', ['Bouton du thème : A · jour · nuit · Zz. A : selon le soleil, et Zz en charge la nuit.', 'Zz : fond noir, tout en une ou deux teintes (la montre dans l\'une, la lumière et les fenêtres dans l\'autre) ; l\'écran reste allumé.', 'En Zz : un toucher sur la montre change les teintes (cinq couleurs et huit combinaisons), un double toucher la retourne, glisser sur la montre règle l\'intensité.']],
@@ -5281,7 +5281,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['app', 'Installer l\'app', ['Bouton INS de la barre.', 'iPhone : Safari › Partager › Sur l\'écran d\'accueil.']]
       ] },
       de: { title: 'So funktioniert es', sections: [
-        ['watch', 'Die Uhr', ['Doppeltippen auf das Zifferblatt dreht die Uhr in 8 Sekunden wie einen Zylinder: KOSTOV ↔ Tissot PRS 516.', 'Die Lünette beider Seiten dreht sich: mit dem Finger ziehen (gegen den Uhrzeigersinn, rastend). Doppeltippen auf die Lünette: zurück auf null.', 'Beide zeigen die echte Zeit; die Tissot zeigt Wochentag und Datum.']],
+        ['watch', 'Die Uhr', ['Doppeltippen auf das Zifferblatt dreht die Uhr in 8 Sekunden wie einen Zylinder: VOSTOK ↔ Tissot PRS 516.', 'Die Lünette beider Seiten dreht sich: mit dem Finger ziehen (gegen den Uhrzeigersinn, rastend). Doppeltippen auf die Lünette: zurück auf null.', 'Beide zeigen die echte Zeit; die Tissot zeigt Wochentag und Datum.']],
         ['swipe', 'Das Rad', ['Finger nach oben oder unten: nächstes oder voriges Fenster (im Kreis). Doppeltippen: zurück zum Kalender.', 'Kalender · Datum · Temperatur · Wetter · Heute · Standort · Warnungen · Luft · Radio · Nachrichten · Wecker.', 'Finger zur Seite: Monat oder Unterseite (Punkte oben).', 'Warnungen erscheinen nur, wenn es welche gibt.']],
         ['cal', 'Der Kalender', ['„Heute“ oder Doppeltippen auf den Monat: zurück zum aktuellen Monat.', 'Feiertage werden nur auf Katalanisch angezeigt.']],
         ['moon', 'Modi und Zz-Modus', ['Modus-Taste: A · Tag · Nacht · Zz. A: nach der Sonne, Zz beim Laden in der Nacht.', 'Zz: schwarzer Grund, alles in einem oder zwei Farbtönen (die Uhr im einen, Leuchtmasse und Fenster im anderen); der Bildschirm bleibt an.', 'In Zz: Tippen auf die Uhr wechselt die Farbtöne (fünf Farben und acht Kombinationen), Doppeltippen dreht sie, Wischen über die Uhr ändert die Helligkeit.']],
@@ -5291,7 +5291,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['app', 'App installieren', ['INS-Taste in der Leiste.', 'iPhone: Safari › Teilen › Zum Home-Bildschirm.']]
       ] },
       it: { title: 'Come funziona', sections: [
-        ['watch', "L'orologio", ['Doppio tocco sul quadrante: si gira in 8 secondi, come un cilindro, KOSTOV ↔ Tissot PRS 516.', 'La ghiera di entrambe le facce ruota: trascinala con il dito (in senso antiorario, a scatti). Doppio tocco sulla ghiera: torna a zero.', "Entrambe segnano l'ora reale; la Tissot mostra giorno e data."]],
+        ['watch', "L'orologio", ['Doppio tocco sul quadrante: si gira in 8 secondi, come un cilindro, VOSTOK ↔ Tissot PRS 516.', 'La ghiera di entrambe le facce ruota: trascinala con il dito (in senso antiorario, a scatti). Doppio tocco sulla ghiera: torna a zero.', "Entrambe segnano l'ora reale; la Tissot mostra giorno e data."]],
         ['swipe', 'La ruota', ['Dito su o giù: finestra successiva o precedente (in cerchio). Doppio tocco: torna al calendario.', 'Calendario · Data · Temperatura · Meteo · Oggi · Posizione · Allerte · Aria · Radio · Notizie · Sveglie.', 'Dito di lato: mese o sottopannello (punti in alto).', 'Allerte compare solo se ce ne sono.']],
         ['cal', 'Il calendario', ['«Oggi» o doppio tocco sul mese: torna al mese corrente.', 'Le feste si vedono solo in catalano.']],
         ['moon', 'Temi e modalità Zz', ['Tasto del tema: A · giorno · notte · Zz. A: secondo il sole, e Zz in carica di notte.', "Zz: fondo nero e tutto in uno o due toni (l'orologio in uno, la luminescenza e le finestre nell'altro); lo schermo resta acceso.", "In Zz: un tocco sull'orologio cambia i toni (cinque colori e otto combinazioni), doppio tocco lo gira, scorrere sull'orologio regola l'intensità."]],
@@ -5301,7 +5301,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['app', "Installare l'app", ['Tasto INS nella barra.', 'iPhone: Safari › Condividi › Aggiungi alla schermata Home.']]
       ] },
       en: { title: 'How it works', sections: [
-        ['watch', 'The watch', ['Double-tap the dial: it turns over in 8 seconds, like a cylinder, KOSTOV ↔ Tissot PRS 516.', 'The outer bezel of both faces turns: drag it with your finger (anticlockwise, in clicks). Double-tap the bezel: back to zero.', 'Both show the real time; the Tissot shows the day and date.']],
+        ['watch', 'The watch', ['Double-tap the dial: it turns over in 8 seconds, like a cylinder, VOSTOK ↔ Tissot PRS 516.', 'The outer bezel of both faces turns: drag it with your finger (anticlockwise, in clicks). Double-tap the bezel: back to zero.', 'Both show the real time; the Tissot shows the day and date.']],
         ['swipe', 'The wheel', ['Finger up or down: next or previous panel (in a loop). Double-tap: back to the calendar.', 'Calendar · Date · Temperature · Weather · Today · Location · Alerts · Air · Radio · News · Alarms.', 'Finger sideways: month or sub-panel (dots at the top).', 'Alerts only appears when there are any.']],
         ['cal', 'The calendar', ['“Today” or double-tap the month: back to the current month.', 'Holidays are shown in Catalan only.']],
         ['moon', 'Themes and Zz mode', ['Theme button: A · day · night · Zz. A follows the sun, and Zz while charging at night.', 'Zz: black background, everything in one or two tones (the watch in one, the lume and panels in the other); the screen stays on.', 'In Zz: tap the watch to change tones (five colours and eight combinations), double-tap flips it, swipe on the watch sets the brightness.']],
@@ -5345,7 +5345,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // dita en veu alta, vibració si el telèfon en té, i botons per aturar
     // o posposar 5 minuts. Sonen encara que el so de l'altaveu sigui apagat.
     // ------------------------------------------------------------------
-    const ALARM_STORAGE_KEY = 'kostov_alarms';
+    const ALARM_STORAGE_KEY = 'VOSTOK_alarms';
     const ALARM_DEFAULTS = [
       { on: false, time: '07:00', days: [1, 2, 3, 4, 5] },
       { on: false, time: '08:00', days: [0, 6] },
@@ -5621,7 +5621,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       if (currentCoords) refreshWeather(currentCoords.lat, currentCoords.lon);
     }, WEATHER_REFRESH_MS);
     // ------------------------------------------------------------------
-    // KOSTOV: lume nocturn de les agulles, instal·lació, mode Zz i arrencada
+    // VOSTOK: lume nocturn de les agulles, instal·lació, mode Zz i arrencada
     // ------------------------------------------------------------------
     function setNightLume(on) {
       document.querySelectorAll('.lyr-hands .hl').forEach(el => {
