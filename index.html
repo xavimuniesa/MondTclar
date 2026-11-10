@@ -609,9 +609,24 @@ html[data-theme="zz"] .zz-velo{opacity:var(--zz-dim, .1)}
 html[data-theme="zz"]{--page:#000; --body-bg:#000}
 html[data-theme="zz"] body{background:#000}
 /* Zz amb dos tons: el rellotge en el to A, el lume i les finestres en el to B (poden ser iguals) */
-html[data-theme="zz"] #baseLayer, html[data-theme="zz"] #bezelLayer, html[data-theme="zz"] #bBezel{filter:url(#zz-a-dim)}
-html[data-theme="zz"] #bBase{filter:url(#zz-a-inv)}
-html[data-theme="zz"] #bBase .t-lume{filter:url(#fInv)}
+html[data-theme="zz"] #baseLayer, html[data-theme="zz"] #bezelLayer{filter:url(#zz-a-dim)}
+/* Tissot en Zz: pintat directament amb els tons (sense filtres): a Android, el filtre d'invertir i tenyir
+   tota l'esfera trigava segons a dibuixar-se després del gir */
+html[data-theme="zz"] #bBase, html[data-theme="zz"] #bBezel{filter:none}
+html[data-theme="zz"] #bBase [filter], html[data-theme="zz"] #bBezel .tb-n{filter:none!important}
+html[data-theme="zz"] #bBase .td-ov, html[data-theme="zz"] #bBezel .td-ov{display:none}
+html[data-theme="zz"] #bBase .td-bg{fill:url(#tDialZ)}
+html[data-theme="zz"] #bBase .td-ring{stroke:var(--zh-dim)}
+html[data-theme="zz"] #bBase .td-tk{fill:var(--zh-dim)}
+html[data-theme="zz"] #bBase .td-tx text, html[data-theme="zz"] #bBase .td-tx tspan{fill:var(--zh-lume); stroke:none}
+html[data-theme="zz"] #bBase .td-tx2{fill:var(--zh-body)}
+html[data-theme="zz"] #bBase .td-wf{stroke:var(--zh-body)}
+html[data-theme="zz"] #bBase rect.td-wf:not([fill="none"]){fill:var(--zh-body)}
+html[data-theme="zz"] #bBase .td-wb{fill:#000}
+html[data-theme="zz"] #bBase #tDay, html[data-theme="zz"] #bBase #tDate{fill:var(--zh-lume)}
+html[data-theme="zz"] #bBase .td-is{fill:var(--zh-body)}
+html[data-theme="zz"] #bBase .t-lume{fill:var(--zh-lume)}
+html[data-theme="zz"] #bBezel .tb-n, html[data-theme="zz"] #bBezel .tb-d{fill:var(--zh-body)}
 /* Agulles en Zz: es pinten directament amb el to (sense filtre de color a la capa, que en alguns
    Android les feia desaparèixer): cos en to fosc, lume i segonera en to ple; sense reflexos de vidre */
 html[data-theme="zz"] .lyr-hands [fill]:not([fill="none"]){fill:var(--zh-body)}
@@ -1381,7 +1396,7 @@ function buildBackBezel(){
   s += `<circle r="444.5" fill="none" stroke="#333" stroke-width="3"/>`;
   // ratlletes a les mitges desenes
   for (const a of [30, 90, 150, 210, 270, 330]){
-    s += `<rect x="-2.68" y="-436.6" width="5.36" height="56" rx="1.6" fill="#fff" transform="rotate(${a})"/>`;
+    s += `<rect class="tb-d" x="-2.68" y="-436.6" width="5.36" height="56" rx="1.6" fill="#fff" transform="rotate(${a})"/>`;
   }
   // números: perpendiculars a l'eix, llevat del 30, que es llegeix del dret
   for (const [v, a] of [['60',0],['10',60],['20',120],['30',180],['40',240],['50',300]]){
@@ -1389,9 +1404,9 @@ function buildBackBezel(){
     const rot = v === '30' ? 0 : a;
     s += `<text x="${x}" y="${y}" transform="rotate(${rot} ${x} ${y})" text-anchor="middle" dominant-baseline="central"
             font-family="${T_SANS}" font-weight="500" font-size="56" letter-spacing="-.5" fill="#fff"
-            style="filter:drop-shadow(0 1.5px 2.5px rgba(0,0,0,.8))">${v}</text>`;
+            class="tb-n" style="filter:drop-shadow(0 1.5px 2.5px rgba(0,0,0,.8))">${v}</text>`;
   }
-  s += `<path d="${ring}" fill="url(#tBezSheen)" fill-rule="evenodd" pointer-events="none"/>`;
+  s += `<path class="td-ov" d="${ring}" fill="url(#tBezSheen)" fill-rule="evenodd" pointer-events="none"/>`;
   s += `<circle r="${T_DIAL+1}" fill="none" stroke="#000" stroke-width="3" opacity=".7"/>`;
   s += `</g>`;
   s += `<path id="bezelHitB" class="bezel-hit" d="M0,-446 A446,446 0 1 1 -0.01,-446 Z M0,-${T_DIAL-4} A${T_DIAL-4},${T_DIAL-4} 0 1 0 0.01,-${T_DIAL-4} Z" fill="#000" fill-opacity="0" fill-rule="evenodd"/>`;
@@ -1429,25 +1444,26 @@ function buildBackDial(){
     <filter id="tDialSh" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#000" flood-opacity=".6"/></filter>
     <filter id="tInset" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="3" stdDeviation="2.6" flood-color="#000" flood-opacity=".5"/></filter>
     <clipPath id="tDialClip"><circle r="${R}"/></clipPath>
+    <radialGradient id="tDialZ" cx="50%" cy="50%" r="50%"><stop offset="0" style="stop-color:var(--zt-c0,#000)"/><stop offset=".8" style="stop-color:var(--zt-c0,#000)"/><stop offset="1" style="stop-color:var(--zt-c1,#222)"/></radialGradient>
   </defs>`;
   if (DIAL_ONLY) s += `<circle r="446" fill="#080808"/>`;
   s += `<g class="t-dial">`;
-  s += `<circle r="${R}" fill="url(#tDial)" filter="url(#tDialSh)"/>`;
-  s += `<circle r="${R}" fill="url(#tDialLow)"/>`;
-  s += `<circle r="${R}" fill="url(#tDialIn)"/>`;
-  s += `<circle r="${R-1.4}" fill="none" stroke="#666" stroke-width="2.7"/>`;
-  s += `<path d="M-200,-${R-24} A${R-24},${R-24} 0 0 1 200,-${R-24}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="5" stroke-linecap="round" style="filter:blur(3px)"/>`;
+  s += `<circle class="td-bg" r="${R}" fill="url(#tDial)" filter="url(#tDialSh)"/>`;
+  s += `<circle class="td-ov" r="${R}" fill="url(#tDialLow)"/>`;
+  s += `<circle class="td-ov" r="${R}" fill="url(#tDialIn)"/>`;
+  s += `<circle class="td-ring" r="${R-1.4}" fill="none" stroke="#666" stroke-width="2.7"/>`;
+  s += `<path class="td-ov" d="M-200,-${R-24} A${R-24},${R-24} 0 0 1 200,-${R-24}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="5" stroke-linecap="round" style="filter:blur(3px)"/>`;
   // ratlletes de minut (no als índexs) i el cercle que les tanca per dins
   let ticks = '';
   for (let m = 0; m < 60; m++){
     if (m % 5 === 0) continue;
     ticks += `<rect x="-0.98" y="${-(R-7.47)}" width="1.96" height="19.6" transform="rotate(${m*6})"/>`;
   }
-  s += `<g fill="#141414">${ticks}</g>`;
-  s += `<circle r="${(R - 29.7).toFixed(1)}" fill="none" stroke="rgba(20,20,20,.55)" stroke-width="1.6"/>`;
+  s += `<g class="td-tk" fill="#141414">${ticks}</g>`;
+  s += `<circle class="td-ring" r="${(R - 29.7).toFixed(1)}" fill="none" stroke="rgba(20,20,20,.55)" stroke-width="1.6"/>`;
 
   // marca i model
-  s += `<g fill="#111" text-anchor="middle">
+  s += `<g class="td-tx" fill="#111" text-anchor="middle">
     <text x="0" y="-192" font-family="TissotBricolage, ui-rounded, ${T_SANS}" font-weight="600" font-size="48" letter-spacing="7.6"
           style="paint-order:stroke" stroke="rgba(255,255,255,.5)" stroke-width=".8">TISSOT</text>
     <text x="0" y="-146" font-family="Georgia, 'Times New Roman', Times, serif" font-weight="700" font-size="32" letter-spacing="1.8"
@@ -1460,16 +1476,16 @@ function buildBackDial(){
   let arc = '';
   'SWISS'.split('').forEach((ch, i) => { const a = 7 + (4 - i) * 2.33; arc += `<text x="0" y="319" transform="rotate(${a.toFixed(2)})">${ch}</text>`; });
   'MADE'.split('').forEach((ch, i) => { const a = -(7 + i * 2.44); arc += `<text x="0" y="319" transform="rotate(${a.toFixed(2)})">${ch}</text>`; });
-  s += `<g fill="#333" font-family="${T_SANS}" font-weight="700" font-size="12.8" text-anchor="middle">${arc}</g>`;
+  s += `<g class="td-tx2" fill="#333" font-family="${T_SANS}" font-weight="700" font-size="12.8" text-anchor="middle">${arc}</g>`;
 
   // finestreta de dia i data (a les 3)
   const bw = 2.9, dayW = 70.5, dateW = 50, h = 41.7, x1 = 230.2 - bw*2 - dayW - dateW - 1.6, top = -h/2;
   s += `<g id="tWin" filter="url(#tInset)">
-    <rect x="${x1 - 2.6}" y="${top - 2.6 - bw}" width="${dayW + dateW + bw*2 + 1.6 + 5.2}" height="${h + bw*2 + 5.2}" rx="2" fill="none" stroke="#1a1a1a" stroke-width="2.9"/>
-    <rect x="${x1}" y="${top - bw}" width="${dayW + dateW + bw*2 + 1.6}" height="${h + bw*2}" rx="1.5" fill="#1a1a1a"/>
-    <rect x="${x1 + bw}" y="${top}" width="${dayW}" height="${h}" fill="url(#tWinDay)"/>
-    <rect x="${x1 + bw + dayW + 3.2}" y="${top}" width="${dateW - 1.6}" height="${h}" fill="url(#tWinDate)"/>
-    <rect x="${x1 + bw}" y="${top}" width="${dayW + dateW + 1.6}" height="6" fill="#000" opacity=".12"/>
+    <rect x="${x1 - 2.6}" y="${top - 2.6 - bw}" width="${dayW + dateW + bw*2 + 1.6 + 5.2}" height="${h + bw*2 + 5.2}" rx="2" fill="none" stroke="#1a1a1a" stroke-width="2.9" class="td-wf"/>
+    <rect x="${x1}" y="${top - bw}" width="${dayW + dateW + bw*2 + 1.6}" height="${h + bw*2}" rx="1.5" fill="#1a1a1a" class="td-wf"/>
+    <rect x="${x1 + bw}" y="${top}" width="${dayW}" height="${h}" fill="url(#tWinDay)" class="td-wb"/>
+    <rect x="${x1 + bw + dayW + 3.2}" y="${top}" width="${dateW - 1.6}" height="${h}" fill="url(#tWinDate)" class="td-wb"/>
+    <rect x="${x1 + bw}" y="${top}" width="${dayW + dateW + 1.6}" height="6" fill="#000" opacity=".12" class="td-ov"/>
   </g>
   <text id="tDay" x="${(x1 + bw + dayW/2).toFixed(1)}" y="1.5" text-anchor="middle" dominant-baseline="central" font-family="${T_SANS}" font-weight="700" font-size="25.5" letter-spacing=".5" fill="#111">DV</text>
   <text id="tDate" x="${(x1 + bw + dayW + 3.2 + (dateW-1.6)/2).toFixed(1)}" y="1.5" text-anchor="middle" dominant-baseline="central" font-family="${T_SANS}" font-weight="700" font-size="25.5" fill="#111" style="font-variant-numeric:tabular-nums">30</text>`;
@@ -1481,15 +1497,15 @@ function buildBackDial(){
   for (let i = 0; i < 12; i++){
     const a = i * 30;
     idx += `<g transform="rotate(${a})" filter="url(#tIdxSh)">
-      <rect x="${-w/2}" y="${-rO}" width="${w}" height="${hI}" rx="1" fill="#8a8a8f"/>
+      <rect class="td-is" x="${-w/2}" y="${-rO}" width="${w}" height="${hI}" rx="1" fill="#8a8a8f"/>
       <rect class="t-lume" x="${-w/2 + sw}" y="${-rO + 1.8}" width="${w - 2*sw}" height="${hI - 3.6}" fill="url(#tIdxG)"/>
-      <rect x="${-w/2}" y="${-rO}" width="${w}" height="${hI}" rx="1" fill="url(#tIdxShade)"/>
+      <rect class="td-ov" x="${-w/2}" y="${-rO}" width="${w}" height="${hI}" rx="1" fill="url(#tIdxShade)"/>
     </g>`;
     T_IDX.push(`<rect transform="rotate(${a})" x="${-w/2 + sw}" y="${-rO + 1.8}" width="${w - 2*sw}" height="${hI - 3.6}"/>`);
   }
   s += idx;
   // lluentor del dial (soft-light del CSS)
-  s += `<circle r="${R}" fill="url(#tSheen)" style="mix-blend-mode:soft-light" pointer-events="none"/>`;
+  s += `<circle class="td-ov" r="${R}" fill="url(#tSheen)" style="mix-blend-mode:soft-light" pointer-events="none"/>`;
   s += `</g>`;
   document.getElementById('bBase').innerHTML = s;
 }
@@ -5173,7 +5189,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         '--pop-bg': c(B, .09), '--pop-bd': c(B, .35), '--pop-tip': c(B, .09), '--ico-a': c(A, 1),
         '--alert-bg': c(B, .1), '--alert-bd': c(B, .35), '--alert-ink': c(B, 1), '--alert-lbl': c(B, .72),
         '--rain': c(B, 1), '--warn': c(A, 1),
-        '--zh-body': c(A, .5), '--zh-lume': c(A, 1)
+        '--zh-body': c(A, .5), '--zh-lume': c(A, 1), '--zh-dim': c(A, .32), '--zt-c0': c(A, .05), '--zt-c1': c(A, .2)
       };
       let st = document.getElementById('zz-tokens');
       if (!st) { st = document.createElement('style'); st.id = 'zz-tokens'; document.head.appendChild(st); }
