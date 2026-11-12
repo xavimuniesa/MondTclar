@@ -283,10 +283,11 @@ html[data-theme="day"] .day.hol.sun{background:radial-gradient(circle at 50% 40%
 
 /* ---------- la roda: punts de les finestres (es poden tocar) ---------- */
 .view-dots{position:absolute; z-index:150; left:50%; bottom:1.2cqh; transform:translateX(-50%); display:flex; gap:2px; pointer-events:auto}
-.view-dots button{width:14px; height:14px; display:grid; place-items:center; padding:0}
-.view-dots button::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--line); transition:background .3s, transform .3s}
-.view-dots button.on::before{background:var(--lume-lo); transform:scale(1.35)}
-.view-dots button.al::before{background:#ff7a00}
+.view-dots button{position:relative; width:14px; height:14px; padding:0; margin:0; border:0; -webkit-appearance:none; appearance:none; background:none}
+.view-dots button::before{content:""; position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:var(--line); transform:translate(-50%,-50%); transition:background .3s, transform .3s}
+.view-dots button.on::before{background:var(--lume-lo); transform:translate(-50%,-50%) scale(1.35)}
+/* alerta (hi ha avisos): taronja, ben centrat i una mica més gran */
+.view-dots button.al::before{background:#ff7a00; transform:translate(-50%,-50%) scale(1.2); box-shadow:0 0 6px rgba(255,122,0,.6)}
 .wface{padding-bottom:max(18px, 5.4cqh)}
 .wface .fbody{position:relative; flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:none; overscroll-behavior:contain}
 .wface .fbody::-webkit-scrollbar{display:none}
@@ -636,7 +637,9 @@ html[data-theme="zz"] #hSec [fill]:not([fill="none"]), html[data-theme="zz"] #hS
 html[data-theme="zz"] #hSec [stroke]:not([stroke="none"]), html[data-theme="zz"] #hSecB [stroke]:not([stroke="none"]){stroke:var(--zh-lume)}
 html[data-theme="zz"] #handsLayerGlass, html[data-theme="zz"] #bHandsGlass{display:none}
 html[data-theme="zz"] .lyr-glow{filter:url(#zz-b)}
-html[data-theme="zz"] #bGlow{opacity:.55}
+html[data-theme="zz"] #bGlow{opacity:1}
+.zz-win{display:none}
+html[data-theme="zz"] .zz-win{display:inline}
 html[data-theme="zz"] .edge{background:#000!important}
 html[data-theme="zz"] .watch{touch-action:none}
 .wake-video{position:fixed; left:0; bottom:0; width:2px; height:2px; opacity:0; pointer-events:none}
@@ -661,7 +664,6 @@ html[data-theme="zz"] .aq-scale span:nth-child(n+3){background:var(--ink2)!impor
 html[data-theme="zz"] .aq-scale span:nth-child(n+5){background:var(--accent)!important}
 html[data-theme="zz"] .placa-sona .on-air,html[data-theme="zz"] .radio.sonant .punt{background:#000; box-shadow:none}
 html[data-theme="zz"] .placa-sona .on-air{background:var(--accent)}
-html[data-theme="zz"] .view-dots button.al::before{background:var(--accent)}
 html[data-theme="zz"] .holiday-tip{border-left-color:var(--accent)}
 
 /* Estalvi de bateria: cada capa del rellotge en la seva pròpia capa de composició,
@@ -1580,6 +1582,7 @@ function refreshTissotWindow(now){
   try { if (day.getComputedTextLength() > 60){ day.setAttribute('textLength', '60'); day.setAttribute('lengthAdjust', 'spacingAndGlyphs'); } } catch (e) {}
   date.textContent = pad2(now.getDate());
   day.setAttribute('fill', col); date.setAttribute('fill', col);
+  mirrorText('tDay', 'tDayG'); mirrorText('tDate', 'tDateG');
 }
 
 /* Estalvi de bateria: la segonera (i el capçal) i el vidre van en capes SVG
@@ -1601,6 +1604,30 @@ function splitHands(layerId, secId, glassId){
   while (n && n !== glass){ const nx = n.nextSibling; secSvg.appendChild(n); n = nx; }
   while (n){ const nx = n.nextSibling; glassSvg.appendChild(n); n = nx; }
   layer.after(secSvg); secSvg.after(glassSvg);
+}
+
+/* Mode Zz: finestretes de data fosforescents (paper lluminós, xifres negres i halo).
+   Van a les capes de lume, que en Zz prenen el to triat; fora de Zz no es veuen. */
+function buildZzWindows(){
+  const ns = 'http://www.w3.org/2000/svg';
+  const add = (id, html) => { const g = document.createElementNS(ns, 'g'); g.setAttribute('class', 'zz-win'); g.innerHTML = html; document.getElementById(id).appendChild(g); };
+  const halo = `<defs><filter id="fWinGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter></defs>`;
+  add('glowLayer', halo + `<rect x="-24" y="161" width="48" height="54" rx="5" fill="#fff" opacity=".55" filter="url(#fWinGlow)"/>
+    <rect x="-16.5" y="168.5" width="33" height="39" fill="#fff"/>
+    <text id="dateNumG" x="0" y="189.5" text-anchor="middle" dominant-baseline="central" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="600" font-size="32" fill="#000">--</text>`);
+  const bw = 2.9, dayW = 70.5, dateW = 50, h = 41.7, x1 = 230.2 - bw*2 - dayW - dateW - 1.6, top = -h/2;
+  const dx = x1 + bw, nx = x1 + bw + dayW + 3.2;
+  add('bGlow', `<rect x="${dx - 6}" y="${top - 6}" width="${nx + dateW - 1.6 - dx + 12}" height="${h + 12}" rx="5" fill="#fff" opacity=".55" filter="url(#fWinGlow)"/>
+    <rect x="${dx}" y="${top}" width="${dayW}" height="${h}" fill="#fff"/>
+    <rect x="${nx}" y="${top}" width="${dateW - 1.6}" height="${h}" fill="#fff"/>
+    <text id="tDayG" x="${(dx + dayW/2).toFixed(1)}" y="1.5" text-anchor="middle" dominant-baseline="central" font-family="${T_SANS}" font-weight="700" font-size="25.5" letter-spacing=".5" fill="#000"></text>
+    <text id="tDateG" x="${(nx + (dateW-1.6)/2).toFixed(1)}" y="1.5" text-anchor="middle" dominant-baseline="central" font-family="${T_SANS}" font-weight="700" font-size="25.5" fill="#000"></text>`);
+}
+function mirrorText(fromId, toId){
+  const a = document.getElementById(fromId), b = document.getElementById(toId);
+  if (!a || !b) return;
+  b.textContent = a.textContent;
+  for (const k of ['textLength', 'lengthAdjust']){ const v = a.getAttribute(k); if (v) b.setAttribute(k, v); else b.removeAttribute(k); }
 }
 
 /* =========================================================
@@ -1903,7 +1930,7 @@ function wxIcon(code, day, light){
 
 buildBase(); buildBezel(); buildGlow(); buildHands(); setupBezel();
 buildBackDial(); buildBackBezel(); buildBackGlow(); buildBackHands();
-splitHands('handsLayer', 'hSec', 'glass'); splitHands('bHands', 'hSecB', 'glassB');
+splitHands('handsLayer', 'hSec', 'glass'); splitHands('bHands', 'hSecB', 'glassB'); buildZzWindows();
 setupBezel('bBezel','bezelHitB','bezelRotB','glowPipB');
 initFlip();
 const hSec = document.getElementById('hSec'), hMin = document.getElementById('hMin'), hHour = document.getElementById('hHour');
@@ -2233,7 +2260,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
 
     // Textos propis del KOSTOV (barra, gir, so, instal·lació i mode Zz)
     Object.assign(I18N.ca, {
-      zzNames: { orange: 'taronja', red: 'vermell', yellow: 'groc', green: 'verd', blue: 'blau', amber: 'ambre', teal: 'turquesa', cyan: 'cian', violet: 'violeta', ice: 'blanc gel' },
+      zzNames: { lume: 'verd lume', orange: 'taronja', red: 'vermell', yellow: 'groc', green: 'verd', blue: 'blau', amber: 'ambre', teal: 'turquesa', cyan: 'cian', violet: 'violeta', ice: 'blanc gel' },
       flipBtn: "Girar el rellotge (KOSTOV ↔ Tissot)", soundBtn: 'Sons mecànics: carraca del bisell i de la roda, grinyol del gir',
       prevMonth: 'Mes anterior', nextMonth: 'Mes següent',
       watchFront: 'Rellotge KOSTOV. Toca per girar-lo.', watchBack: 'Rellotge Tissot PRS 516. Toca per girar-lo.',
@@ -2244,7 +2271,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['taronja', 'vermell', 'groc', 'verd', 'blau'], weekWord: 'Setmana'
     });
     Object.assign(I18N.fr, {
-      zzNames: { orange: 'orange', red: 'rouge', yellow: 'jaune', green: 'vert', blue: 'bleu', amber: 'ambre', teal: 'turquoise', cyan: 'cyan', violet: 'violet', ice: 'blanc glacé' },
+      zzNames: { lume: 'vert luminescent', orange: 'orange', red: 'rouge', yellow: 'jaune', green: 'vert', blue: 'bleu', amber: 'ambre', teal: 'turquoise', cyan: 'cyan', violet: 'violet', ice: 'blanc glacé' },
       flipBtn: 'Retourner la montre (KOSTOV ↔ Tissot)', soundBtn: 'Sons mécaniques : cliquet de la lunette et de la roue, grincement du retournement',
       prevMonth: 'Mois précédent', nextMonth: 'Mois suivant',
       watchFront: 'Montre KOSTOV. Touchez pour la retourner.', watchBack: 'Montre Tissot PRS 516. Touchez pour la retourner.',
@@ -2255,7 +2282,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['orange', 'rouge', 'jaune', 'vert', 'bleu'], weekWord: 'Semaine'
     });
     Object.assign(I18N.de, {
-      zzNames: { orange: 'Orange', red: 'Rot', yellow: 'Gelb', green: 'Grün', blue: 'Blau', amber: 'Bernstein', teal: 'Türkis', cyan: 'Cyan', violet: 'Violett', ice: 'Eisweiß' },
+      zzNames: { lume: 'Leuchtgrün', orange: 'Orange', red: 'Rot', yellow: 'Gelb', green: 'Grün', blue: 'Blau', amber: 'Bernstein', teal: 'Türkis', cyan: 'Cyan', violet: 'Violett', ice: 'Eisweiß' },
       flipBtn: 'Uhr umdrehen (KOSTOV ↔ Tissot)', soundBtn: 'Mechanische Geräusche: Ratsche von Lünette und Rad, Knarren beim Drehen',
       prevMonth: 'Voriger Monat', nextMonth: 'Nächster Monat',
       watchFront: 'KOSTOV-Uhr. Tippen zum Umdrehen.', watchBack: 'Tissot PRS 516. Tippen zum Umdrehen.',
@@ -2266,7 +2293,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['Orange', 'Rot', 'Gelb', 'Grün', 'Blau'], weekWord: 'Woche'
     });
     Object.assign(I18N.it, {
-      zzNames: { orange: 'arancione', red: 'rosso', yellow: 'giallo', green: 'verde', blue: 'blu', amber: 'ambra', teal: 'turchese', cyan: 'ciano', violet: 'viola', ice: 'bianco ghiaccio' },
+      zzNames: { lume: 'verde luminescente', orange: 'arancione', red: 'rosso', yellow: 'giallo', green: 'verde', blue: 'blu', amber: 'ambra', teal: 'turchese', cyan: 'ciano', violet: 'viola', ice: 'bianco ghiaccio' },
       flipBtn: "Girare l'orologio (KOSTOV ↔ Tissot)", soundBtn: 'Suoni meccanici: cricchetto della ghiera e della ruota, cigolio del giro',
       prevMonth: 'Mese precedente', nextMonth: 'Mese successivo',
       watchFront: 'Orologio KOSTOV. Tocca per girarlo.', watchBack: 'Orologio Tissot PRS 516. Tocca per girarlo.',
@@ -2277,7 +2304,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       zzColors: ['arancione', 'rosso', 'giallo', 'verde', 'blu'], weekWord: 'Settimana'
     });
     Object.assign(I18N.en, {
-      zzNames: { orange: 'orange', red: 'red', yellow: 'yellow', green: 'green', blue: 'blue', amber: 'amber', teal: 'teal', cyan: 'cyan', violet: 'violet', ice: 'ice white' },
+      zzNames: { lume: 'lume green', orange: 'orange', red: 'red', yellow: 'yellow', green: 'green', blue: 'blue', amber: 'amber', teal: 'teal', cyan: 'cyan', violet: 'violet', ice: 'ice white' },
       flipBtn: 'Flip the watch (KOSTOV ↔ Tissot)', soundBtn: 'Mechanical sounds: bezel and wheel ratchet, flip creak',
       prevMonth: 'Previous month', nextMonth: 'Next month',
       watchFront: 'KOSTOV watch. Tap to flip it.', watchBack: 'Tissot PRS 516 watch. Tap to flip it.',
@@ -2596,6 +2623,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
       if (dn) {
         dn.textContent = now.getDate();
         if (now.getDate() > 9) { dn.setAttribute('textLength', '27'); dn.setAttribute('lengthAdjust', 'spacingAndGlyphs'); } else dn.removeAttribute('textLength');
+        mirrorText('dateNum', 'dateNumG');
       }
     }
 
@@ -5150,12 +5178,12 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
     // (taronja, vermell, groc, verd, blau); un doble toc gira l'esfera.
     // ------------------------------------------------------------------
     const ZZ_TINTS = { orange: [255, 138, 43], red: [255, 90, 69], yellow: [242, 197, 61], green: [61, 220, 132], blue: [74, 166, 255],
-                       amber: [255, 176, 0], teal: [0, 214, 190], cyan: [80, 210, 255], violet: [170, 120, 255], ice: [220, 235, 255] };
+                       lume: [223, 232, 178], amber: [255, 176, 0], teal: [0, 214, 190], cyan: [80, 210, 255], violet: [170, 120, 255], ice: [220, 235, 255] };
     // Un sol to o dos: el primer per al rellotge, el segon per al lume i les finestres
-    const ZZ_ORDER = ['orange', 'red', 'yellow', 'green', 'blue',
+    const ZZ_ORDER = ['lume', 'orange', 'red', 'yellow', 'green', 'blue',
                       'red+yellow', 'green+orange', 'blue+yellow', 'ice+orange', 'violet+amber', 'teal+orange', 'blue+orange', 'cyan+amber'];
     const ZZ_KEY = 'kostov_zz_tint';
-    let zzTint = (() => { try { const v = localStorage.getItem(ZZ_KEY); return ZZ_ORDER.includes(v) ? v : 'orange'; } catch (e) { return 'orange'; } })();
+    let zzTint = (() => { try { const v = localStorage.getItem(ZZ_KEY); return ZZ_ORDER.includes(v) ? v : 'lume'; } catch (e) { return 'lume'; } })();
     const zzPair = k => { const [a, b] = k.split('+'); return [a, b || a]; };
     const zzName = k => zzPair(k).filter((c, i, arr) => arr.indexOf(c) === i).map(c => t('zzNames')[c] || c).join(' · ');
     function applyZzTint() {
@@ -5323,7 +5351,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['watch', 'El rellotge', ["Doble toc a l'esfera: gira en 8 segons, com un cilindre, KOSTOV ↔ Tissot PRS 516.", "La corona exterior de totes dues cares gira: arrossega-la amb el dit (només en sentit antihorari, a clics). Doble toc a la corona: torna a zero.", 'Totes dues marquen l\'hora real; el Tissot mostra el dia i la data a la finestreta.']],
         ['swipe', 'La roda', ['Dit amunt o avall al quadre: finestra següent o anterior (en cercle). Doble toc: torna al calendari.', 'Calendari · Data · Temperatura · El temps · Avui · Properament · Ubicació · Avisos · Aire · Ràdio · Podcasts · Notícies · Alarmes.', 'Dit de costat: canvia de mes o de subpanell (punts de dalt).', 'Avisos només surt quan n\'hi ha (temps extrem o festiu avui o demà).']],
         ['cal', 'El calendari', ['Festius en vermell: toca\'ls per veure\'n el nom.', '«Avui» o doble toc al mes: torna al mes actual.', 'Les festes, només en català (amb les locals del municipi).']],
-        ['moon', 'Temes i mode Zz', ['Botó del tema: A · dia · nit · Zz. A: dia o nit segons el sol, i Zz si es carrega de nit.', 'Zz: fons negre i tot en un o dos tons (el rellotge en un, el lume i les finestres en l\'altre); la pantalla no s\'apaga.', 'En Zz: un toc al rellotge canvia els tons (taronja, vermell, groc, verd, blau i vuit combinacions), doble toc el gira, dit amunt o avall sobre el rellotge n\'ajusta la intensitat.']],
+        ['moon', 'Temes i mode Zz', ['Botó del tema: A · dia · nit · Zz. A: dia o nit segons el sol, i Zz si es carrega de nit.', 'Zz: fons negre i tot en un o dos tons (el rellotge en un, el lume i les finestres en l\'altre); la pantalla no s\'apaga i la finestreta de la data brilla com el lume.', 'En Zz: un toc al rellotge canvia els tons (verd lume, taronja, vermell, groc, verd, blau i vuit combinacions), doble toc el gira, dit amunt o avall sobre el rellotge n\'ajusta la intensitat.']],
         ['row', 'La barra', ['INS: instal·la l\'app · roda dentada: sons mecànics (corona, roda i gir) · ?: aquesta ajuda.', 'Idioma: CA · FR · DE · IT · EN.', 'Tema: A (automàtic) · dia · nit · Zz.', 'Altaveu: un toc diu l\'hora; dos tocs apaguen la veu. Diu les hores en punt.', 'Quan sona la ràdio, «Ara sona» surt a sota de la roda: temporitzador (15–90 min), pausa i ✕.', 'Aniversari: doble toc al nom de la població, a la finestra Ubicació.']],
         ['bell', 'Alarmes', ['Tres alarmes: toca l\'hora per canviar-la i tria els dies.', 'Sonen amb l\'app oberta. El botó del mòbil les passa al rellotge del telèfon.']],
         ['radio', 'Ràdio, podcasts i notícies', ['Emissores i notícies de l\'idioma triat.', 'Podcasts de RAC1 (en català).']],
@@ -5333,7 +5361,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['watch', 'La montre', ['Double toucher sur le cadran : il se retourne en 8 secondes, comme un cylindre, KOSTOV ↔ Tissot PRS 516.', 'La lunette des deux faces tourne : faites-la glisser du doigt (sens antihoraire, par crans). Double toucher sur la lunette : retour à zéro.', 'Les deux faces indiquent l\'heure réelle ; la Tissot affiche le jour et la date.']],
         ['swipe', 'La roue', ['Doigt vers le haut ou le bas : fenêtre suivante ou précédente (en boucle). Double toucher : retour au calendrier.', 'Calendrier · Date · Température · Météo · Aujourd\'hui · Lieu · Alertes · Air · Radio · Actualités · Réveils.', 'Doigt sur le côté : mois ou sous-panneau (points en haut).', 'Alertes n\'apparaît que s\'il y en a.']],
         ['cal', 'Le calendrier', ['« Auj. » ou double toucher sur le mois : retour au mois actuel.', 'Les jours fériés ne s\'affichent qu\'en catalan.']],
-        ['moon', 'Thèmes et mode Zz', ['Bouton du thème : A · jour · nuit · Zz. A : selon le soleil, et Zz en charge la nuit.', 'Zz : fond noir, tout en une ou deux teintes (la montre dans l\'une, la lumière et les fenêtres dans l\'autre) ; l\'écran reste allumé.', 'En Zz : un toucher sur la montre change les teintes (cinq couleurs et huit combinaisons), un double toucher la retourne, glisser sur la montre règle l\'intensité.']],
+        ['moon', 'Thèmes et mode Zz', ['Bouton du thème : A · jour · nuit · Zz. A : selon le soleil, et Zz en charge la nuit.', 'Zz : fond noir, tout en une ou deux teintes (la montre dans l\'une, la lumière et les fenêtres dans l\'autre) ; l\'écran reste allumé.', 'En Zz : un toucher sur la montre change les teintes (six couleurs et huit combinaisons), un double toucher la retourne, glisser sur la montre règle l\'intensité.']],
         ['row', 'La barre', ['INS : installer l\'app · roue dentée : sons mécaniques (lunette, roue, retournement) · ? : cette aide.', 'Langue : CA · FR · DE · IT · EN.', 'Thème : A (automatique) · jour · nuit · Zz.', 'Haut-parleur : un toucher dit l\'heure ; deux touchers coupent la voix. Annonce les heures pile.', 'Radio en cours : « En écoute » apparaît sous la roue, avec minuterie (15–90 min), pause et ✕.', 'Anniversaire : double toucher sur le nom de la localité, fenêtre Lieu.']],
         ['bell', 'Réveils', ['Trois réveils : touchez l\'heure et choisissez les jours.', 'Ils sonnent avec l\'app ouverte. Le bouton téléphone les ajoute à l\'horloge du téléphone.']],
         ['radio', 'Radio et actualités', ['Stations et actualités de la langue choisie.']],
@@ -5343,7 +5371,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['watch', 'Die Uhr', ['Doppeltippen auf das Zifferblatt dreht die Uhr in 8 Sekunden wie einen Zylinder: KOSTOV ↔ Tissot PRS 516.', 'Die Lünette beider Seiten dreht sich: mit dem Finger ziehen (gegen den Uhrzeigersinn, rastend). Doppeltippen auf die Lünette: zurück auf null.', 'Beide zeigen die echte Zeit; die Tissot zeigt Wochentag und Datum.']],
         ['swipe', 'Das Rad', ['Finger nach oben oder unten: nächstes oder voriges Fenster (im Kreis). Doppeltippen: zurück zum Kalender.', 'Kalender · Datum · Temperatur · Wetter · Heute · Standort · Warnungen · Luft · Radio · Nachrichten · Wecker.', 'Finger zur Seite: Monat oder Unterseite (Punkte oben).', 'Warnungen erscheinen nur, wenn es welche gibt.']],
         ['cal', 'Der Kalender', ['„Heute“ oder Doppeltippen auf den Monat: zurück zum aktuellen Monat.', 'Feiertage werden nur auf Katalanisch angezeigt.']],
-        ['moon', 'Modi und Zz-Modus', ['Modus-Taste: A · Tag · Nacht · Zz. A: nach der Sonne, Zz beim Laden in der Nacht.', 'Zz: schwarzer Grund, alles in einem oder zwei Farbtönen (die Uhr im einen, Leuchtmasse und Fenster im anderen); der Bildschirm bleibt an.', 'In Zz: Tippen auf die Uhr wechselt die Farbtöne (fünf Farben und acht Kombinationen), Doppeltippen dreht sie, Wischen über die Uhr ändert die Helligkeit.']],
+        ['moon', 'Modi und Zz-Modus', ['Modus-Taste: A · Tag · Nacht · Zz. A: nach der Sonne, Zz beim Laden in der Nacht.', 'Zz: schwarzer Grund, alles in einem oder zwei Farbtönen (die Uhr im einen, Leuchtmasse und Fenster im anderen); der Bildschirm bleibt an.', 'In Zz: Tippen auf die Uhr wechselt die Farbtöne (sechs Farben und acht Kombinationen), Doppeltippen dreht sie, Wischen über die Uhr ändert die Helligkeit.']],
         ['row', 'Die Leiste', ['INS: App installieren · Zahnrad: mechanische Geräusche (Lünette, Rad, Drehen) · ?: diese Hilfe.', 'Sprache: CA · FR · DE · IT · EN.', 'Modus: A (automatisch) · Tag · Nacht · Zz.', 'Lautsprecher: Tippen sagt die Uhrzeit; zweimal tippen schaltet die Stimme aus. Volle Stunden werden angesagt.', 'Läuft Radio, erscheint unter dem Rad die Anzeige mit Sleep-Timer (15–90 Min.), Pause und ✕.', 'Geburtstag: Doppeltippen auf den Ortsnamen im Fenster Standort.']],
         ['bell', 'Wecker', ['Drei Wecker: Uhrzeit antippen und Tage wählen.', 'Sie klingeln bei geöffneter App. Die Handy-Taste überträgt sie in die Uhr des Telefons.']],
         ['radio', 'Radio und Nachrichten', ['Sender und Nachrichten der gewählten Sprache.']],
@@ -5353,7 +5381,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['watch', "L'orologio", ['Doppio tocco sul quadrante: si gira in 8 secondi, come un cilindro, KOSTOV ↔ Tissot PRS 516.', 'La ghiera di entrambe le facce ruota: trascinala con il dito (in senso antiorario, a scatti). Doppio tocco sulla ghiera: torna a zero.', "Entrambe segnano l'ora reale; la Tissot mostra giorno e data."]],
         ['swipe', 'La ruota', ['Dito su o giù: finestra successiva o precedente (in cerchio). Doppio tocco: torna al calendario.', 'Calendario · Data · Temperatura · Meteo · Oggi · Posizione · Allerte · Aria · Radio · Notizie · Sveglie.', 'Dito di lato: mese o sottopannello (punti in alto).', 'Allerte compare solo se ce ne sono.']],
         ['cal', 'Il calendario', ['«Oggi» o doppio tocco sul mese: torna al mese corrente.', 'Le feste si vedono solo in catalano.']],
-        ['moon', 'Temi e modalità Zz', ['Tasto del tema: A · giorno · notte · Zz. A: secondo il sole, e Zz in carica di notte.', "Zz: fondo nero e tutto in uno o due toni (l'orologio in uno, la luminescenza e le finestre nell'altro); lo schermo resta acceso.", "In Zz: un tocco sull'orologio cambia i toni (cinque colori e otto combinazioni), doppio tocco lo gira, scorrere sull'orologio regola l'intensità."]],
+        ['moon', 'Temi e modalità Zz', ['Tasto del tema: A · giorno · notte · Zz. A: secondo il sole, e Zz in carica di notte.', "Zz: fondo nero e tutto in uno o due toni (l'orologio in uno, la luminescenza e le finestre nell'altro); lo schermo resta acceso.", "In Zz: un tocco sull'orologio cambia i toni (sei colori e otto combinazioni), doppio tocco lo gira, scorrere sull'orologio regola l'intensità."]],
         ['row', 'La barra', ["INS: installa l'app · ruota dentata: suoni meccanici (ghiera, ruota, giro) · ?: questo aiuto.", 'Lingua: CA · FR · DE · IT · EN.', 'Tema: A (automatico) · giorno · notte · Zz.', "Altoparlante: un tocco dice l'ora; due tocchi spengono la voce. Annuncia le ore in punto.", 'Radio in ascolto: sotto la ruota compare il riquadro con timer (15–90 min), pausa e ✕.', 'Compleanno: doppio tocco sul nome della località, finestra Posizione.']],
         ['bell', 'Sveglie', ["Tre sveglie: tocca l'ora e scegli i giorni.", "Suonano con l'app aperta. Il tasto del telefono le passa all'orologio del telefono."]],
         ['radio', 'Radio e notizie', ['Emittenti e notizie della lingua scelta.']],
@@ -5363,7 +5391,7 @@ const hSecB = document.getElementById('hSecB'), hMinB = document.getElementById(
         ['watch', 'The watch', ['Double-tap the dial: it turns over in 8 seconds, like a cylinder, KOSTOV ↔ Tissot PRS 516.', 'The outer bezel of both faces turns: drag it with your finger (anticlockwise, in clicks). Double-tap the bezel: back to zero.', 'Both show the real time; the Tissot shows the day and date.']],
         ['swipe', 'The wheel', ['Finger up or down: next or previous panel (in a loop). Double-tap: back to the calendar.', 'Calendar · Date · Temperature · Weather · Today · Location · Alerts · Air · Radio · News · Alarms.', 'Finger sideways: month or sub-panel (dots at the top).', 'Alerts only appears when there are any.']],
         ['cal', 'The calendar', ['“Today” or double-tap the month: back to the current month.', 'Holidays are shown in Catalan only.']],
-        ['moon', 'Themes and Zz mode', ['Theme button: A · day · night · Zz. A follows the sun, and Zz while charging at night.', 'Zz: black background, everything in one or two tones (the watch in one, the lume and panels in the other); the screen stays on.', 'In Zz: tap the watch to change tones (five colours and eight combinations), double-tap flips it, swipe on the watch sets the brightness.']],
+        ['moon', 'Themes and Zz mode', ['Theme button: A · day · night · Zz. A follows the sun, and Zz while charging at night.', 'Zz: black background, everything in one or two tones (the watch in one, the lume and panels in the other); the screen stays on.', 'In Zz: tap the watch to change tones (six colours and eight combinations), double-tap flips it, swipe on the watch sets the brightness.']],
         ['row', 'The bar', ['INS: install the app · cog: mechanical sounds (bezel, wheel, flip) · ?: this help.', 'Language: CA · FR · DE · IT · EN.', 'Theme: A (automatic) · day · night · Zz.', 'Speaker: tap says the time; double-tap mutes the voice. It announces the hours.', 'While radio plays, a strip under the wheel has the sleep timer (15–90 min), pause and ✕.', 'Birthday: double-tap the town name in the Location panel.']],
         ['bell', 'Alarms', ['Three alarms: tap the time and pick the days.', 'They ring while the app is open. The phone button adds them to the phone\'s clock.']],
         ['radio', 'Radio and news', ['Stations and news in the chosen language.']],
