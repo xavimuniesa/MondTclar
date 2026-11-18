@@ -671,6 +671,12 @@ html[data-theme="zz"] .holiday-tip{border-left-color:var(--accent)}
 /* (Sense capes de composició pròpies per a cada SVG: a Android, dins del gir 3D, quedaven al mateix
    pla i parpellejaven — agulles que desapareixien i esfera que s'apagava en canviar de to) */
 
+/* Zz: la marca vermella de nit no cal (ja hi ha les lletres il·luminades); l'anella del VOSTOK en to ple */
+html[data-theme="zz"] .night-brand{display:none}
+html[data-theme="zz"] #bezelLayer{filter:url(#zz-a)}
+/* Tissot: números de l'anella en to ple i amb halo */
+html[data-theme="zz"] #bBezel .tb-n{fill:var(--zh-lume); filter:url(#fZzText)!important}
+
 html,body{overscroll-behavior:none}
 </style>
 </head>
@@ -1630,6 +1636,30 @@ function mirrorText(fromId, toId){
   for (const k of ['textLength', 'lengthAdjust']){ const v = a.getAttribute(k); if (v) b.setAttribute(k, v); else b.removeAttribute(k); }
 }
 
+/* Mode Zz: les lletres de l'esfera VOSTOK i els números de l'anella s'il·luminen
+   (còpies blanques amb halo; a la capa de lume, i a l'anella dins del grup que gira) */
+function buildZzLetters(){
+  const ns = 'http://www.w3.org/2000/svg';
+  const glowDefs = `<defs><filter id="fZzText" x="-25%" y="-80%" width="150%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+  const clones = list => list.map(t => { const c = t.cloneNode(true); c.removeAttribute('id'); c.removeAttribute('style'); c.removeAttribute('class'); c.setAttribute('fill', '#fff'); return c.outerHTML; }).join('');
+  // esfera: marca, textos i números del rehaut (la data ja és fosforescent a part)
+  const texts = [...document.querySelectorAll('#baseLayer text')].filter(t => t.id !== 'dateNum');
+  const g = document.createElementNS(ns, 'g');
+  g.setAttribute('class', 'zz-win');
+  g.innerHTML = glowDefs + `<g filter="url(#fZzText)">${clones(texts)}</g>`;
+  document.getElementById('glowLayer').appendChild(g);
+  // anella: els números sobre el sector fosc (30, 40, 50); el 10 i el 20 queden foscos sobre el sector clar
+  const rot = document.getElementById('bezelRot');
+  const nums = [...rot.querySelectorAll('.bznum')].filter(t => +t.textContent >= 30);
+  const b = document.createElementNS(ns, 'g');
+  b.setAttribute('class', 'zz-win');
+  b.setAttribute('filter', 'url(#fZzText)');
+  b.innerHTML = clones(nums);
+  rot.appendChild(b);
+}
+
 /* =========================================================
    GIR 3D (8 s): perspectiva, dues cares i capes de gruix.
    Cada toc a l'esfera suma 180°, sempre en el mateix sentit.
@@ -1930,7 +1960,7 @@ function wxIcon(code, day, light){
 
 buildBase(); buildBezel(); buildGlow(); buildHands(); setupBezel();
 buildBackDial(); buildBackBezel(); buildBackGlow(); buildBackHands();
-splitHands('handsLayer', 'hSec', 'glass'); splitHands('bHands', 'hSecB', 'glassB'); buildZzWindows();
+splitHands('handsLayer', 'hSec', 'glass'); splitHands('bHands', 'hSecB', 'glassB'); buildZzWindows(); buildZzLetters();
 setupBezel('bBezel','bezelHitB','bezelRotB','glowPipB');
 initFlip();
 const hSec = document.getElementById('hSec'), hMin = document.getElementById('hMin'), hHour = document.getElementById('hHour');
